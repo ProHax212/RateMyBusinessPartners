@@ -18,6 +18,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".CompanyProfile"
+            android:label="@string/title_activity_company_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".WriteReview"
+            android:label="@string/title_activity_write_review"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ReviewResults"
+            android:label="@string/title_activity_review_results"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
