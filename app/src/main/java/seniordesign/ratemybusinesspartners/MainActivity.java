@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     //Test Methods - will not be in final product
     public void switchToCompanyProfile(View view){
         Intent intent = new Intent(this, CompanyProfile.class);
+        intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
+
         startActivity(intent);
     }
 }
