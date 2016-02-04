@@ -7,4 +7,5 @@
 
     <!--Company Profile Strings-->
     <string name="company_profile_company_name">Company Name</string>
+    <string name="company_profile_company_location">Location</string>
 </resources>

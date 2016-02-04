@@ -23,4 +23,24 @@
         android:text="@string/company_profile_company_name"
         android:textStyle="bold" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:id="@+id/companyLocation"
+        android:text="@string/company_profile_company_location"
+        android:textStyle="bold"
+        android:layout_below="@+id/companyName"
+        android:layout_alignLeft="@+id/companyName" />
+
+    <ListView
+        android:id="@+id/companyProfileReviewList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/companyLocation">
+
+
+
+    </ListView>
+
 </RelativeLayout>
