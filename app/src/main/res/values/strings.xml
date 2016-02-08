@@ -8,4 +8,12 @@
     <!--Company Profile Strings-->
     <string name="company_profile_company_name">[Company Name]</string>
     <string name="company_profile_reviews">Reviews:</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_register">Register</string>
+
+    <!--Login page Strings-->
+    <string name="login_textView_username">Username</string>
+    <string name="login_textView_password">Password</string>
+    <string name="login_textView_title">Welcome to Rate My Business Partner</string>
+
 </resources>
