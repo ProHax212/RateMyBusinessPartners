@@ -44,7 +44,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
             case R.id.register_button_register:
                 Intent intent = new Intent(this, CompanyProfile.class);
                 User new_user = new User(firstname, lastname, email, company, username, password, confirmpassword);
-                intent.putExtra("newUser", (Serializable) new_user);
+                intent.putExtra("newUser", new_user);
+                startActivity(intent);
+                break;
         }
     }
 }

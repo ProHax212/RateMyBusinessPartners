@@ -35,6 +35,11 @@ public class User implements Serializable {
         this.confirmPassword = "Catwoman";
     }
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public User(String firstname, String lastname, String username, String email, String company, String password, String confirmPassword){
         this.firstname = firstname;
         this.lastname = lastname;

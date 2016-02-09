@@ -46,11 +46,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         switch(v.getId()) {
             case R.id.login_button_login:
                 Intent login_intent = new Intent(this, CompanyProfile.class);
-                login_intent.putExtra(User.LOGIN_USERNAME, username);
-                login_intent.putExtra(User.LOGIN_PASSWORD, password);
+                User user = new User(username, password);
+                login_intent.putExtra("newUser", user);
                 startActivity(login_intent);
+                break;
             case R.id.login_textView_register:
                 startActivity(new Intent(this, Register.class));
+                break;
         }
     }
 }

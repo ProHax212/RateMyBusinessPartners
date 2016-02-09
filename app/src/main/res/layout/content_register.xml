@@ -18,12 +18,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_margin="10dp"
         android:layout_weight="1">
         <TextView
-            android:text="@string/register_textView_firstName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/register_textView_firstName" />
         <EditText
             android:id="@+id/register_editText_firstName"
             android:padding="10dp"
@@ -37,12 +36,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_margin="10dp"
         android:layout_weight="1">
         <TextView
-            android:text="@string/register_textView_lastName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/register_textView_lastName" />
         <EditText
             android:id="@+id/register_editText_lastName"
             android:padding="10dp"
@@ -55,16 +53,15 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_margin="10dp"
         android:layout_weight="1">
         <TextView
-            android:layout_width="wrap_content"
-            android:text="@string/register_textView_email"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/register_textView_email" />
         <EditText
             android:id="@+id/register_editText_email"
             android:padding="10dp"
-            android:inputType="text"
+            android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -73,12 +70,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_margin="10dp"
         android:layout_weight="1">
         <TextView
-            android:layout_width="wrap_content"
-            android:text="@string/register_textView_company"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/register_textView_company" />
         <EditText
             android:id="@+id/register_editText_company"
             android:padding="10dp"
@@ -92,12 +88,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_margin="10dp"
         android:layout_weight="1">
         <TextView
-            android:layout_width="wrap_content"
-            android:text="@string/register_textView_username"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/register_textView_username" />
         <EditText
             android:id="@+id/register_editText_username"
             android:paddingBottom="10dp"
@@ -111,12 +106,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_margin="10dp"
         android:layout_weight="1">
         <TextView
-        android:layout_width="wrap_content"
-        android:text="@string/register_textView_password"
-        android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/register_textView_password" />
         <EditText
             android:id="@+id/register_editText_password"
             android:padding="10dp"
@@ -130,12 +124,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_margin="10dp"
         android:layout_weight="1">
         <TextView
-            android:layout_width="wrap_content"
-            android:text="@string/register_textView_confirmPassword"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/register_textView_confirmPassword" />
         <EditText
             android:id="@+id/register_editText_confirmPassword"
             android:padding="10dp"
@@ -147,11 +140,10 @@
     <!--Register-->
     <Button
         android:id="@+id/register_button_register"
-        android:layout_marginLeft="130dp"
-        android:layout_marginRight="130dp"
-        android:layout_marginTop="10dp"
         android:text="@string/register_button_register"
-        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
 </LinearLayout>
+
