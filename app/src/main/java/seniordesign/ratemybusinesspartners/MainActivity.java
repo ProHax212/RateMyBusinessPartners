@@ -50,4 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(intent);
     }
+
+    public void switchToLogin(View view){
+        Intent intent = new Intent(this, Login.class);
+        startActivity(intent);
+    }
 }
