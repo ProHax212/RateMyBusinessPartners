@@ -40,12 +40,13 @@ public class CompanyProfile extends AppCompatActivity {
 
         //Initialize List View
         ListView reviewList = (ListView) findViewById(R.id.companyProfileReviewList);
-        User user = new User("Elizabeth", "1234", "ryancomer94@gmail.com");
+        //User user = (User) intent.getSerializableExtra("newUser");
+        User user = new User("Elizabeth", "Pika", "pika@utexas.edu","wall-e mart", "zergbanger", "1234", "1234");
         Review[] companyReviews = {new Review(user, "This is the best company ever", "Walmart", 5), new Review(user, "I agree", "Walmart", 3)};
         reviewArrayAdapter = new ArrayAdapter<Review>(this, android.R.layout.simple_list_item_1, new ArrayList<Review>());
         reviewList.setAdapter(reviewArrayAdapter);
 
-        Review testReview = new Review(user, "This is a test review, please disregard (btw Ryan is awesome)", "Walmart", 5);
+        Review testReview = new Review(user, "This is a test review, please disregard (btw Abraham is awesome)", "Walmart", 5);
 
         for(int i = 0; i < 10; i++){
             reviewArrayAdapter.add(testReview);

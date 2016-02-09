@@ -35,7 +35,7 @@ public class Review {
         StringBuilder builder = new StringBuilder();
 
         builder.append(this.targetCompanyName + "\n");
-        builder.append(reviewer.getUserName() + "\t\t");
+        builder.append(reviewer.getUsername() + "\t\t");
         builder.append("Stars: " + this.numStars);
         builder.append("\n" + this.reviewText);
 
