@@ -54,7 +54,15 @@ public class CompanyProfile extends AppCompatActivity {
             }
         });
 
-        //User user = (User) intent.getSerializableExtra("newUser");
+//        User user = (User) intent.getSerializableExtra("newUser");
+//        user.setFirstName("Elizabeth");
+//        user.setLastname("Bob");
+//        user.setEmail("pika@utexas.edu");
+//        user.setCompany("Audi");
+//        user.setUsername("blah");
+//        user.setPassword("s");
+//        user.setConfirmPassword("ble");
+
         User user = new User("Elizabeth", "Pika", "pika@utexas.edu","wall-e mart", "zergbanger", "1234", "1234");
         Review[] companyReviews = {new Review(user, "This is the best company ever", "Walmart", 5), new Review(user, "I agree", "Walmart", 3)};
         reviewArrayAdapter = new ArrayAdapter<Review>(this, R.layout.review_list_item, new ArrayList<Review>());
