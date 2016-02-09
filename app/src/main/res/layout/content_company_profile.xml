@@ -38,7 +38,7 @@
     <ListView
         android:id="@+id/companyProfileReviewList"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/review_list_height"
+        android:layout_height="@dimen/company_profile_review_list_height"
         android:layout_below="@id/companyProfileReviewsTextView"
         android:clickable="false"
         android:contextClickable="false">
@@ -46,5 +46,23 @@
 
 
     </ListView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/company_profile_view_reviews"
+        android:id="@+id/allReviewsButton"
+        android:layout_below="@+id/companyProfileReviewList"
+        android:layout_alignParentLeft="true"
+        android:onClick="viewAllReviews"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/company_profile_write_review"
+        android:id="@+id/writeReviewButton"
+        android:layout_alignBottom="@+id/allReviewsButton"
+        android:layout_toRightOf="@+id/allReviewsButton"
+        android:onClick="writeReview"/>
 
 </RelativeLayout>

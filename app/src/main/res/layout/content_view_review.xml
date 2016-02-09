@@ -9,14 +9,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="seniordesign.ratemybusinesspartners.ReviewResults"
-    tools:showIn="@layout/activity_review_results">
+    tools:context="seniordesign.ratemybusinesspartners.ViewReview"
+    tools:showIn="@layout/activity_view_review">
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/review_results_review_list_height"
-        android:id="@+id/reviewResultsListView">
-
-    </ListView>
 
 </RelativeLayout>

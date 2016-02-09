@@ -33,11 +33,14 @@
         <activity
             android:name=".Login"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Register"
             android:label="@string/title_activity_register"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ViewReview"
+            android:label="@string/title_activity_view_review"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

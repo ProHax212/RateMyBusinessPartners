@@ -7,9 +7,11 @@
 
     <!--Company Profile Strings-->
     <string name="company_profile_company_name">[Company Name]</string>
-    <string name="company_profile_reviews">Reviews:</string>
+    <string name="company_profile_reviews">Recent Reviews:</string>
     <string name="title_activity_login">Login</string>
     <string name="title_activity_register">Register</string>
+    <string name="company_profile_view_reviews">All Reviews</string>
+    <string name="company_profile_write_review">Write Review</string>
 
     <!--Login page Strings-->
     <string name="login_textView_username">Username</string>
@@ -27,5 +29,6 @@
     <string name="register_textView_password">Password</string>
     <string name="register_textView_confirmPassword">Confirm Password</string>
     <string name="register_button_register">Register</string>
+    <string name="title_activity_view_review">ViewReview</string>
 
 </resources>

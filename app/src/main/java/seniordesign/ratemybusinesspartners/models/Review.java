@@ -42,4 +42,9 @@ public class Review {
         return builder.toString();
     }
 
+    //Getters and Setters
+    public User getReviewer(){
+        return this.reviewer;
+    }
+
 }

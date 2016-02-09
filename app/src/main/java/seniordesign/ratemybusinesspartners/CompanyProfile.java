@@ -6,7 +6,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,17 +42,45 @@ public class CompanyProfile extends AppCompatActivity {
 
         //Initialize List View
         ListView reviewList = (ListView) findViewById(R.id.companyProfileReviewList);
+
+        reviewList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("ListView", "Item: " + position + " pressed");
+                TextView textView = (TextView) view;
+                Log.d("ListView", "Text: " + textView.getText().toString());
+                Review review = (Review) parent.getItemAtPosition(position);
+                Log.d("ListView", "Name: " + review.getReviewer().getUsername());
+            }
+        });
+
         //User user = (User) intent.getSerializableExtra("newUser");
         User user = new User("Elizabeth", "Pika", "pika@utexas.edu","wall-e mart", "zergbanger", "1234", "1234");
         Review[] companyReviews = {new Review(user, "This is the best company ever", "Walmart", 5), new Review(user, "I agree", "Walmart", 3)};
-        reviewArrayAdapter = new ArrayAdapter<Review>(this, android.R.layout.simple_list_item_1, new ArrayList<Review>());
+        reviewArrayAdapter = new ArrayAdapter<Review>(this, R.layout.review_list_item, new ArrayList<Review>());
         reviewList.setAdapter(reviewArrayAdapter);
+
+
 
         Review testReview = new Review(user, "This is a test review, please disregard (btw Abraham is awesome)", "Walmart", 5);
 
         for(int i = 0; i < 10; i++){
             reviewArrayAdapter.add(testReview);
         }
+    }
+
+
+    // Navigation Methods
+    public void viewAllReviews(View view){
+        Intent intent = new Intent(this, ReviewResults.class);
+        intent.putExtra(COMPANY_PROFILE_TARGET_COMPANY, this.currentCompany);
+        startActivity(intent);
+    }
+
+    public void writeReview(View view){
+        Intent intent = new Intent(this, WriteReview.class);
+        intent.putExtra(COMPANY_PROFILE_TARGET_COMPANY, this.currentCompany);
+        startActivity(intent);
     }
 
 }
