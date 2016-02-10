@@ -12,4 +12,10 @@
     tools:context="seniordesign.ratemybusinesspartners.WriteReview"
     tools:showIn="@layout/activity_write_review">
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/reviewEditText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"/>
 </RelativeLayout>

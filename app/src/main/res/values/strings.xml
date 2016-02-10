@@ -31,4 +31,13 @@
     <string name="register_button_register">Register</string>
     <string name="title_activity_view_review">ViewReview</string>
 
+    <!-- Review Results Strings -->
+    <string-array name="sort_by_options">
+        <item>Date - Ascending</item>
+        <item>Date - Descending</item>
+        <item>Rating - Ascending</item>
+        <item>Rating - Descending</item>
+    </string-array>
+    <string name="sort_by_prompt">Sort By:</string>
+
 </resources>

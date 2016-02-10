@@ -15,7 +15,7 @@ public class WriteReview extends AppCompatActivity {
         setContentView(R.layout.activity_write_review);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        
+
     }
 
 }
