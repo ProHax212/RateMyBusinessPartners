@@ -26,11 +26,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/writeReviewEditText"
         android:layout_below="@id/writeReviewCompanyTextView"
-        android:inputType="textMultiLine"
         android:lines="8"
-        android:gravity="top|left"
+        android:gravity="start"
         android:scrollbars="vertical"
-        android:imeOptions="actionDone"
         android:hint="@string/write_review_review_hint"/>
 
     <RatingBar

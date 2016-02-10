@@ -10,8 +10,8 @@
     <dimen name="divider_margin">2dp</dimen>
 
     <!-- Company Profile dimensions -->
-    <dimen name="company_information_text_size">20dp</dimen>
-    <dimen name="review_list_item_text_size">15dp</dimen>
+    <dimen name="company_information_text_size">20sp</dimen>
+    <dimen name="review_list_item_text_size">15sp</dimen>
     <dimen name="review_list_item_height">60dp</dimen>
     <dimen name="company_profile_review_list_height">200dp</dimen>
 
