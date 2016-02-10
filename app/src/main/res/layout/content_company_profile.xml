@@ -47,13 +47,17 @@
 
     </ListView>
 
+    <View style="@style/divider"
+        android:layout_height="@dimen/divider_height"
+        android:layout_below="@id/companyProfileReviewList"
+        android:id="@+id/companyProfileDividerOne"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/company_profile_view_reviews"
         android:id="@+id/allReviewsButton"
-        android:layout_below="@+id/companyProfileReviewList"
-        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/companyProfileDividerOne"
         android:onClick="viewAllReviews"/>
 
     <Button
@@ -63,6 +67,7 @@
         android:id="@+id/writeReviewButton"
         android:layout_alignBottom="@+id/allReviewsButton"
         android:layout_toRightOf="@+id/allReviewsButton"
+        android:layout_toEndOf="@+id/allReviewsButton"
         android:onClick="writeReview"/>
 
 </RelativeLayout>

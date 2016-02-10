@@ -6,6 +6,8 @@
     <dimen name="text_margin">16dp</dimen>
 
     <!-- General Dimensions -->
+    <dimen name="divider_height">5dp</dimen>
+    <dimen name="divider_margin">2dp</dimen>
 
     <!-- Company Profile dimensions -->
     <dimen name="company_information_text_size">20dp</dimen>
@@ -15,4 +17,7 @@
 
     <!-- Review Results dimensions -->
     <dimen name="review_results_review_list_height">300dp</dimen>
+
+    <!-- Write Review dimensions -->
+
 </resources>

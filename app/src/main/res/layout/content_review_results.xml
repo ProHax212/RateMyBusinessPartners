@@ -12,20 +12,32 @@
     tools:context="seniordesign.ratemybusinesspartners.ReviewResults"
     tools:showIn="@layout/activity_review_results">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/review_results_company_name_default"
+        android:textSize="@dimen/company_information_text_size"
+        android:id="@+id/reviewResultsCompanyName"/>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="@dimen/review_results_review_list_height"
+        android:layout_below="@id/reviewResultsCompanyName"
         android:id="@+id/reviewResultsListView">
-
     </ListView>
+
+    <View style="@style/divider"
+        android:layout_below="@id/reviewResultsListView"
+        android:id="@+id/reviewResultsDividerOne"/>
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/sortBySpinner"
-        android:layout_below="@+id/reviewResultsListView"
+        android:layout_below="@+id/reviewResultsDividerOne"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:spinnerMode="dropdown"/>
+        android:layout_alignParentStart="true"/>
 
 </RelativeLayout>

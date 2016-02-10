@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -33,6 +36,8 @@ public class ReviewResults extends AppCompatActivity {
 
         Intent intent = getIntent();
         currentCompany = intent.getStringExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY);
+        TextView companyName = (TextView) findViewById(R.id.reviewResultsCompanyName);
+        companyName.setText(currentCompany);
 
         //Initialize Reviews
         ListView reviewResults = (ListView) findViewById(R.id.reviewResultsListView);
