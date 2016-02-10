@@ -8,6 +8,7 @@
     <!-- General Dimensions -->
     <dimen name="divider_height">5dp</dimen>
     <dimen name="divider_margin">2dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
 
     <!-- Company Profile dimensions -->
     <dimen name="company_information_text_size">20sp</dimen>
