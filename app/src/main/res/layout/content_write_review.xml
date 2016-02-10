@@ -12,10 +12,37 @@
     tools:context="seniordesign.ratemybusinesspartners.WriteReview"
     tools:showIn="@layout/activity_write_review">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/writeReviewCompanyTextView"
+        android:textSize="@dimen/company_information_text_size"
+        android:text="@string/write_review_company_name_default"/>
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/reviewEditText"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"/>
+        android:id="@+id/writeReviewEditText"
+        android:layout_below="@id/writeReviewCompanyTextView"
+        android:inputType="textMultiLine"
+        android:hint="@string/write_review_review_hint"/>
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/reviewRatingBar"
+        android:layout_below="@+id/writeReviewEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/submitReviewButton"
+        android:layout_below="@+id/reviewRatingBar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
