@@ -19,14 +19,11 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_weight="1">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_textView_firstName" />
         <EditText
             android:id="@+id/register_editText_firstName"
             android:padding="10dp"
             android:inputType="text"
+            android:hint="@string/register_textView_firstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -37,14 +34,11 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_weight="1">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_textView_lastName" />
         <EditText
             android:id="@+id/register_editText_lastName"
             android:padding="10dp"
             android:inputType="text"
+            android:hint="@string/register_textView_lastName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -54,14 +48,11 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_weight="1">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_textView_email" />
         <EditText
             android:id="@+id/register_editText_email"
             android:padding="10dp"
             android:inputType="textEmailAddress"
+            android:hint="@string/register_textView_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -71,14 +62,11 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_weight="1">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_textView_company" />
         <EditText
             android:id="@+id/register_editText_company"
             android:padding="10dp"
             android:inputType="text"
+            android:hint="@string/register_textView_company"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -89,14 +77,11 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_weight="1">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_textView_username" />
         <EditText
             android:id="@+id/register_editText_username"
             android:paddingBottom="10dp"
             android:inputType="text"
+            android:hint="@string/register_textView_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -107,14 +92,11 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_weight="1">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_textView_password" />
         <EditText
             android:id="@+id/register_editText_password"
             android:padding="10dp"
             android:inputType="textPassword"
+            android:hint="@string/register_textView_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -125,14 +107,11 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_weight="1">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_textView_confirmPassword" />
         <EditText
             android:id="@+id/register_editText_confirmPassword"
             android:padding="10dp"
             android:inputType="textPassword"
+            android:hint="@string/register_textView_confirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

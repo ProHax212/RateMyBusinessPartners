@@ -53,5 +53,13 @@
         android:text="@string/login_textView_register"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"/>
+    <TextView
+        android:id="@+id/login_textView_failedLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_textView_failedLogin"
+        android:textSize="12sp"
+        android:textColor="#FF0000"
+        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>

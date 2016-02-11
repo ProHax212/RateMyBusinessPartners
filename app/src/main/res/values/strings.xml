@@ -19,6 +19,7 @@
     <string name="login_textView_title">Welcome to Rate My Business Partner</string>
     <string name="login_button_login">Login</string>
     <string name="login_textView_register"><u>Register Now</u></string>
+    <string name="login_textView_failedLogin">The username or password you entered was incorrect!</string>
 
     <!--Register page Strings-->
     <string name="register_textView_firstName">First Name</string>

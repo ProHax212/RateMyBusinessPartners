@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_id": "ratemybusinesspartners",
+    "project_number": "132195057733",
+    "name": "RateMyBusinessPartners"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132195057733:android:34db2509e728ab04",
+        "client_id": "android:seniordesign.ratemybusinesspartners",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "seniordesign.ratemybusinesspartners"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "132195057733-mu9icnckhitvkboj20f9ngqimvnlg3l4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "seniordesign.ratemybusinesspartners",
+            "certificate_hash": "918BBC78DB0D3C1566CBDE4C14442506645BAF63"
+          }
+        },
+        {
+          "client_id": "132195057733-0vb1eqsl6alv4tbv2v5q5louh21340u2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
