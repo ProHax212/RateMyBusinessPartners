@@ -45,7 +45,7 @@ public class ReviewResults extends AppCompatActivity {
         reviewResults.setAdapter(reviewResultsAdapter);
 
         User user = new User("Elizabeth", "Pika", "pika@utexas.edu","wall-e mart", "zergbanger", "1234", "1234");
-        Review testReview = new Review(user, "This is a test review, please disregard (btw Abraham is awesome)", "Walmart", 5);
+        Review testReview = new Review(user, "This is a test review, please disregard (btw Abraham is awesome)", "Walmart", 5f);
 
         for(int i = 0; i < 20; i++){
             reviewResultsAdapter.add(testReview);

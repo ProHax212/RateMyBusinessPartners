@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import seniordesign.ratemybusinesspartners.models.DummyDatabase;
 import seniordesign.ratemybusinesspartners.models.Review;
 import seniordesign.ratemybusinesspartners.models.User;
 
@@ -24,6 +25,7 @@ public class CompanyProfile extends AppCompatActivity {
 
     ArrayAdapter<Review> reviewArrayAdapter;
     String currentCompany;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,7 @@ public class CompanyProfile extends AppCompatActivity {
         //Retrieve Intent inputs
         Intent intent = getIntent();
         currentCompany = intent.getStringExtra(COMPANY_PROFILE_TARGET_COMPANY);
+        this.currentUser = intent.getParcelableExtra(MainActivity.CURRENT_USER);
 
         //Initialize profile information
         TextView companyNameTextView = (TextView) findViewById(R.id.companyNameTextView);
@@ -64,16 +67,16 @@ public class CompanyProfile extends AppCompatActivity {
 //        user.setConfirmPassword("ble");
 
         User user = new User("Elizabeth", "Pika", "pika@utexas.edu","wall-e mart", "zergbanger", "1234", "1234");
-        Review[] companyReviews = {new Review(user, "This is the best company ever", "Walmart", 5), new Review(user, "I agree", "Walmart", 3)};
+        Review[] companyReviews = {new Review(user, "This is the best company ever", "Walmart", 5f), new Review(user, "I agree", "Walmart", 3f)};
         reviewArrayAdapter = new ArrayAdapter<Review>(this, R.layout.review_list_item, new ArrayList<Review>());
         reviewList.setAdapter(reviewArrayAdapter);
 
 
 
-        Review testReview = new Review(user, "This is a test review, please disregard (btw Abraham is awesome)", "Walmart", 5);
+        Review testReview = new Review(user, "This is a test review, please disregard (btw Abraham is awesome)", "Walmart", 5f);
 
-        for(int i = 0; i < 10; i++){
-            reviewArrayAdapter.add(testReview);
+        for(Review review : DummyDatabase.reviews){
+            reviewArrayAdapter.add(review);
         }
     }
 
@@ -88,6 +91,7 @@ public class CompanyProfile extends AppCompatActivity {
     public void writeReview(View view){
         Intent intent = new Intent(this, WriteReview.class);
         intent.putExtra(COMPANY_PROFILE_TARGET_COMPANY, this.currentCompany);
+        intent.putExtra(MainActivity.CURRENT_USER, this.currentUser);
         startActivity(intent);
     }
 

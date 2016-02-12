@@ -10,7 +10,14 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import seniordesign.ratemybusinesspartners.models.User;
+
 public class MainActivity extends AppCompatActivity {
+
+    String targetCompany;
+    User currentUser;
+
+    public static final String CURRENT_USER = "com.ryan.current.user";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        this.targetCompany = "Walmart";
+        this.currentUser = new User("Ryan", "Comer", "ProHax", "ryancomer94@gmail.com", "University of Texas", "1234", "1234");
     }
 
     @Override
@@ -47,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     public void switchToCompanyProfile(View view){
         Intent intent = new Intent(this, CompanyProfile.class);
         intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
+        intent.putExtra(this.CURRENT_USER, this.currentUser);
 
         startActivity(intent);
     }
