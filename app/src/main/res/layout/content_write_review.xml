@@ -47,4 +47,13 @@
         android:layout_alignParentStart="true"
         android:onClick="submitReview"/>
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/write_review_anonymous_checkbox"
+        android:id="@+id/anonymousCheckbox"
+        android:layout_alignBaseline="@+id/submitReviewButton"
+        android:layout_toRightOf="@+id/submitReviewButton"
+        android:layout_toEndOf="@+id/submitReviewButton" />
+
 </RelativeLayout>

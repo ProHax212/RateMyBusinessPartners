@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import seniordesign.ratemybusinesspartners.adapters.ReviewListAdapter;
 import seniordesign.ratemybusinesspartners.models.DummyDatabase;
 import seniordesign.ratemybusinesspartners.models.Review;
 import seniordesign.ratemybusinesspartners.models.User;
@@ -23,7 +24,7 @@ public class CompanyProfile extends AppCompatActivity {
 
     public static final String COMPANY_PROFILE_TARGET_COMPANY = "com.ryan.target.company";
 
-    ArrayAdapter<Review> reviewArrayAdapter;
+    ReviewListAdapter reviewArrayAdapter;
     String currentCompany;
     private User currentUser;
 
@@ -46,34 +47,8 @@ public class CompanyProfile extends AppCompatActivity {
         //Initialize List View
         ListView reviewList = (ListView) findViewById(R.id.companyProfileReviewList);
 
-        reviewList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("ListView", "Item: " + position + " pressed");
-                TextView textView = (TextView) view;
-                Log.d("ListView", "Text: " + textView.getText().toString());
-                Review review = (Review) parent.getItemAtPosition(position);
-                Log.d("ListView", "Name: " + review.getReviewer().getUsername());
-            }
-        });
-
-//        User user = (User) intent.getSerializableExtra("newUser");
-//        user.setFirstName("Elizabeth");
-//        user.setLastname("Bob");
-//        user.setEmail("pika@utexas.edu");
-//        user.setCompany("Audi");
-//        user.setUsername("blah");
-//        user.setPassword("s");
-//        user.setConfirmPassword("ble");
-
-        User user = new User("Elizabeth", "Pika", "pika@utexas.edu","wall-e mart", "zergbanger", "1234", "1234");
-        Review[] companyReviews = {new Review(user, "This is the best company ever", "Walmart", 5f), new Review(user, "I agree", "Walmart", 3f)};
-        reviewArrayAdapter = new ArrayAdapter<Review>(this, R.layout.review_list_item, new ArrayList<Review>());
+        reviewArrayAdapter = new ReviewListAdapter(this, new ArrayList<Review>());
         reviewList.setAdapter(reviewArrayAdapter);
-
-
-
-        Review testReview = new Review(user, "This is a test review, please disregard (btw Abraham is awesome)", "Walmart", 5f);
 
         for(Review review : DummyDatabase.reviews){
             reviewArrayAdapter.add(review);
@@ -85,6 +60,7 @@ public class CompanyProfile extends AppCompatActivity {
     public void viewAllReviews(View view){
         Intent intent = new Intent(this, ReviewResults.class);
         intent.putExtra(COMPANY_PROFILE_TARGET_COMPANY, this.currentCompany);
+        intent.putExtra(MainActivity.CURRENT_USER, this.currentUser);
         startActivity(intent);
     }
 

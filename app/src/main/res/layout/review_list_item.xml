@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    <TableRow>
+    <RatingBar
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/reviewRatingBar"
+        android:rating="3"/>
+    </TableRow>
+
+    <TableRow>
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/reviewTextView"
         android:textSize="@dimen/review_list_item_text_size"/>
+    </TableRow>
+
+</TableLayout>

@@ -14,16 +14,18 @@ public class Review {
     private String targetCompanyName;
     private Float numStars;
     private Calendar dateCreated;
+    private boolean isUserAnonymous;
 
 
 
-    public Review(User reviewer, String reviewText, String targetCompanyName, Float numStars){
+    public Review(User reviewer, String reviewText, String targetCompanyName, Float numStars, boolean isUserAnonymous){
 
         this.reviewer = reviewer;
         this.reviewText = reviewText;
         this.targetCompanyName = targetCompanyName;
         this.numStars = numStars;
         this.dateCreated = Calendar.getInstance();
+        this.isUserAnonymous = isUserAnonymous;
 
     }
 
@@ -38,9 +40,11 @@ public class Review {
     public String toString(){
         StringBuilder builder = new StringBuilder();
 
-        builder.append(this.targetCompanyName + "\n");
-        builder.append(reviewer.getUsername() + "\t\t");
-        builder.append("Stars: " + this.numStars);
+        if(!this.isUserAnonymous){
+            builder.append(reviewer.getUsername() + "\t\t");
+        }else{
+            builder.append("Anonymous");
+        }
         builder.append("\n" + this.reviewText);
 
         return builder.toString();
@@ -49,6 +53,10 @@ public class Review {
     //Getters and Setters
     public User getReviewer(){
         return this.reviewer;
+    }
+
+    public float getNumStars(){
+        return this.numStars;
     }
 
 }

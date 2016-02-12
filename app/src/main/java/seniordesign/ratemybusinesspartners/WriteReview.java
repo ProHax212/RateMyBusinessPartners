@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -52,13 +53,13 @@ public class WriteReview extends AppCompatActivity {
         RatingBar reviewRatingBar = (RatingBar) findViewById(R.id.reviewRatingBar);
         Float numStars = reviewRatingBar.getRating();
 
-        Log.d("Stars", Float.toString(numStars));
+        CheckBox remainAnonymousCheckbox = (CheckBox)findViewById(R.id.anonymousCheckbox);
 
         User reviewer = this.currentUser;
 
         String targetCompany = this.currentCompany;
 
-        Review review = new Review(reviewer, reviewText, targetCompany, numStars);
+        Review review = new Review(reviewer, reviewText, targetCompany, numStars, remainAnonymousCheckbox.isChecked());
 
         DummyDatabase.reviews.add(review);
 
