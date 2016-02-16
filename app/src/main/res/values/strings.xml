@@ -5,6 +5,10 @@
     <string name="title_activity_write_review">WriteReview</string>
     <string name="title_activity_review_results">ReviewResults</string>
 
+    <!-- Main -->
+    <string name="main_textView_title">Rate My Business Partners</string>
+    <string name="signed_in_fmt">Signed in as: %s</string>
+
     <!--Company Profile Strings-->
     <string name="company_profile_company_name">[Company Name]</string>
     <string name="company_profile_reviews">Recent Reviews:</string>
@@ -20,7 +24,6 @@
     <string name="login_button_login">Login</string>
     <string name="login_textView_register"><u>Register Now</u></string>
     <string name="login_textView_failedLogin">The username or password you entered was incorrect!</string>
-    <string name="signed_in_fmt">Signed in as: %s</string>
 
     <!--Register page Strings-->
     <string name="register_textView_firstName">First Name</string>

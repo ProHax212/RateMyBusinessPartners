@@ -21,7 +21,6 @@
             app:popupTheme="@style/AppTheme.PopupOverlay">
             <TextView
                 android:id="@+id/login_textView_title"
-                android:text="@string/login_textView_title"
                 android:textSize="20sp"
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"

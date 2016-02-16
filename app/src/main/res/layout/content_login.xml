@@ -77,8 +77,8 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" >
-        <!--android:background="@color/blue_grey_900">-->
+        android:layout_weight="1"
+        android:background="@color/blue_grey_900">
 
         <!--<com.google.android.gms.common.SignInButton-->
             <!--android:id="@+id/sign_in_button"-->
@@ -104,16 +104,16 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Sign Out" />
-                <!--android:theme="@style/ThemeOverlay.MyDarkButton" />-->
+                android:text="Sign Out"
+                android:theme="@style/ThemeOverlay.MyDarkButton" />
 
             <Button
                 android:id="@+id/disconnect_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Disconnect" />
-                <!--android:theme="@style/ThemeOverlay.MyDarkButton" />-->
+                android:text="Disconnect"
+                android:theme="@style/ThemeOverlay.MyDarkButton" />
         </LinearLayout>
 
     </RelativeLayout>
