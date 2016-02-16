@@ -39,12 +39,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/login_button_login"
-        android:text="@string/login_button_login"
-        android:layout_gravity="center_horizontal"
+    <!--<Button-->
+        <!--android:id="@+id/login_button_login"-->
+        <!--android:text="@string/login_button_login"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/login_textView_register"
@@ -60,6 +65,57 @@
         android:text="@string/login_textView_failedLogin"
         android:textSize="12sp"
         android:textColor="#FF0000"
+        android:visibility="invisible"
         android:layout_gravity="center_horizontal"/>
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Signed Out"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+        <!--android:background="@color/blue_grey_900">-->
+
+        <!--<com.google.android.gms.common.SignInButton-->
+            <!--android:id="@+id/sign_in_button"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:visibility="visible"-->
+            <!--tools:visibility="gone" />-->
+
+        <LinearLayout
+            android:id="@+id/sign_out_and_disconnect"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <Button
+                android:id="@+id/sign_out_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Sign Out" />
+                <!--android:theme="@style/ThemeOverlay.MyDarkButton" />-->
+
+            <Button
+                android:id="@+id/disconnect_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Disconnect" />
+                <!--android:theme="@style/ThemeOverlay.MyDarkButton" />-->
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>
