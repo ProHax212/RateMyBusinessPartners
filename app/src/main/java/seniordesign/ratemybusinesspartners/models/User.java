@@ -1,11 +1,12 @@
 package seniordesign.ratemybusinesspartners.models;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Ryan Comer on 2/4/2016.
  */
-public class User implements Serializable {
+public class User implements Parcelable {
     public static final String LOGIN_USERNAME = "test username";
     public static final String LOGIN_PASSWORD = "test password";
 
@@ -90,6 +91,32 @@ public class User implements Serializable {
         this.confirmPassword = confirmPassword;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.firstname);
+        dest.writeString(this.lastname);
+        dest.writeString(this.username);
+        dest.writeString(this.email);
+        dest.writeString(this.company);
+        dest.writeString(this.password);
+        dest.writeString(this.confirmPassword);
+    }
 
+    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>(){
+
+        @Override
+        public User createFromParcel(Parcel source) {
+            return new User(source.readString(), source.readString(), source.readString(), source.readString(), source.readString(), source.readString(), source.readString());
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[0];
+        }
+    };
 }

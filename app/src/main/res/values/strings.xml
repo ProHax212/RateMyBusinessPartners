@@ -41,13 +41,23 @@
         <item>Rating - Ascending</item>
         <item>Rating - Descending</item>
     </string-array>
+    <string-array name="review_results_date_options">
+        <item>All</item>
+        <item>Last week</item>
+        <item>Last month</item>
+        <item>Last 3 months</item>
+        <item>Last 6 months</item>
+        <item>Last 12 months</item>
+    </string-array>
+    <string name="review_results_spinner_sort_by">Sort By:</string>
 
 
     <!-- Write Review Strings -->
     <string name="write_review_company_name_default">[Company Name]</string>
     <string name="write_review_submit_review">Submit</string>
     <string name="write_review_review_hint">Write your review...</string>
+    <string name="write_review_anonymous_checkbox">Anonymous Review</string>
 
-    <!-- View Strings -->
+    <!-- View Review Strings -->
 
 </resources>
