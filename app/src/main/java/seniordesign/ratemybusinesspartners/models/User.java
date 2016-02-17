@@ -6,8 +6,8 @@ import android.os.Parcelable;
 /**
  * Created by Ryan Comer on 2/4/2016.
  */
-public class User implements Parcelable {
-    public static final String LOGIN_USERNAME = "test username";
+public class User {
+    /*public static final String LOGIN_USERNAME = "test username";
     public static final String LOGIN_PASSWORD = "test password";
 
     public static final String REGISTER_FIRSTNAME = "TEST FIRSTNAME";
@@ -24,9 +24,20 @@ public class User implements Parcelable {
     private String email;
     private String company;
     private String password;
-    private String confirmPassword;
+    private String confirmPassword;*/
 
-    public User() {
+    private String userIdToken;
+    private String company;
+
+    public User(){
+
+    }
+
+    public User (String userIdToken, String company){
+
+    }
+
+    /*public User() {
         this.firstname = "Bruce";
         this.lastname = "Wayne";
         this.email = "Bruce.Wayne@utexas.edu";
@@ -118,5 +129,5 @@ public class User implements Parcelable {
         public User[] newArray(int size) {
             return new User[0];
         }
-    };
+    };*/
 }
