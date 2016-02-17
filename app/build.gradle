@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "seniordesign.ratemybusinesspartners"
-        minSdkVersion 9//changed from 8 to 9 to be compatible with google play services
+        minSdkVersion 10//changed from 8 to 9 to be compatible with google play services
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -28,4 +28,9 @@ dependencies {
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.google.android.gms:play-services-auth:8.3.0'
+    compile files('libs/aws-android-sdk-core-2.2.12.jar')
+    compile files('libs/aws-android-sdk-cognito-2.2.12.jar')
+    compile files('libs/aws-android-sdk-ddb-2.2.12.jar')
+    compile files('libs/aws-android-sdk-s3-2.2.12.jar')
+    compile files('libs/aws-android-sdk-ddb-mapper-2.2.12.jar')
 }

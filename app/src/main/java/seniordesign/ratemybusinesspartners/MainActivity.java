@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+//Google API
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -22,9 +24,20 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+//AWS API
+import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
+import com.amazonaws.mobileconnectors.cognito.Dataset;
+import com.amazonaws.mobileconnectors.cognito.DefaultSyncCallback;
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.*;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
+import com.amazonaws.services.dynamodbv2.model.*;
+
+import java.util.List;
 
 import seniordesign.ratemybusinesspartners.models.User;
 
@@ -70,9 +83,35 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         mStatusTextView = (TextView) findViewById(R.id.status);
 
 
+        //Amazon Testing
+        // Initialize the Amazon Cognito credentials provider
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                "us-east-1:f5ba73d3-acbf-45bb-83e2-e4fbe40f269c", // Identity Pool ID
+                Regions.US_EAST_1 // Region
+        );
+
+        // Initialize the Cognito Sync client
+        CognitoSyncManager syncClient = new CognitoSyncManager(
+                getApplicationContext(),
+                Regions.US_EAST_1, // Region
+                credentialsProvider);
+
+        // Create a record in a dataset and synchronize with the server
+        Dataset dataset = syncClient.openOrCreateDataset("myDataset");
+        dataset.put("myKey", "myValue");
+        dataset.synchronize(new DefaultSyncCallback() {
+            @Override
+            public void onSuccess(Dataset dataset, List newRecords) {
+                //Your handler code here
+            }
+        });
+
+        AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+        DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
 
 
-
+        //Company Profile
         this.targetCompany = "Walmart";
         this.currentUser = new User("Ryan", "Comer", "ProHax", "ryancomer94@gmail.com", "University of Texas", "1234", "1234");
     }
@@ -131,11 +170,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
         intent.putExtra(this.CURRENT_USER, this.currentUser);
 
-        startActivity(intent);
-    }
-
-    public void switchToLogin(View view){
-        Intent intent = new Intent(this, Login.class);
         startActivity(intent);
     }
 
