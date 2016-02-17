@@ -1,6 +1,7 @@
 package seniordesign.ratemybusinesspartners;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -38,7 +39,9 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
 import com.amazonaws.services.dynamodbv2.model.*;
 
 import java.util.List;
+import java.util.Random;
 
+import seniordesign.ratemybusinesspartners.models.Book;
 import seniordesign.ratemybusinesspartners.models.User;
 
 public class MainActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     private static final String TAG = "SignInActivity";
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
+
+    private DynamoDBMapper mapper;
 
 
     @Override
@@ -108,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         });
 
         AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
-        DynamoDBMapper mapper = new DynamoDBMapper(ddbClient);
+        mapper = new DynamoDBMapper(ddbClient);
 
 
         //Company Profile
@@ -169,6 +174,28 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         Intent intent = new Intent(this, CompanyProfile.class);
         intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
         intent.putExtra(this.CURRENT_USER, this.currentUser);
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+                Random rand = new Random();
+
+                Book book = new Book();
+                book.setTitle("Moby Dick");
+                book.setAuthor("Charles Dickens");
+                book.setPrice(1299);
+                book.setIsbn(Integer.toString(rand.nextInt()));
+                book.setHardCover(false);
+
+                mapper.save(book);
+
+            }
+        };
+
+        Thread thread = new Thread(runnable);
+
+        thread.start();
 
         startActivity(intent);
     }
