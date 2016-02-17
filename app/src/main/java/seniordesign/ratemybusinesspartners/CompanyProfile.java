@@ -38,7 +38,6 @@ public class CompanyProfile extends AppCompatActivity {
         //Retrieve Intent inputs
         Intent intent = getIntent();
         currentCompany = intent.getStringExtra(COMPANY_PROFILE_TARGET_COMPANY);
-        this.currentUser = intent.getParcelableExtra(MainActivity.CURRENT_USER);
 
         //Initialize profile information
         TextView companyNameTextView = (TextView) findViewById(R.id.companyNameTextView);
@@ -60,14 +59,12 @@ public class CompanyProfile extends AppCompatActivity {
     public void viewAllReviews(View view){
         Intent intent = new Intent(this, ReviewResults.class);
         intent.putExtra(COMPANY_PROFILE_TARGET_COMPANY, this.currentCompany);
-        intent.putExtra(MainActivity.CURRENT_USER, this.currentUser);
         startActivity(intent);
     }
 
     public void writeReview(View view){
         Intent intent = new Intent(this, WriteReview.class);
         intent.putExtra(COMPANY_PROFILE_TARGET_COMPANY, this.currentCompany);
-        intent.putExtra(MainActivity.CURRENT_USER, this.currentUser);
         startActivity(intent);
     }
 

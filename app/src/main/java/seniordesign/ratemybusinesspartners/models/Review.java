@@ -41,7 +41,7 @@ public class Review {
         StringBuilder builder = new StringBuilder();
 
         if(!this.isUserAnonymous){
-            builder.append(reviewer.getUsername() + "\t\t");
+            builder.append(reviewer.getUserIdToken() + "\t\t");
         }else{
             builder.append("Anonymous");
         }

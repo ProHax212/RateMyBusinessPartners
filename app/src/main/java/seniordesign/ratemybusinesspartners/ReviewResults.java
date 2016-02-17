@@ -42,7 +42,6 @@ public class ReviewResults extends AppCompatActivity {
 
         Intent intent = getIntent();
         currentCompany = intent.getStringExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY);
-        currentUser = intent.getParcelableExtra(MainActivity.CURRENT_USER);
         TextView companyName = (TextView) findViewById(R.id.reviewResultsCompanyName);
         companyName.setText(currentCompany);
 

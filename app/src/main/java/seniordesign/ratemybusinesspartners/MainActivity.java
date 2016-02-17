@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
 
         //Company Profile
         this.targetCompany = "Walmart";
-        this.currentUser = new User("Ryan", "Comer", "ProHax", "ryancomer94@gmail.com", "University of Texas", "1234", "1234");
     }
 
     @Override
@@ -173,7 +172,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     public void switchToCompanyProfile(View view){
         Intent intent = new Intent(this, CompanyProfile.class);
         intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
-        intent.putExtra(this.CURRENT_USER, this.currentUser);
 
         Runnable runnable = new Runnable() {
             @Override
@@ -195,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
 
         Thread thread = new Thread(runnable);
 
-        thread.start();
+        //thread.start();
 
         startActivity(intent);
     }

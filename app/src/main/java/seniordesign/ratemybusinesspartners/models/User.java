@@ -37,6 +37,10 @@ public class User {
 
     }
 
+    public String getUserIdToken(){
+        return this.userIdToken;
+    }
+
     /*public User() {
         this.firstname = "Bruce";
         this.lastname = "Wayne";

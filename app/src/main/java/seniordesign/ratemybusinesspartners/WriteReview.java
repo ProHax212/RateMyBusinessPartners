@@ -21,7 +21,6 @@ import seniordesign.ratemybusinesspartners.models.User;
 public class WriteReview extends AppCompatActivity {
 
     private String currentCompany;
-    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +35,6 @@ public class WriteReview extends AppCompatActivity {
         currentCompany = intent.getStringExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY);
         TextView companyName = (TextView) findViewById(R.id.writeReviewCompanyTextView);
         companyName.setText(currentCompany);
-
-        this.currentUser = intent.getParcelableExtra(MainActivity.CURRENT_USER);
     }
 
 
@@ -55,7 +52,7 @@ public class WriteReview extends AppCompatActivity {
 
         CheckBox remainAnonymousCheckbox = (CheckBox)findViewById(R.id.anonymousCheckbox);
 
-        User reviewer = this.currentUser;
+        User reviewer = new User("Dummy ID Token", "Walmart");
 
         String targetCompany = this.currentCompany;
 
@@ -66,7 +63,6 @@ public class WriteReview extends AppCompatActivity {
         // Switch back to Company Profile page
         Intent intent = new Intent(this, CompanyProfile.class);
         intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, this.currentCompany);
-        intent.putExtra(MainActivity.CURRENT_USER, this.currentUser);
 
         startActivity(intent);
 
