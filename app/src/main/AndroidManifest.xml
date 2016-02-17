@@ -35,6 +35,7 @@
             android:name=".ViewReview"
             android:label="@string/title_activity_view_review"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".SelectCompanyPopUp" />
     </application>
 
 </manifest>

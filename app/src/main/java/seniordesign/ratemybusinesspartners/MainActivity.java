@@ -1,7 +1,6 @@
 package seniordesign.ratemybusinesspartners;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -44,7 +45,7 @@ import java.util.Random;
 import seniordesign.ratemybusinesspartners.models.Book;
 import seniordesign.ratemybusinesspartners.models.User;
 
-public class MainActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     String targetCompany;
     User currentUser;
@@ -55,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     private static final String TAG = "SignInActivity";
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
+
+    //Select Company
+    private static final int RC_COMPANY_SELECTION = 9002;
+    public static final String SELECTED_COMPANY = "";
 
     private DynamoDBMapper mapper;
 
@@ -150,6 +155,10 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
+        } else if (requestCode == RC_COMPANY_SELECTION) {
+            if(resultCode == RC_COMPANY_SELECTION) {
+                Log.d("COMPANY IS: ", data.getStringExtra(SELECTED_COMPANY));
+            }
         }
     }
 
@@ -205,7 +214,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     }
     // [END SignIn]
 
-    // [START signOut]
     private void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
@@ -217,9 +225,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                     }
                 });
     }
-    // [END signOut]
 
-    // [START revokeAccess]
     private void revokeAccess() {
         Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
@@ -231,13 +237,17 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                     }
                 });
     }
-    // [END revokeAccess]
 
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
+            String userIDToken = acct.getIdToken();
+            if(true) {
+                Intent intent = new Intent(MainActivity.this, SelectCompanyPopUp.class);
+                startActivityForResult(intent, RC_COMPANY_SELECTION);
+            }
             mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             findViewById(R.id.status).setVisibility(View.VISIBLE);
             updateUI(true);
@@ -248,13 +258,21 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     }
 
     private void updateUI(boolean signedIn) {
+        mStatusTextView.postDelayed(new Runnable(){
+            @Override
+            public void run()
+            {
+                mStatusTextView.setVisibility(View.GONE);
+            }
+        }, 10000);
         if (signedIn) {
+            mStatusTextView.setVisibility(View.VISIBLE);
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
             findViewById(R.id.disconnect_button).setVisibility(View.VISIBLE);
         } else {
-            mStatusTextView.setText("SIGNED OUT");
-
+            mStatusTextView.setVisibility(View.VISIBLE);
+            mStatusTextView.setText(R.string.main_textView_signedout);
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.sign_out_button).setVisibility(View.GONE);
             findViewById(R.id.disconnect_button).setVisibility(View.GONE);
