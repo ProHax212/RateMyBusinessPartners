@@ -14,7 +14,7 @@ public class Book {
     private String isbn;
     private Boolean hardCover;
 
-    @DynamoDBIndexRangeKey(attributeName = "Title")
+    @DynamoDBAttribute(attributeName = "Title")
     public String getTitle() {
         return title;
     }
@@ -23,7 +23,7 @@ public class Book {
         this.title = title;
     }
 
-    @DynamoDBIndexHashKey(attributeName = "Author")
+    @DynamoDBAttribute(attributeName = "Author")
     public String getAuthor() {
         return author;
     }

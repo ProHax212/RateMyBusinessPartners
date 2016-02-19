@@ -2,6 +2,7 @@ package seniordesign.ratemybusinesspartners;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.MainThread;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -39,6 +40,13 @@ import com.amazonaws.services.dynamodbv2.*;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
 import com.amazonaws.services.dynamodbv2.model.*;
 
+//Dynamo
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexHashKey;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRangeKey;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
+
 import java.util.List;
 import java.util.Random;
 
@@ -60,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     //Select Company
     private static final int RC_COMPANY_SELECTION = 9002;
     public static final String SELECTED_COMPANY = "";
+    private static boolean hasCompany = false;
+    private String userIdToken;
+    private String company;
 
     private DynamoDBMapper mapper;
 
@@ -81,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
+                .requestIdToken(getString(R.string.server_client_id))
                 .build();
 
         // Build a GoogleApiClient with access to the Google Sign-In API and the
@@ -156,9 +168,20 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         } else if (requestCode == RC_COMPANY_SELECTION) {
-            if(resultCode == RC_COMPANY_SELECTION) {
-                Log.d("COMPANY IS: ", data.getStringExtra(SELECTED_COMPANY));
-            }
+            data.getData();
+            company = data.getStringExtra(SELECTED_COMPANY);
+            Runnable runSaveItem = new Runnable() {
+                @Override
+                public void run() {
+                    User user = new User();
+                    user.setUserIdToken(userIdToken);
+                    user.setCompany(company);
+
+                    mapper.save(user);
+                }
+            };
+            Thread thread = new Thread(runSaveItem);
+            thread.start();
         }
     }
 
@@ -181,29 +204,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     public void switchToCompanyProfile(View view){
         Intent intent = new Intent(this, CompanyProfile.class);
         intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
-
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-
-                Random rand = new Random();
-
-                Book book = new Book();
-                book.setTitle("Moby Dick");
-                book.setAuthor("Charles Dickens");
-                book.setPrice(1299);
-                book.setIsbn(Integer.toString(rand.nextInt()));
-                book.setHardCover(false);
-
-                mapper.save(book);
-
-            }
-        };
-
-        Thread thread = new Thread(runnable);
-
-        //thread.start();
-
         startActivity(intent);
     }
 
@@ -243,8 +243,42 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            String userIDToken = acct.getIdToken();
-            if(true) {
+            userIdToken = acct.getIdToken();
+            Runnable runLoadItem = new Runnable() {
+                @Override
+                public void run() {
+                    User partitionKeyKeyValues = new User();
+
+                    partitionKeyKeyValues.setUserIdToken(userIdToken);
+                    DynamoDBQueryExpression<User> queryExpression = new DynamoDBQueryExpression<User>()
+                            .withHashKeyValues(partitionKeyKeyValues);
+
+                    List<User> itemList = mapper.query(User.class, queryExpression);
+                    if(itemList.size() > 0) { MainActivity.hasCompany = true; }
+                    else { MainActivity.hasCompany = false; }
+                    Log.d("ITEMLIST SIZE: ", itemList.size() + "");
+                    Log.d("hascompany: ", MainActivity.hasCompany + "");
+                    if(MainActivity.hasCompany) {
+                        Log.d("TOKENID: ", itemList.get(0).getUserIdToken());
+                        Log.d("COMPANY: ", itemList.get(0).getCompany());
+                    }
+
+//                  User user = mapper.load(User.class, "0");
+//
+//                  Log.d("USERID: ", user.getUserIdToken());
+//                  Log.d("COMPANY: ", user.getCompany());
+                }
+            };
+
+            Thread thread = new Thread(runLoadItem);
+            thread.start();
+            try {
+                thread.join();
+            } catch(Exception e) {
+
+            }
+            Log.d("is there a company: ", MainActivity.hasCompany + "...");
+            if(!MainActivity.hasCompany) {
                 Intent intent = new Intent(MainActivity.this, SelectCompanyPopUp.class);
                 startActivityForResult(intent, RC_COMPANY_SELECTION);
             }

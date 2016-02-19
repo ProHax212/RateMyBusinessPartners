@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.hardware.SensorEventListener;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -51,12 +52,13 @@ public class SelectCompanyPopUp extends Activity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         selectCompanySpinner.setAdapter(adapter);
-        company = selectCompanySpinner.getSelectedItem().toString();
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                company = selectCompanySpinner.getSelectedItem().toString();
                 Intent intent = new Intent(SelectCompanyPopUp.this, MainActivity.class);
+                Log.d("POPUP COMPANY: ", company);
                 intent.putExtra(MainActivity.SELECTED_COMPANY, company);
                 setResult(COMPANY_SELECTION, intent);
                 finish();

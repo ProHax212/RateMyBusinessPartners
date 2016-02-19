@@ -4,7 +4,7 @@
     <string name="title_activity_company_profile">CompanyProfile</string>
     <string name="title_activity_write_review">WriteReview</string>
     <string name="title_activity_review_results">ReviewResults</string>
-
+    <string name="server_client_id">132195057733-0vb1eqsl6alv4tbv2v5q5louh21340u2.apps.googleusercontent.com</string>
     <!-- Main -->
     <string name="main_textView_title">Rate My Business Partners</string>
     <string name="signed_in_fmt">Signed in as: %s</string>
