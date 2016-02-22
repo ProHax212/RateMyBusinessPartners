@@ -21,6 +21,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBQueryExp
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryList;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.marshallers.CalendarToStringMarshaller;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
@@ -97,7 +98,7 @@ public class ReviewResults extends AppCompatActivity {
         reviewResults.setAdapter(reviewResultsAdapter);
 
         AsyncListUpdate updater = new AsyncListUpdate();
-        updater.execute(SORT_BY_DATE_DESCENDING, SHOW_ALL);
+        updater.execute(SORT_BY_DATE_DESCENDING, SHOW_LAST_6_MONTHS);
 
     }
 
@@ -158,7 +159,7 @@ public class ReviewResults extends AppCompatActivity {
      * UI operations have to be done on the onPreExecute() and onPostExecute() methods
      * The doInBackground() method is used to run the actual database scan
      */
-    private class AsyncListUpdate extends AsyncTask<String, String, PaginatedScanList<Review>> {
+    private class AsyncListUpdate extends AsyncTask<String, String, ArrayList<Review>> {
 
         @Override
         protected void onPreExecute(){
@@ -169,21 +170,75 @@ public class ReviewResults extends AppCompatActivity {
         }
 
         @Override
-        protected PaginatedScanList<Review> doInBackground(String... params) {
+        protected ArrayList<Review> doInBackground(String... params) {
+
+
+            Calendar relativeCalendar = Calendar.getInstance(); // Use this to filter based on result date
+            CalendarToStringMarshaller calendarMarshaller = CalendarToStringMarshaller.instance();  // Marshaller to turn the Calendar into a String
             Map<String, AttributeValue> attributeValueMap = new HashMap<>();
-            attributeValueMap.put(":v1", new AttributeValue().withN("4"));
-            DynamoDBScanExpression scanExpression = new DynamoDBScanExpression().withFilterExpression("Rating >= :v1")
-                    .withExpressionAttributeValues(attributeValueMap);
+            Map<String, String> attributeNameMap = new HashMap<>();
+            DynamoDBScanExpression scanExpression;
+
+            // Filter by date
+            attributeNameMap.put("#D", "Date Created");
+            switch (params[1]){
+
+                case SHOW_ALL:
+                    scanExpression = new DynamoDBScanExpression();
+                    break;
+                case SHOW_LAST_WEEK:
+                    relativeCalendar.set(Calendar.WEEK_OF_MONTH, relativeCalendar.get(Calendar.WEEK_OF_MONTH) - 1);
+                    attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
+                    scanExpression = new DynamoDBScanExpression().withFilterExpression("#D > :v1")
+                            .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
+                    break;
+                case SHOW_LAST_MONTH:
+                    relativeCalendar.set(Calendar.MONTH, relativeCalendar.get(Calendar.MONTH) - 1);
+                    attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
+                    scanExpression = new DynamoDBScanExpression().withFilterExpression("#D > :v1")
+                            .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
+                    break;
+                case SHOW_LAST_3_MONTHS:
+                    relativeCalendar.set(Calendar.MONTH, relativeCalendar.get(Calendar.MONTH) - 3);
+                    attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
+                    scanExpression = new DynamoDBScanExpression().withFilterExpression("#D > :v1")
+                            .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
+                    break;
+                case SHOW_LAST_6_MONTHS:
+                    relativeCalendar.set(Calendar.MONTH, relativeCalendar.get(Calendar.MONTH) - 6);
+                    attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
+                    scanExpression = new DynamoDBScanExpression().withFilterExpression("#D > :v1")
+                            .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
+                    break;
+                case SHOW_LAST_12_MONTHS:
+                    relativeCalendar.set(Calendar.MONTH, relativeCalendar.get(Calendar.MONTH) - 12);
+                    attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
+                    scanExpression = new DynamoDBScanExpression().withFilterExpression("#D > :v1")
+                            .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
+                    break;
+                default:
+                    scanExpression = new DynamoDBScanExpression();
+                    break;
+
+            }
+
             PaginatedScanList<Review> scannedReviews = ryanMapper.scan(Review.class, scanExpression);
 
-            return scannedReviews;
+            ArrayList<Review> resultsList = new ArrayList<>();
+            for(Review review : scannedReviews){
+                resultsList.add(review);
+            }
+
+            return resultsList;
         }
 
         @Override
-        protected void onPostExecute(PaginatedScanList<Review> scanList){
+        protected void onPostExecute(ArrayList<Review> scanList){
 
             for(Review review : scanList){
                 reviewResultsAdapter.add(review);
+                Log.d("Review", review.getReviewText());
+                Log.d("Date", review.getDateCreated().getTime().toString());
             }
 
         }
