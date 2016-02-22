@@ -17,15 +17,22 @@ import android.widget.TextView;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBQueryExpression;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryList;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.Condition;
 
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import seniordesign.ratemybusinesspartners.adapters.ReviewListAdapter;
 import seniordesign.ratemybusinesspartners.models.DummyDatabase;
@@ -33,6 +40,19 @@ import seniordesign.ratemybusinesspartners.models.Review;
 import seniordesign.ratemybusinesspartners.models.User;
 
 public class ReviewResults extends AppCompatActivity {
+
+    // Strings to dictate queries
+    public static final String SORT_BY_DATE_ASCENDING = "ReviewResults.Sort-Ascending";
+    public static final String SORT_BY_DATE_DESCENDING = "ReviewResults.Sort-Date-Descending";
+    public static final String SORT_BY_RATING_ASCENDING = "ReviewResults.Sort-Rating-Ascending";
+    public static final String SORT_BY_RATING_DESCENDING = "ReviewResults.Sort-Rating-Descending";
+
+    public static final String SHOW_ALL = "ReviewResults.Show-All";
+    public static final String SHOW_LAST_WEEK = "ReviewResults.Show-Last-Week";
+    public static final String SHOW_LAST_MONTH = "ReviewResults.Show-Last-Month";
+    public static final String SHOW_LAST_3_MONTHS = "ReviewResults.Show-Last-3-Months";
+    public static final String SHOW_LAST_6_MONTHS = "ReviewResults.Show-Last-6-Months";
+    public static final String SHOW_LAST_12_MONTHS = "ReviewResults.Show-Last-12-Months";
 
     private String currentCompany;
     private User currentUser;
@@ -60,14 +80,6 @@ public class ReviewResults extends AppCompatActivity {
         // Initialize Ryan Database
         initializeRyanDatabase();
 
-        //Initialize Reviews
-        ListView reviewResults = (ListView) findViewById(R.id.reviewResultsListView);
-        reviewResultsAdapter = new ReviewListAdapter(this, new ArrayList<Review>());
-        reviewResults.setAdapter(reviewResultsAdapter);
-
-        AsyncListUpdate updater = new AsyncListUpdate();
-        updater.execute();
-
         // Initialize Filters
         Spinner sortBySpinner = (Spinner) findViewById(R.id.sortBySpinner);
         sortBySpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.sort_by_options, R.layout.support_simple_spinner_dropdown_item);
@@ -78,6 +90,15 @@ public class ReviewResults extends AppCompatActivity {
         dateSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.review_results_date_options, R.layout.support_simple_spinner_dropdown_item);
         dateSpinner.setAdapter(dateSpinnerAdapter);
         initializeDateSpinnerListener(dateSpinner);
+
+        //Initialize Reviews
+        ListView reviewResults = (ListView) findViewById(R.id.reviewResultsListView);
+        reviewResultsAdapter = new ReviewListAdapter(this, new ArrayList<Review>());
+        reviewResults.setAdapter(reviewResultsAdapter);
+
+        AsyncListUpdate updater = new AsyncListUpdate();
+        updater.execute(SORT_BY_DATE_DESCENDING, SHOW_ALL);
+
     }
 
 
@@ -149,7 +170,10 @@ public class ReviewResults extends AppCompatActivity {
 
         @Override
         protected PaginatedScanList<Review> doInBackground(String... params) {
-            DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+            Map<String, AttributeValue> attributeValueMap = new HashMap<>();
+            attributeValueMap.put(":v1", new AttributeValue().withN("4"));
+            DynamoDBScanExpression scanExpression = new DynamoDBScanExpression().withFilterExpression("Rating >= :v1")
+                    .withExpressionAttributeValues(attributeValueMap);
             PaginatedScanList<Review> scannedReviews = ryanMapper.scan(Review.class, scanExpression);
 
             return scannedReviews;
