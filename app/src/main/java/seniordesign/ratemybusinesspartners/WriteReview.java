@@ -14,6 +14,11 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+
 import seniordesign.ratemybusinesspartners.models.DummyDatabase;
 import seniordesign.ratemybusinesspartners.models.Review;
 import seniordesign.ratemybusinesspartners.models.User;
@@ -21,6 +26,9 @@ import seniordesign.ratemybusinesspartners.models.User;
 public class WriteReview extends AppCompatActivity {
 
     private String currentCompany;
+
+    private AmazonDynamoDBClient ryanClient;
+    private DynamoDBMapper ryanMapper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +43,23 @@ public class WriteReview extends AppCompatActivity {
         currentCompany = intent.getStringExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY);
         TextView companyName = (TextView) findViewById(R.id.writeReviewCompanyTextView);
         companyName.setText(currentCompany);
+
+        // Initialize Database
+        initializeRyanDatabase();
+
+    }
+
+    private void initializeRyanDatabase(){
+
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                "us-east-1:7af6d1e9-e1a2-45e5-8d91-8fb5be4b70d4", // Identity Pool ID
+                Regions.US_EAST_1 // Region
+        );
+
+        this.ryanClient = new AmazonDynamoDBClient(credentialsProvider);
+        this.ryanMapper = new DynamoDBMapper(ryanClient);
+
     }
 
 
@@ -56,9 +81,17 @@ public class WriteReview extends AppCompatActivity {
 
         String targetCompany = this.currentCompany;
 
-        Review review = new Review(reviewer, reviewText, targetCompany, numStars, remainAnonymousCheckbox.isChecked());
+        final Review review = new Review(reviewer, reviewText, targetCompany, numStars, remainAnonymousCheckbox.isChecked());
 
-        DummyDatabase.reviews.add(review);
+        Thread submitReviewThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                ryanMapper.save(review);
+
+            }
+        });
+        submitReviewThread.start();
 
         // Switch back to Company Profile page
         Intent intent = new Intent(this, CompanyProfile.class);

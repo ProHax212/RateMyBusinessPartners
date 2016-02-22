@@ -1,6 +1,7 @@
 package seniordesign.ratemybusinesspartners;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 
 import org.w3c.dom.Text;
 
@@ -33,6 +41,10 @@ public class ReviewResults extends AppCompatActivity {
     private ArrayAdapter<CharSequence> dateSpinnerAdapter;
     private ReviewListAdapter reviewResultsAdapter;
 
+    // Ryan database variables
+    AmazonDynamoDBClient ryanClient;
+    DynamoDBMapper ryanMapper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,14 +57,16 @@ public class ReviewResults extends AppCompatActivity {
         TextView companyName = (TextView) findViewById(R.id.reviewResultsCompanyName);
         companyName.setText(currentCompany);
 
+        // Initialize Ryan Database
+        initializeRyanDatabase();
+
         //Initialize Reviews
         ListView reviewResults = (ListView) findViewById(R.id.reviewResultsListView);
         reviewResultsAdapter = new ReviewListAdapter(this, new ArrayList<Review>());
         reviewResults.setAdapter(reviewResultsAdapter);
 
-        for(Review review : DummyDatabase.reviews){
-            reviewResultsAdapter.add(review);
-        }
+        AsyncListUpdate updater = new AsyncListUpdate();
+        updater.execute();
 
         // Initialize Filters
         Spinner sortBySpinner = (Spinner) findViewById(R.id.sortBySpinner);
@@ -64,6 +78,21 @@ public class ReviewResults extends AppCompatActivity {
         dateSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.review_results_date_options, R.layout.support_simple_spinner_dropdown_item);
         dateSpinner.setAdapter(dateSpinnerAdapter);
         initializeDateSpinnerListener(dateSpinner);
+    }
+
+
+    // Initialize Ryan's Database
+    private void initializeRyanDatabase(){
+
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                "us-east-1:7af6d1e9-e1a2-45e5-8d91-8fb5be4b70d4", // Identity Pool ID
+                Regions.US_EAST_1 // Region
+        );
+
+        this.ryanClient = new AmazonDynamoDBClient(credentialsProvider);
+        this.ryanMapper = new DynamoDBMapper(ryanClient);
+
     }
 
 
@@ -100,4 +129,41 @@ public class ReviewResults extends AppCompatActivity {
         });
 
     }
+
+
+    /**
+     * This Inner class is used to scan the review database and update the 'recent reviews' list
+     * The scan is done in an AsyncTask and updates the ListView on the UI thread
+     * UI operations have to be done on the onPreExecute() and onPostExecute() methods
+     * The doInBackground() method is used to run the actual database scan
+     */
+    private class AsyncListUpdate extends AsyncTask<String, String, PaginatedScanList<Review>> {
+
+        @Override
+        protected void onPreExecute(){
+
+            // Clear the adapter
+            reviewResultsAdapter.clear();
+
+        }
+
+        @Override
+        protected PaginatedScanList<Review> doInBackground(String... params) {
+            DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+            PaginatedScanList<Review> scannedReviews = ryanMapper.scan(Review.class, scanExpression);
+
+            return scannedReviews;
+        }
+
+        @Override
+        protected void onPostExecute(PaginatedScanList<Review> scanList){
+
+            for(Review review : scanList){
+                reviewResultsAdapter.add(review);
+            }
+
+        }
+    }
+
+
 }

@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Random;
 
 import seniordesign.ratemybusinesspartners.models.Book;
+import seniordesign.ratemybusinesspartners.models.Review;
 import seniordesign.ratemybusinesspartners.models.User;
 
 public class MainActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -73,6 +74,10 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     private String company;
 
     private DynamoDBMapper mapper;
+
+    //Ryan's Database for Testing
+    private DynamoDBMapper ryanMapper;
+    private AmazonDynamoDBClient ryanClient;
 
 
     @Override
@@ -133,8 +138,24 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         mapper = new DynamoDBMapper(ddbClient);
 
 
+        //Ryan's initialization for database
+        initializeRyanDatabase();
+
         //Company Profile
         this.targetCompany = "Walmart";
+    }
+
+    private void initializeRyanDatabase(){
+
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                "us-east-1:7af6d1e9-e1a2-45e5-8d91-8fb5be4b70d4", // Identity Pool ID
+                Regions.US_EAST_1 // Region
+        );
+
+        this.ryanClient = new AmazonDynamoDBClient(credentialsProvider);
+        this.ryanMapper = new DynamoDBMapper(ryanClient);
+
     }
 
     @Override
@@ -204,6 +225,25 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     public void switchToCompanyProfile(View view){
         Intent intent = new Intent(this, CompanyProfile.class);
         intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
+
+        // Test Ryan's Database
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                User reviewer = new User("1234", "Walmart");
+                Review review = new Review();
+                review.setReviewer(reviewer);
+                review.setReviewText("This company is great");
+                review.setTargetCompanyName("Ryan Co");
+                review.setNumStars(3f);
+                review.setIsUserAnonymous(false);
+                ryanMapper.save(review);
+            }
+        });
+
+        //thread.start();
+
         startActivity(intent);
     }
 

@@ -6,6 +6,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribut
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexHashKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRangeKey;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMarshaller;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
@@ -39,6 +40,29 @@ public class User {
         this.company = company;
     }
 
+
+    public static class UserConverter implements DynamoDBMarshaller<User>{
+
+        @Override
+        public String marshall(User user) {
+            StringBuilder builder = new StringBuilder();
+
+            builder.append(user.getUserIdToken() + "\t" + user.getCompany());
+            return builder.toString();
+        }
+
+        @Override
+        public User unmarshall(Class<User> aClass, String s){
+
+            String[] attributes = s.split("\t");
+
+            User user = new User();
+            user.setUserIdToken(attributes[0]);
+            user.setCompany(attributes[1]);
+
+            return user;
+        }
+    }
 
 
 //
