@@ -32,21 +32,25 @@ import org.w3c.dom.Text;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import seniordesign.ratemybusinesspartners.adapters.ReviewListAdapter;
-import seniordesign.ratemybusinesspartners.models.DummyDatabase;
+import seniordesign.ratemybusinesspartners.comparators.ReviewDateComparator;
+import seniordesign.ratemybusinesspartners.comparators.ReviewRatingComparator;
 import seniordesign.ratemybusinesspartners.models.Review;
 import seniordesign.ratemybusinesspartners.models.User;
 
 public class ReviewResults extends AppCompatActivity {
 
-    // Strings to dictate queries
-    public static final String SORT_BY_DATE_ASCENDING = "ReviewResults.Sort-Ascending";
+
+    public static final String SORT_BY_DATE_ASCENDING = "ReviewResults.Sort-Date-Ascending";
     public static final String SORT_BY_DATE_DESCENDING = "ReviewResults.Sort-Date-Descending";
     public static final String SORT_BY_RATING_ASCENDING = "ReviewResults.Sort-Rating-Ascending";
     public static final String SORT_BY_RATING_DESCENDING = "ReviewResults.Sort-Rating-Descending";
+    public static final String[] SORT_OPTIONS = {SORT_BY_DATE_ASCENDING, SORT_BY_DATE_DESCENDING, SORT_BY_RATING_ASCENDING,
+            SORT_BY_RATING_DESCENDING};
 
     public static final String SHOW_ALL = "ReviewResults.Show-All";
     public static final String SHOW_LAST_WEEK = "ReviewResults.Show-Last-Week";
@@ -54,6 +58,8 @@ public class ReviewResults extends AppCompatActivity {
     public static final String SHOW_LAST_3_MONTHS = "ReviewResults.Show-Last-3-Months";
     public static final String SHOW_LAST_6_MONTHS = "ReviewResults.Show-Last-6-Months";
     public static final String SHOW_LAST_12_MONTHS = "ReviewResults.Show-Last-12-Months";
+    public static final String[] DATE_OPTIONS = {SHOW_ALL, SHOW_LAST_WEEK, SHOW_LAST_MONTH, SHOW_LAST_3_MONTHS,
+            SHOW_LAST_6_MONTHS, SHOW_LAST_12_MONTHS};
 
     private String currentCompany;
     private User currentUser;
@@ -98,7 +104,7 @@ public class ReviewResults extends AppCompatActivity {
         reviewResults.setAdapter(reviewResultsAdapter);
 
         AsyncListUpdate updater = new AsyncListUpdate();
-        updater.execute(SORT_BY_DATE_DESCENDING, SHOW_LAST_6_MONTHS);
+        updater.execute(SORT_BY_DATE_ASCENDING, SHOW_ALL);
 
     }
 
@@ -152,6 +158,21 @@ public class ReviewResults extends AppCompatActivity {
 
     }
 
+    /**
+     * Filter the review results
+     * Get the filters from the other views and apply them here
+     * @param view The filter button that fired this event
+     */
+    public void filterResults(View view){
+
+        Spinner sortBySpinner = (Spinner) findViewById(R.id.sortBySpinner);
+        Spinner dateSpinner = (Spinner) findViewById(R.id.dateSpinner);
+
+        AsyncListUpdate updater = new AsyncListUpdate();
+        updater.execute(SORT_OPTIONS[sortBySpinner.getSelectedItemPosition()], DATE_OPTIONS[dateSpinner.getSelectedItemPosition()]);
+
+    }
+
 
     /**
      * This Inner class is used to scan the review database and update the 'recent reviews' list
@@ -172,7 +193,7 @@ public class ReviewResults extends AppCompatActivity {
         @Override
         protected ArrayList<Review> doInBackground(String... params) {
 
-
+            Log.d("Execute", "Param 0: " + params[0] + "\tParam 1: " + params[1]);
             Calendar relativeCalendar = Calendar.getInstance(); // Use this to filter based on result date
             CalendarToStringMarshaller calendarMarshaller = CalendarToStringMarshaller.instance();  // Marshaller to turn the Calendar into a String
             Map<String, AttributeValue> attributeValueMap = new HashMap<>();
@@ -218,6 +239,7 @@ public class ReviewResults extends AppCompatActivity {
                     break;
                 default:
                     scanExpression = new DynamoDBScanExpression();
+
                     break;
 
             }
@@ -229,6 +251,29 @@ public class ReviewResults extends AppCompatActivity {
                 resultsList.add(review);
             }
 
+            // Sort depending on the filters
+            ReviewDateComparator dateComparator;
+            ReviewRatingComparator ratingComparator;
+            switch (params[0]){
+                case SORT_BY_DATE_ASCENDING:
+                    dateComparator = new ReviewDateComparator(ReviewDateComparator.DATE_ASCENDING);
+                    Collections.sort(resultsList, dateComparator);
+                    break;
+                case SORT_BY_DATE_DESCENDING:
+                    dateComparator = new ReviewDateComparator(ReviewDateComparator.DATE_DESCENDING);
+                    Collections.sort(resultsList, dateComparator);
+                    break;
+                case SORT_BY_RATING_ASCENDING:
+                    ratingComparator = new ReviewRatingComparator(ReviewRatingComparator.RATING_ASCENDING);
+                    Collections.sort(resultsList, ratingComparator);
+                    break;
+                case SORT_BY_RATING_DESCENDING:
+                    ratingComparator = new ReviewRatingComparator(ReviewRatingComparator.RATING_DESCENDING);
+                    Collections.sort(resultsList, ratingComparator);
+                    break;
+
+            }
+
             return resultsList;
         }
 
@@ -237,12 +282,10 @@ public class ReviewResults extends AppCompatActivity {
 
             for(Review review : scanList){
                 reviewResultsAdapter.add(review);
-                Log.d("Review", review.getReviewText());
-                Log.d("Date", review.getDateCreated().getTime().toString());
             }
 
         }
-    }
 
+    }
 
 }

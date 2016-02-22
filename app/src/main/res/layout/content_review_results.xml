@@ -47,4 +47,14 @@
         android:layout_toRightOf="@id/sortBySpinner"
         android:layout_alignBottom="@id/sortBySpinner"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/filterButton"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/sortBySpinner"
+        android:text="@string/review_results_filter_button"
+        android:onClick="filterResults"/>
+
 </RelativeLayout>

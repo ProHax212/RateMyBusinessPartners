@@ -60,6 +60,7 @@
         <item>Last 12 months</item>
     </string-array>
     <string name="review_results_spinner_sort_by">Sort By:</string>
+    <string name="review_results_filter_button">Apply</string>
 
 
     <!-- Write Review Strings -->
