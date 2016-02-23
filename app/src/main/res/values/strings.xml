@@ -46,10 +46,10 @@
     <!-- Review Results Strings -->
     <string name="review_results_company_name_default">[Company Name]</string>
     <string-array name="sort_by_options">
-        <item>Date - Ascending</item>
-        <item>Date - Descending</item>
-        <item>Rating - Ascending</item>
-        <item>Rating - Descending</item>
+        <item>Date - Newest</item>
+        <item>Date - Oldest</item>
+        <item>Rating - Highest</item>
+        <item>Rating - Lowest</item>
     </string-array>
     <string-array name="review_results_date_options">
         <item>All</item>

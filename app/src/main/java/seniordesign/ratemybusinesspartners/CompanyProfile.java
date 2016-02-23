@@ -23,8 +23,10 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import seniordesign.ratemybusinesspartners.adapters.ReviewListAdapter;
+import seniordesign.ratemybusinesspartners.comparators.ReviewDateComparator;
 import seniordesign.ratemybusinesspartners.models.DummyDatabase;
 import seniordesign.ratemybusinesspartners.models.Review;
 import seniordesign.ratemybusinesspartners.models.User;
@@ -104,7 +106,7 @@ public class CompanyProfile extends AppCompatActivity {
      * UI operations have to be done on the onPreExecute() and onPostExecute() methods
      * The doInBackground() method is used to run the actual database scan
      */
-    private class AsyncListUpdate extends AsyncTask<String, String, PaginatedScanList<Review>>{
+    private class AsyncListUpdate extends AsyncTask<String, String, ArrayList<Review>>{
 
         @Override
         protected void onPreExecute(){
@@ -115,15 +117,24 @@ public class CompanyProfile extends AppCompatActivity {
         }
 
         @Override
-        protected PaginatedScanList<Review> doInBackground(String... params) {
+        protected ArrayList<Review> doInBackground(String... params) {
             DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
             PaginatedScanList<Review> scannedReviews = ryanMapper.scan(Review.class, scanExpression);
 
-            return scannedReviews;
+            ArrayList<Review> reviewResults = new ArrayList<>();
+
+            for(Review review : scannedReviews){
+                reviewResults.add(review);
+            }
+
+            ReviewDateComparator comparator = new ReviewDateComparator(ReviewDateComparator.DATE_NEWEST);
+            Collections.sort(reviewResults, comparator);
+
+            return reviewResults;
         }
 
         @Override
-        protected void onPostExecute(PaginatedScanList<Review> scanList){
+        protected void onPostExecute(ArrayList<Review> scanList){
 
             for(Review review : scanList){
                 reviewArrayAdapter.add(review);

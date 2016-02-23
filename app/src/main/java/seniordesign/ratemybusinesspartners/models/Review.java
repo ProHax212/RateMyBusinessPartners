@@ -7,7 +7,10 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMarshall
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
+import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Ryan Comer on 2/3/2016.
@@ -51,11 +54,14 @@ public class Review {
         StringBuilder builder = new StringBuilder();
 
         if(!this.isUserAnonymous){
-            builder.append(reviewer.getUserIdToken() + "\t\t");
+            builder.append(reviewer.getUserIdToken());
         }else{
             builder.append("Anonymous");
         }
-        builder.append("\n" + this.reviewText);
+        DateFormat dateFormat = DateFormat.getDateInstance();
+        dateFormat.setCalendar(this.dateCreated);
+        builder.append("\n" + dateFormat.format(dateFormat.getCalendar().getTime()));
+        builder.append("\n\n" + this.reviewText);
 
         return builder.toString();
     }

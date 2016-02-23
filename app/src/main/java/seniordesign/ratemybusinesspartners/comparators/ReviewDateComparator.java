@@ -9,8 +9,8 @@ import seniordesign.ratemybusinesspartners.models.Review;
  */
 public class ReviewDateComparator implements Comparator<Review> {
 
-    public static final String DATE_ASCENDING = "ReviewDateComparator.Date.Ascending";
-    public static final String DATE_DESCENDING = "ReviewDateComparator.Date.Descending";
+    public static final String DATE_NEWEST = "ReviewDateComparator.Date.Newest";
+    public static final String DATE_OLDEST = "ReviewDateComparator.Date.Oldest";
 
     private String ordering;
 
@@ -25,10 +25,10 @@ public class ReviewDateComparator implements Comparator<Review> {
         if(lhs.getDateCreated().compareTo(rhs.getDateCreated()) == 0) return 0;
 
         switch(this.ordering){
-            case DATE_ASCENDING:
-                return lhs.getDateCreated().compareTo(rhs.getDateCreated());
-            case DATE_DESCENDING:
-                return lhs.getDateCreated().compareTo(rhs.getDateCreated()) * -1;   // Flip the result of compareTo to get descending order
+            case DATE_NEWEST:
+                return lhs.getDateCreated().compareTo(rhs.getDateCreated()) * -1;
+            case DATE_OLDEST:
+                return lhs.getDateCreated().compareTo(rhs.getDateCreated());   // Flip the result of compareTo to get opposite order
         }
 
         return 0;   // Should never get here because an ordering should be defined

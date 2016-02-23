@@ -9,8 +9,8 @@ import seniordesign.ratemybusinesspartners.models.Review;
  */
 public class ReviewRatingComparator implements Comparator<Review> {
 
-    public static final String RATING_ASCENDING = "ReviewRatingComparator.Rating.Ascending";
-    public static final String RATING_DESCENDING = "ReviewRatingComparator.Rating.Descending";
+    public static final String RATING_HIGHEST = "ReviewRatingComparator.Rating.Highest";
+    public static final String RATING_LOWEST = "ReviewRatingComparator.Rating.Lowest";
 
     private String ordering;
 
@@ -26,11 +26,11 @@ public class ReviewRatingComparator implements Comparator<Review> {
         if(lhs.getNumStars() == rhs.getNumStars()) return 0;
 
         switch (ordering){
-            case RATING_ASCENDING:
-                if(lhs.getNumStars() > rhs.getNumStars()) return 1;
-                else return -1;
-            case RATING_DESCENDING:
+            case RATING_HIGHEST:
                 if(lhs.getNumStars() < rhs.getNumStars()) return 1;
+                else return -1;
+            case RATING_LOWEST:
+                if(lhs.getNumStars() > rhs.getNumStars()) return 1;
                 else return -1;
         }
 

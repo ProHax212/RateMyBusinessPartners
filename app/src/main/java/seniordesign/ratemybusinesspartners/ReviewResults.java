@@ -45,12 +45,12 @@ import seniordesign.ratemybusinesspartners.models.User;
 public class ReviewResults extends AppCompatActivity {
 
 
-    public static final String SORT_BY_DATE_ASCENDING = "ReviewResults.Sort-Date-Ascending";
-    public static final String SORT_BY_DATE_DESCENDING = "ReviewResults.Sort-Date-Descending";
-    public static final String SORT_BY_RATING_ASCENDING = "ReviewResults.Sort-Rating-Ascending";
-    public static final String SORT_BY_RATING_DESCENDING = "ReviewResults.Sort-Rating-Descending";
-    public static final String[] SORT_OPTIONS = {SORT_BY_DATE_ASCENDING, SORT_BY_DATE_DESCENDING, SORT_BY_RATING_ASCENDING,
-            SORT_BY_RATING_DESCENDING};
+    public static final String SORT_BY_DATE_NEWEST = "ReviewResults.Sort-Date-Newest";
+    public static final String SORT_BY_DATE_OLDEST = "ReviewResults.Sort-Date-Oldest";
+    public static final String SORT_BY_RATING_HIGHEST = "ReviewResults.Sort-Rating-Highest";
+    public static final String SORT_BY_RATING_LOWEST = "ReviewResults.Sort-Rating-Lowest";
+    public static final String[] SORT_OPTIONS = {SORT_BY_DATE_NEWEST, SORT_BY_DATE_OLDEST, SORT_BY_RATING_HIGHEST,
+            SORT_BY_RATING_LOWEST};
 
     public static final String SHOW_ALL = "ReviewResults.Show-All";
     public static final String SHOW_LAST_WEEK = "ReviewResults.Show-Last-Week";
@@ -104,7 +104,7 @@ public class ReviewResults extends AppCompatActivity {
         reviewResults.setAdapter(reviewResultsAdapter);
 
         AsyncListUpdate updater = new AsyncListUpdate();
-        updater.execute(SORT_BY_DATE_ASCENDING, SHOW_ALL);
+        updater.execute(SORT_BY_DATE_NEWEST, SHOW_ALL);
 
     }
 
@@ -255,20 +255,20 @@ public class ReviewResults extends AppCompatActivity {
             ReviewDateComparator dateComparator;
             ReviewRatingComparator ratingComparator;
             switch (params[0]){
-                case SORT_BY_DATE_ASCENDING:
-                    dateComparator = new ReviewDateComparator(ReviewDateComparator.DATE_ASCENDING);
+                case SORT_BY_DATE_NEWEST:
+                    dateComparator = new ReviewDateComparator(ReviewDateComparator.DATE_NEWEST);
                     Collections.sort(resultsList, dateComparator);
                     break;
-                case SORT_BY_DATE_DESCENDING:
-                    dateComparator = new ReviewDateComparator(ReviewDateComparator.DATE_DESCENDING);
+                case SORT_BY_DATE_OLDEST:
+                    dateComparator = new ReviewDateComparator(ReviewDateComparator.DATE_OLDEST);
                     Collections.sort(resultsList, dateComparator);
                     break;
-                case SORT_BY_RATING_ASCENDING:
-                    ratingComparator = new ReviewRatingComparator(ReviewRatingComparator.RATING_ASCENDING);
+                case SORT_BY_RATING_HIGHEST:
+                    ratingComparator = new ReviewRatingComparator(ReviewRatingComparator.RATING_HIGHEST);
                     Collections.sort(resultsList, ratingComparator);
                     break;
-                case SORT_BY_RATING_DESCENDING:
-                    ratingComparator = new ReviewRatingComparator(ReviewRatingComparator.RATING_DESCENDING);
+                case SORT_BY_RATING_LOWEST:
+                    ratingComparator = new ReviewRatingComparator(ReviewRatingComparator.RATING_LOWEST);
                     Collections.sort(resultsList, ratingComparator);
                     break;
 
