@@ -193,85 +193,85 @@ public class ReviewResults extends AppCompatActivity {
         @Override
         protected ArrayList<Review> doInBackground(String... params) {
 
-            Log.d("Execute", "Param 0: " + params[0] + "\tParam 1: " + params[1]);
             Calendar relativeCalendar = Calendar.getInstance(); // Use this to filter based on result date
             CalendarToStringMarshaller calendarMarshaller = CalendarToStringMarshaller.instance();  // Marshaller to turn the Calendar into a String
             Map<String, AttributeValue> attributeValueMap = new HashMap<>();
             Map<String, String> attributeNameMap = new HashMap<>();
-            DynamoDBScanExpression scanExpression;
+            DynamoDBQueryExpression<Review> queryExpression;
 
             // Filter by date
             attributeNameMap.put("#D", "Date Created");
             switch (params[1]){
 
                 case SHOW_ALL:
-                    scanExpression = new DynamoDBScanExpression();
+                    queryExpression = new DynamoDBQueryExpression<Review>();
                     break;
                 case SHOW_LAST_WEEK:
                     relativeCalendar.set(Calendar.WEEK_OF_MONTH, relativeCalendar.get(Calendar.WEEK_OF_MONTH) - 1);
                     attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
-                    scanExpression = new DynamoDBScanExpression().withFilterExpression("#D > :v1")
+                    queryExpression = new DynamoDBQueryExpression<Review>().withFilterExpression("#D > :v1")
                             .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
                     break;
                 case SHOW_LAST_MONTH:
                     relativeCalendar.set(Calendar.MONTH, relativeCalendar.get(Calendar.MONTH) - 1);
                     attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
-                    scanExpression = new DynamoDBScanExpression().withFilterExpression("#D > :v1")
+                    queryExpression = new DynamoDBQueryExpression<Review>().withFilterExpression("#D > :v1")
                             .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
                     break;
                 case SHOW_LAST_3_MONTHS:
                     relativeCalendar.set(Calendar.MONTH, relativeCalendar.get(Calendar.MONTH) - 3);
                     attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
-                    scanExpression = new DynamoDBScanExpression().withFilterExpression("#D > :v1")
+                    queryExpression = new DynamoDBQueryExpression<Review>().withFilterExpression("#D > :v1")
                             .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
                     break;
                 case SHOW_LAST_6_MONTHS:
                     relativeCalendar.set(Calendar.MONTH, relativeCalendar.get(Calendar.MONTH) - 6);
                     attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
-                    scanExpression = new DynamoDBScanExpression().withFilterExpression("#D > :v1")
+                    queryExpression = new DynamoDBQueryExpression<Review>().withFilterExpression("#D > :v1")
                             .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
                     break;
                 case SHOW_LAST_12_MONTHS:
                     relativeCalendar.set(Calendar.MONTH, relativeCalendar.get(Calendar.MONTH) - 12);
                     attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
-                    scanExpression = new DynamoDBScanExpression().withFilterExpression("#D > :v1")
+                    queryExpression = new DynamoDBQueryExpression<Review>().withFilterExpression("#D > :v1")
                             .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
                     break;
                 default:
-                    scanExpression = new DynamoDBScanExpression();
+                    queryExpression = new DynamoDBQueryExpression<Review>();
 
                     break;
 
-            }
-
-            PaginatedScanList<Review> scannedReviews = ryanMapper.scan(Review.class, scanExpression);
-
-            ArrayList<Review> resultsList = new ArrayList<>();
-            for(Review review : scannedReviews){
-                resultsList.add(review);
             }
 
             // Sort depending on the filters
-            ReviewDateComparator dateComparator;
-            ReviewRatingComparator ratingComparator;
             switch (params[0]){
                 case SORT_BY_DATE_NEWEST:
-                    dateComparator = new ReviewDateComparator(ReviewDateComparator.DATE_NEWEST);
-                    Collections.sort(resultsList, dateComparator);
+                    queryExpression.setScanIndexForward(false);
                     break;
                 case SORT_BY_DATE_OLDEST:
-                    dateComparator = new ReviewDateComparator(ReviewDateComparator.DATE_OLDEST);
-                    Collections.sort(resultsList, dateComparator);
+                    queryExpression.setScanIndexForward(true);
                     break;
                 case SORT_BY_RATING_HIGHEST:
-                    ratingComparator = new ReviewRatingComparator(ReviewRatingComparator.RATING_HIGHEST);
-                    Collections.sort(resultsList, ratingComparator);
+                    queryExpression.setIndexName("ReviewRatingIndex");
+                    queryExpression.setScanIndexForward(false);
                     break;
                 case SORT_BY_RATING_LOWEST:
-                    ratingComparator = new ReviewRatingComparator(ReviewRatingComparator.RATING_LOWEST);
-                    Collections.sort(resultsList, ratingComparator);
+                    queryExpression.setIndexName("ReviewRatingIndex");
+                    queryExpression.setScanIndexForward(true);
                     break;
 
+            }
+
+            Review queryReview = new Review();
+            queryReview.setTargetCompanyName("Walmart");
+
+            queryExpression.setHashKeyValues(queryReview);
+
+            PaginatedQueryList<Review> queryResults = ryanMapper.query(Review.class, queryExpression);
+
+            ArrayList<Review> resultsList = new ArrayList<>();
+            for(Review review : queryResults){
+                resultsList.add(review);
             }
 
             return resultsList;

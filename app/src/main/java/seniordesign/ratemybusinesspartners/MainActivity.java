@@ -60,6 +60,10 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     User currentUser;
     public static final String CURRENT_USER = "com.ryan.current.user";
 
+    //D&B Login Credintials
+    public static final String RYAN_DNB_LOGIN_USERNAME = "P200000FC7D9C7FA3D74F55BFF5D6D15";
+    public static final String RYAN_DNB_LOGIN_PASSWORD = "ratemybusinesspartners";
+
     // google sign in
     private TextView mStatusTextView;
     private static final String TAG = "SignInActivity";
@@ -225,24 +229,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     public void switchToCompanyProfile(View view){
         Intent intent = new Intent(this, CompanyProfile.class);
         intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
-
-        // Test Ryan's Database
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                User reviewer = new User("1234", "Walmart");
-                Review review = new Review();
-                review.setReviewer(reviewer);
-                review.setReviewText("This company is great");
-                review.setTargetCompanyName("Ryan Co");
-                review.setNumStars(3f);
-                review.setIsUserAnonymous(false);
-                ryanMapper.save(review);
-            }
-        });
-
-        //thread.start();
 
         startActivity(intent);
     }

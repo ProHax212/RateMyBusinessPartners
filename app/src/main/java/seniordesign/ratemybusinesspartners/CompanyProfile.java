@@ -16,8 +16,10 @@ import android.widget.TextView;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBQueryExpression;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedList;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryList;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
@@ -118,25 +120,27 @@ public class CompanyProfile extends AppCompatActivity {
 
         @Override
         protected ArrayList<Review> doInBackground(String... params) {
-            DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-            PaginatedScanList<Review> scannedReviews = ryanMapper.scan(Review.class, scanExpression);
+            Review comparedReview = new Review();
+            comparedReview.setTargetCompanyName("Walmart");
+
+            DynamoDBQueryExpression<Review> queryExpression = new DynamoDBQueryExpression<Review>().withHashKeyValues(comparedReview);
+            queryExpression.setScanIndexForward(false); // Setting this to false returns reviews (newest first)
+
+            PaginatedQueryList<Review> queryList = ryanMapper.query(Review.class, queryExpression);
 
             ArrayList<Review> reviewResults = new ArrayList<>();
 
-            for(Review review : scannedReviews){
+            for(Review review : queryList){
                 reviewResults.add(review);
             }
-
-            ReviewDateComparator comparator = new ReviewDateComparator(ReviewDateComparator.DATE_NEWEST);
-            Collections.sort(reviewResults, comparator);
 
             return reviewResults;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Review> scanList){
+        protected void onPostExecute(ArrayList<Review> queryList){
 
-            for(Review review : scanList){
+            for(Review review : queryList){
                 reviewArrayAdapter.add(review);
             }
 
