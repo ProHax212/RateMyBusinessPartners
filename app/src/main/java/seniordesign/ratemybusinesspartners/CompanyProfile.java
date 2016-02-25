@@ -36,9 +36,10 @@ import seniordesign.ratemybusinesspartners.models.User;
 public class CompanyProfile extends AppCompatActivity {
 
     public static final String COMPANY_PROFILE_TARGET_COMPANY = "com.ryan.target.company";
+    public static final String COMPANY_PROFILE_REVIEW_TO_VIEW = "com.ratemybusinesspartners.companyprofile.reviewtoview";
 
     ReviewListAdapter reviewArrayAdapter;
-    String currentCompany;
+    public static String currentCompany;
     private User currentUser;
 
     // Ryan's Test Database
@@ -65,6 +66,16 @@ public class CompanyProfile extends AppCompatActivity {
 
         reviewArrayAdapter = new ReviewListAdapter(this, new ArrayList<Review>());
         reviewList.setAdapter(reviewArrayAdapter);
+        reviewList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ArrayAdapter<Review> arrayAdapter= (ArrayAdapter<Review>) parent.getAdapter();
+
+                Intent intent = new Intent(view.getContext(), ViewReview.class);
+                intent.putExtra(COMPANY_PROFILE_REVIEW_TO_VIEW, arrayAdapter.getItem(position));
+                startActivity(intent);
+            }
+        });
 
         // Initialize Ryan's Database
         initializeRyanDatabase();
@@ -91,15 +102,17 @@ public class CompanyProfile extends AppCompatActivity {
     // Navigation Methods
     public void viewAllReviews(View view){
         Intent intent = new Intent(this, ReviewResults.class);
-        intent.putExtra(COMPANY_PROFILE_TARGET_COMPANY, this.currentCompany);
+        intent.putExtra(COMPANY_PROFILE_TARGET_COMPANY, currentCompany);
         startActivity(intent);
     }
 
     public void writeReview(View view){
         Intent intent = new Intent(this, WriteReview.class);
-        intent.putExtra(COMPANY_PROFILE_TARGET_COMPANY, this.currentCompany);
+        intent.putExtra(COMPANY_PROFILE_TARGET_COMPANY, currentCompany);
         startActivity(intent);
     }
+
+
 
 
     /**
