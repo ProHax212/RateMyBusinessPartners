@@ -37,8 +37,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SelectCompanyPopUp"
-            android:windowSoftInputMode="adjustPan|adjustResize"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/Theme.PopUp" />
     </application>
 
 </manifest>

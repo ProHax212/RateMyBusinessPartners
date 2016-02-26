@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //Google API
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
@@ -57,8 +58,7 @@ import seniordesign.ratemybusinesspartners.models.User;
 public class MainActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     String targetCompany;
-    User currentUser;
-    public static final String CURRENT_USER = "com.ryan.current.user";
+    public static User CURRENT_USER = null;
 
     //D&B Login Credintials
     public static final String RYAN_DNB_LOGIN_USERNAME = "P200000FC7D9C7FA3D74F55BFF5D6D15";
@@ -90,9 +90,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
@@ -192,21 +189,26 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
-        } else if (requestCode == RC_COMPANY_SELECTION && resultCode != 0) {
-            data.getData();
-            company = data.getStringExtra(SELECTED_COMPANY);
-            Runnable runSaveItem = new Runnable() {
-                @Override
-                public void run() {
-                    User user = new User();
-                    user.setUserIdToken(userIdToken);
-                    user.setCompany(company);
+        } else if (requestCode == RC_COMPANY_SELECTION) {
+            if(resultCode == 0) {
+                Toast.makeText(this, "You must associate your account with a company.", Toast.LENGTH_LONG).show();
+                signOut();
+            } else {
+                data.getData();
+                company = data.getStringExtra(SELECTED_COMPANY);
+                Runnable runSaveItem = new Runnable() {
+                    @Override
+                    public void run() {
+                        User user = new User();
+                        user.setUserIdToken(userIdToken);
+                        user.setCompany(company);
 
-                    mapper.save(user);
-                }
-            };
-            Thread thread = new Thread(runSaveItem);
-            thread.start();
+                        mapper.save(user);
+                    }
+                };
+                Thread thread = new Thread(runSaveItem);
+                thread.start();
+            }
         }
     }
 
@@ -269,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
+            CURRENT_USER = new User(acct.getDisplayName(), company);
             userIdToken = acct.getIdToken();
             Runnable runLoadItem = new Runnable() {
                 @Override
@@ -282,17 +285,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                     List<User> itemList = mapper.query(User.class, queryExpression);
                     if(itemList.size() > 0) { MainActivity.hasCompany = true; }
                     else { MainActivity.hasCompany = false; }
-                    Log.d("ITEMLIST SIZE: ", itemList.size() + "");
-                    Log.d("hascompany: ", MainActivity.hasCompany + "");
-                    if(MainActivity.hasCompany) {
-                        Log.d("TOKENID: ", itemList.get(0).getUserIdToken());
-                        Log.d("COMPANY: ", itemList.get(0).getCompany());
-                    }
-
-//                  User user = mapper.load(User.class, "0");
-//
-//                  Log.d("USERID: ", user.getUserIdToken());
-//                  Log.d("COMPANY: ", user.getCompany());
                 }
             };
 
@@ -301,9 +293,8 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
             try {
                 thread.join();
             } catch(Exception e) {
-
+                Log.d("ERROR: AT THREAD.JOIN: ", e.toString());
             }
-            Log.d("is there a company: ", MainActivity.hasCompany + "...");
             if(!MainActivity.hasCompany) {
                 Intent intent = new Intent(MainActivity.this, SelectCompanyPopUp.class);
                 startActivityForResult(intent, RC_COMPANY_SELECTION);

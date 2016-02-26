@@ -32,9 +32,9 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
 
-    <style name="popuptheme" >
+    <style name="Theme.PopUp" parent="android:Theme.Dialog" >
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 </resources>

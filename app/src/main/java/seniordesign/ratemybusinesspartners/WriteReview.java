@@ -78,7 +78,7 @@ public class WriteReview extends AppCompatActivity {
 
         CheckBox remainAnonymousCheckbox = (CheckBox)findViewById(R.id.anonymousCheckbox);
 
-        User reviewer = new User("Dummy ID Token", "Walmart");
+        User reviewer = MainActivity.CURRENT_USER; //new User("Dummy ID Token", "Walmart");
 
         String targetCompany = this.currentCompany;
 

@@ -4,8 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1"
-    android:windowCloseOnTouchOutside="true" >
+    android:weightSum="1" >
 
     <TextView
         android:layout_width="match_parent"
@@ -20,7 +19,6 @@
         android:layout_height="wrap_content"
         android:dropDownWidth="200dp"
         android:id="@+id/select_company_popup_autocompletetextview"
-        android:textColor="@color/blue_grey_500"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true" />
 
