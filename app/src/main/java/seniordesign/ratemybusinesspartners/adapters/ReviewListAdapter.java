@@ -43,9 +43,6 @@ public class ReviewListAdapter extends ArrayAdapter<Review> {
 
         // 3. Get icon,title & counter views from the rowView
         RatingBar reviewRatingBar = (RatingBar) rowView.findViewById(R.id.reviewRatingBar);
-        reviewRatingBar.setClickable(false);
-        reviewRatingBar.setIsIndicator(true);
-        reviewRatingBar.setFocusableInTouchMode(false);
         TextView reviewTextView = (TextView) rowView.findViewById(R.id.reviewTextView);
 
         // 4. Set the text for textView

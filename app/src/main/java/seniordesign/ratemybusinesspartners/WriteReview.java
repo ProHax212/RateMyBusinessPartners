@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
@@ -71,7 +72,13 @@ public class WriteReview extends AppCompatActivity {
     public void submitReview(View view){
 
         EditText reviewEditText= (EditText) findViewById(R.id.writeReviewEditText);
-        String reviewText = reviewEditText.getText().toString();
+        String reviewText = reviewEditText.getText().toString().trim();
+
+        // Check if review has any text
+        if(reviewText.length() == 0){
+            Toast.makeText(WriteReview.this, "Please type a review", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         RatingBar reviewRatingBar = (RatingBar) findViewById(R.id.reviewRatingBar);
         Float numStars = reviewRatingBar.getRating();

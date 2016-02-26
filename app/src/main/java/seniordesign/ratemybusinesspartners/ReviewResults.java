@@ -25,6 +25,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.marshallers.Cale
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 
 import org.w3c.dom.Text;
@@ -205,12 +206,10 @@ public class ReviewResults extends AppCompatActivity {
 
             Calendar relativeCalendar = Calendar.getInstance(); // Use this to filter based on result date
             CalendarToStringMarshaller calendarMarshaller = CalendarToStringMarshaller.instance();  // Marshaller to turn the Calendar into a String
-            Map<String, AttributeValue> attributeValueMap = new HashMap<>();
-            Map<String, String> attributeNameMap = new HashMap<>();
+            Condition rangeKeyCondition;
             DynamoDBQueryExpression<Review> queryExpression;
 
             // Filter by date
-            attributeNameMap.put("#D", "Date Created");
             switch (params[1]){
 
                 case SHOW_ALL:
@@ -218,35 +217,36 @@ public class ReviewResults extends AppCompatActivity {
                     break;
                 case SHOW_LAST_WEEK:
                     relativeCalendar.set(Calendar.WEEK_OF_MONTH, relativeCalendar.get(Calendar.WEEK_OF_MONTH) - 1);
-                    attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
-                    queryExpression = new DynamoDBQueryExpression<Review>().withFilterExpression("#D > :v1")
-                            .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
+                    rangeKeyCondition = new Condition().withComparisonOperator(ComparisonOperator.GT)
+                            .withAttributeValueList(calendarMarshaller.marshall(relativeCalendar));
+                    queryExpression = new DynamoDBQueryExpression<Review>().withRangeKeyCondition("Date Created", rangeKeyCondition);
                     break;
                 case SHOW_LAST_MONTH:
                     relativeCalendar.set(Calendar.MONTH, relativeCalendar.get(Calendar.MONTH) - 1);
-                    attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
-                    queryExpression = new DynamoDBQueryExpression<Review>().withFilterExpression("#D > :v1")
-                            .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
+                    rangeKeyCondition = new Condition().withComparisonOperator(ComparisonOperator.GT)
+                            .withAttributeValueList(calendarMarshaller.marshall(relativeCalendar));
+                    queryExpression = new DynamoDBQueryExpression<Review>().withRangeKeyCondition("Date Created", rangeKeyCondition);
                     break;
                 case SHOW_LAST_3_MONTHS:
                     relativeCalendar.set(Calendar.MONTH, relativeCalendar.get(Calendar.MONTH) - 3);
-                    attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
-                    queryExpression = new DynamoDBQueryExpression<Review>().withFilterExpression("#D > :v1")
-                            .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
+                    rangeKeyCondition = new Condition().withComparisonOperator(ComparisonOperator.GT)
+                            .withAttributeValueList(calendarMarshaller.marshall(relativeCalendar));
+                    queryExpression = new DynamoDBQueryExpression<Review>().withRangeKeyCondition("Date Created", rangeKeyCondition);
                     break;
                 case SHOW_LAST_6_MONTHS:
                     relativeCalendar.set(Calendar.MONTH, relativeCalendar.get(Calendar.MONTH) - 6);
-                    attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
-                    queryExpression = new DynamoDBQueryExpression<Review>().withFilterExpression("#D > :v1")
-                            .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
+                    rangeKeyCondition = new Condition().withComparisonOperator(ComparisonOperator.GT)
+                            .withAttributeValueList(calendarMarshaller.marshall(relativeCalendar));
+                    queryExpression = new DynamoDBQueryExpression<Review>().withRangeKeyCondition("Date Created", rangeKeyCondition);
                     break;
                 case SHOW_LAST_12_MONTHS:
                     relativeCalendar.set(Calendar.MONTH, relativeCalendar.get(Calendar.MONTH) - 12);
-                    attributeValueMap.put(":v1", calendarMarshaller.marshall(relativeCalendar));
-                    queryExpression = new DynamoDBQueryExpression<Review>().withFilterExpression("#D > :v1")
-                            .withExpressionAttributeValues(attributeValueMap).withExpressionAttributeNames(attributeNameMap);
+                    rangeKeyCondition = new Condition().withComparisonOperator(ComparisonOperator.GT)
+                            .withAttributeValueList(calendarMarshaller.marshall(relativeCalendar));
+                    queryExpression = new DynamoDBQueryExpression<Review>().withRangeKeyCondition("Date Created", rangeKeyCondition);
                     break;
                 default:
+                    // Should not get here, if you do that is very bad
                     queryExpression = new DynamoDBQueryExpression<Review>();
 
                     break;
