@@ -20,6 +20,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".SearchEngine"
+            android:label="@string/Search"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
             android:name=".CompanyProfile"
             android:label="@string/title_activity_company_profile"
             android:theme="@style/AppTheme.NoActionBar" />
