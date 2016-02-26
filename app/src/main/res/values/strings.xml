@@ -70,6 +70,7 @@
     <string name="write_review_anonymous_checkbox">Anonymous Review</string>
 
     <!-- View Review Strings -->
-    <string name="view_review_default_text">DEFAULT_TEXT</string>
+    <string name="view_review_default_text">DEFAULT_REVIEW_TEXT</string>
+    <string name="view_review_default_company_name">DEFAULT_COMPANY_NAME</string>
 
 </resources>

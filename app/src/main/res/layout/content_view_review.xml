@@ -16,9 +16,39 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/view_review_default_text"
-        android:id="@+id/viewReviewTextReview"
+        android:text="@string/view_review_default_company_name"
+        android:textSize="@dimen/view_review_company_name_text_size"
+        android:id="@+id/viewReviewCompanyNameTextView"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"/>
+    
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewReviewRatingBar"
+        android:layout_below="@id/viewReviewCompanyNameTextView"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/view_review_default_text"
+        android:textSize="@dimen/view_review_review_text_size"
+        android:id="@+id/viewReviewReviewerDateTextView"
+        android:layout_below="@id/viewReviewRatingBar"/>
+
+    <View
+        style="@style/divider"
+        android:id="@+id/viewReviewDividerOne"
+        android:layout_below="@id/viewReviewReviewerDateTextView"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/view_review_default_text"
+        android:textSize="@dimen/view_review_review_text_size"
+        android:scrollbars="vertical"
+        android:lines="10"
+        android:id="@+id/viewReviewTextReview"
+        android:layout_below="@id/viewReviewDividerOne"/>
 </RelativeLayout>

@@ -102,6 +102,16 @@ public class ReviewResults extends AppCompatActivity {
         ListView reviewResults = (ListView) findViewById(R.id.reviewResultsListView);
         reviewResultsAdapter = new ReviewListAdapter(this, new ArrayList<Review>());
         reviewResults.setAdapter(reviewResultsAdapter);
+        reviewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ArrayAdapter<Review> arrayAdapter = (ArrayAdapter<Review>) parent.getAdapter();
+
+                Intent intent = new Intent(view.getContext(), ViewReview.class);
+                intent.putExtra(CompanyProfile.COMPANY_PROFILE_REVIEW_TO_VIEW, arrayAdapter.getItem(position));
+                startActivity(intent);
+            }
+        });
 
         AsyncListUpdate updater = new AsyncListUpdate();
         updater.execute(SORT_BY_DATE_NEWEST, SHOW_ALL);
