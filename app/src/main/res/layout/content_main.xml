@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,37 +10,37 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:background="@color/blue_grey_900"
     tools:context="seniordesign.ratemybusinesspartners.MainActivity"
     tools:showIn="@layout/activity_main">
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Test Company Profile"
         android:id="@+id/button"
-        android:onClick="switchToCompanyProfile"/>
+        android:onClick="switchToCompanyProfile" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/main_company_review_textView"
+        android:layout_margin="20dp"
         android:text="Company Reviews: "
+        android:layout_below="@+id/button"
+        android:layout_centerHorizontal="true"
         android:textColor="@android:color/white"
         android:textSize="30sp"
         android:layout_gravity="center_horizontal"/>
     <Button
-        android:layout_width="342dp"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:text="@string/Search"
         android:id="@+id/search"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/main_company_review_textView"
+        android:layout_toRightOf="@+id/button"
         android:onClick = "switchToSearchCompany"/>
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="425dp">
+        android:layout_height="500dp">
         <TextView
             android:id="@+id/status"
             android:layout_width="wrap_content"
@@ -58,6 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_above="@+id/sign_out_button"
             android:layout_marginBottom="40dp"
             android:layout_centerHorizontal="true"
             android:visibility="visible" />
@@ -90,7 +91,5 @@
             android:layout_marginBottom="40dp"
             android:visibility="gone" />
 
-
-
     </RelativeLayout>
-</LinearLayout>
+</RelativeLayout>

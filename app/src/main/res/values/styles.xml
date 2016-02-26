@@ -13,8 +13,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+        <item name="android:color">@color/blue_grey_900</item>
+    </style>
+        
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     
     <!-- General Styles -->
@@ -24,6 +26,10 @@
         <item name="android:background">@android:color/darker_gray</item>
         <item name="android:layout_marginTop">@dimen/divider_margin</item>
         <item name="android:layout_marginBottom">@dimen/divider_margin</item>
+    </style>
+
+    <style name="MainActivityTheme" parent="Theme.AppCompat.NoActionBar">
+
     </style>
 
     <!-- Dark Buttons -->
