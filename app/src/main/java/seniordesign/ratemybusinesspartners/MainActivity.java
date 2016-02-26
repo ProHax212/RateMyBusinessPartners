@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
-        } else if (requestCode == RC_COMPANY_SELECTION) {
+        } else if (requestCode == RC_COMPANY_SELECTION && resultCode != 0) {
             data.getData();
             company = data.getStringExtra(SELECTED_COMPANY);
             Runnable runSaveItem = new Runnable() {
