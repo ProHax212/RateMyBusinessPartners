@@ -48,7 +48,12 @@
         android:text="@string/view_review_default_text"
         android:textSize="@dimen/view_review_review_text_size"
         android:scrollbars="vertical"
-        android:lines="10"
+        android:maxLines="10"
         android:id="@+id/viewReviewTextReview"
         android:layout_below="@id/viewReviewDividerOne"/>
+
+    <View
+        style="@style/divider"
+        android:id="@+id/viewReviewDividerTwo"
+        android:layout_below="@id/viewReviewTextReview"/>
 </RelativeLayout>

@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="LikeButton">
+        <attr name="drawable" format="reference"/>
+        <attr name="isLiked" format="boolean"/>
+    </declare-styleable>
+</resources>
