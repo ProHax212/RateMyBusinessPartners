@@ -2,18 +2,11 @@ package seniordesign.ratemybusinesspartners;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.MainThread;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
-import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,9 +19,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 //AWS API
@@ -39,20 +29,11 @@ import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.*;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
-import com.amazonaws.services.dynamodbv2.model.*;
 
 //Dynamo
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexHashKey;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRangeKey;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
 import java.util.List;
-import java.util.Random;
 
-import seniordesign.ratemybusinesspartners.models.Book;
-import seniordesign.ratemybusinesspartners.models.Review;
 import seniordesign.ratemybusinesspartners.models.User;
 
 public class MainActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -88,12 +69,14 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
         findViewById(R.id.disconnect_button).setOnClickListener(this);
+        findViewById(R.id.sign_out_button).setOnClickListener(this);
+        findViewById(R.id.continue_without_login).setOnClickListener(this);
+
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -178,6 +161,9 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
             case R.id.disconnect_button:
                 revokeAccess();
                 break;
+            case R.id.continue_without_login:
+                switchToHomePage();
+                break;
         }
     }
 
@@ -227,19 +213,11 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         return super.onOptionsItemSelected(item);
     }
 
-    //Test Methods - will not be in final product
-    public void switchToCompanyProfile(View view){
-        Intent intent = new Intent(this, CompanyProfile.class);
-        intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
-
+    public void switchToHomePage() {
+        Intent intent = new Intent(this, HomePage.class);
         startActivity(intent);
     }
 
-    //Testing the Search
-    public void switchToSearchCompany(View view){
-        Intent intentSearch = new Intent(this, SearchEngine.class);
-        startActivity(intentSearch);
-    }
     // [Start signIn]
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
