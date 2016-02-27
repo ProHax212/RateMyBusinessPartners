@@ -26,7 +26,7 @@
         <activity
             android:name=".CompanyProfile"
             android:label="@string/title_activity_company_profile"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".WriteReview"
             android:label="@string/title_activity_write_review"
@@ -38,7 +38,7 @@
         <activity
             android:name=".ViewReview"
             android:label="@string/title_activity_view_review"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".SelectCompanyPopUp"
             android:theme="@style/Theme.PopUp" />

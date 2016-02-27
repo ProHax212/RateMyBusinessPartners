@@ -29,7 +29,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 //I am not sure if I should check about the 8 hour token.
-//Would pullig that many times be fine?
+//Would pulling that many times be fine?
 public class SearchEngine extends AppCompatActivity {
     private EditText companyEditText;
     private Button searchButton;
@@ -60,7 +60,7 @@ public class SearchEngine extends AppCompatActivity {
         this.findAllViewsById();
         String urlString = null;
         String company = companyEditText.getText().toString();
-        if(company != null){
+        if(!company.isEmpty()){ /* Ceena - I changed if(company != null) to if(!company.isEmpty()) b/c the original always returns true. */
             urlString = String.format("https://maxcvservices.dnb.com/V6.2/organizations?KeywordText=%s", Uri.encode(company));
         }
         urlString = urlString + "&SearchModeDescription=Basic&findcompany=true";

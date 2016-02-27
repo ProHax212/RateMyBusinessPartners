@@ -236,10 +236,10 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     }
 
     //Testing the Search
-//    public void switchToSearchCompany(View view){
-//        Intent intentSearch = new Intent(this, SearchEngine.class);
-//        startActivity(intentSearch);
-//    }
+    public void switchToSearchCompany(View view){
+        Intent intentSearch = new Intent(this, SearchEngine.class);
+        startActivity(intentSearch);
+    }
     // [Start signIn]
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);

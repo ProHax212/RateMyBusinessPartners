@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:dropDownWidth="200dp"
+        android:hint="Enter your company here: "
         android:id="@+id/select_company_popup_autocompletetextview"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true" />
