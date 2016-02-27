@@ -51,8 +51,8 @@ public class HomePage extends AppCompatActivity
         testCompanyProfileButton = (Button) findViewById(R.id.home_page_company_profile_button);
         companySearched = (EditText) findViewById(R.id.home_page_searchcompany_edittext);
 
-        searchCompanyButton.setOnClickListener(this);
-        testCompanyProfileButton.setOnClickListener(this);
+//        searchCompanyButton.setOnClickListener(this);
+//        testCompanyProfileButton.setOnClickListener(this);
 
     }
 
@@ -113,7 +113,7 @@ public class HomePage extends AppCompatActivity
         return true;
     }
     //Test Methods - will not be in final product
-    public void switchToCompanyProfile(){
+    public void switchToCompanyProfile(View view){
         Intent intent = new Intent(this, CompanyProfile.class);
         intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
 
@@ -121,7 +121,7 @@ public class HomePage extends AppCompatActivity
     }
 
     //Testing the Search
-    public void switchToSearchCompany(){
+    public void switchToSearchCompany(View view){
         Intent intentSearch = new Intent(this, SearchEngine.class);
         startActivity(intentSearch);
     }
@@ -129,13 +129,13 @@ public class HomePage extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()) {
-            case R.id.home_page_searchcompany_button:
-                switchToSearchCompany();
-                break;
-            case R.id.home_page_company_profile_button:
-                switchToCompanyProfile();
-                break;
-        }
+//        switch(v.getId()) {
+//            case R.id.home_page_searchcompany_button:
+//                switchToSearchCompany();
+//                break;
+//            case R.id.home_page_company_profile_button:
+//                switchToCompanyProfile();
+//                break;
+//        }
     }
 }

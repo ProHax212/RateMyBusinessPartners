@@ -33,7 +33,8 @@
             android:layout_weight="1"
             android:text="search"
             android:textSize="12sp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:onClick="switchToSearchCompany"/>
 
         <Button
             android:id="@+id/home_page_company_profile_button"
@@ -42,7 +43,8 @@
             android:text="Test Company Profile"
             android:textSize="12sp"
             android:layout_weight="2"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:onClick="switchToCompanyProfile"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
