@@ -5,6 +5,7 @@
     <string name="title_activity_write_review">WriteReview</string>
     <string name="title_activity_review_results">ReviewResults</string>
     <string name="server_client_id">132195057733-0vb1eqsl6alv4tbv2v5q5louh21340u2.apps.googleusercontent.com</string>
+    <string name="title_search_results">SearchResults</string>
     <!-- Main -->
     <string name="main_textView_title">Rate My Business Partners</string>
     <string name="signed_in_fmt">Signed in as: %s</string>
@@ -72,9 +73,14 @@
     <!-- View Review Strings -->
     <string name="view_review_default_text">DEFAULT_REVIEW_TEXT</string>
     <string name="view_review_default_company_name">DEFAULT_COMPANY_NAME</string>
+
+    <!--Search Engine-->
     <string name="Search">Test Search</string>
     <string name="Company">Company</string>
     <string name="SearchEngine_search">Search</string>
     <string name="Search_Engine_tile">Company Search</string>
+    <string name="search_engine_results_returned">Results returned</string>
+
+
 
 </resources>

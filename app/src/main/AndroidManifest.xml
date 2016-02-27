@@ -21,8 +21,17 @@
         </activity>
         <activity
             android:name=".SearchEngine"
-            android:label="@string/Search"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName = ".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SearchResults"
+            android:label="@string/title_search_results"
+            android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".CompanyProfile"
             android:label="@string/title_activity_company_profile"

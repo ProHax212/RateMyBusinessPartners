@@ -4,10 +4,13 @@ package seniordesign.ratemybusinesspartners;
  * Created by ceenajac on 2/26/2016.
  */
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.JsonReader;
 import android.view.View;
 import android.widget.Button;
@@ -22,8 +25,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -33,12 +38,15 @@ import javax.net.ssl.HttpsURLConnection;
 public class SearchEngine extends AppCompatActivity {
     private EditText companyEditText;
     private Button searchButton;
+    private ArrayList<Response> result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_company);
         this.findAllViewsById();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,6 +74,11 @@ public class SearchEngine extends AppCompatActivity {
         urlString = urlString + "&SearchModeDescription=Basic&findcompany=true";
         return urlString;
     }
+
+    public ArrayList<Response> getResult(ArrayList<Response> result) {
+        return result;
+    }
+
     public void doGetRequest(String token){
         HttpsURLConnection urlConnection = null;
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -86,7 +99,10 @@ public class SearchEngine extends AppCompatActivity {
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             JsonReader jsonReader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-            getResponse.parseResponse(jsonReader);
+            ArrayList<Response> searchResult = getResponse.parseResponse(jsonReader);
+            Intent intent = new Intent(this, SearchResults.class);
+            intent.putExtra("searchResults", searchResult);
+            startActivity(intent);
         }catch(Exception e){
             e.printStackTrace();
         }finally{
@@ -94,21 +110,6 @@ public class SearchEngine extends AppCompatActivity {
         }
     }
 
-    protected String inBackground(String... params) {
-        String urlInput = params[0];
-        String result = "";
-        InputStream in = null;
-
-        try {
-            URL url = new URL(urlInput);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            in = new BufferedInputStream(urlConnection.getInputStream());
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return e.getMessage();
-        }
-        return result;
-    }
 
     public String doPostRequest(){
         HttpsURLConnection urlConnection = null;

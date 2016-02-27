@@ -1,5 +1,6 @@
 package seniordesign.ratemybusinesspartners;
 
+import android.os.Parcelable;
 import android.util.JsonReader;
 import java.util.ArrayList;
 
@@ -42,7 +43,7 @@ public class Response {
     }
 
     public ArrayList<Response> parseResponse(JsonReader jsonReader) {
-        ArrayList<Response> components = null;
+        ArrayList<Response> components = new ArrayList<Response>();
         Response component = new Response();
         String result = null;
         String key = null;
