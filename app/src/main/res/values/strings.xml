@@ -13,6 +13,9 @@
     <string name="main_textView_signedout">Signed out</string>
     <string name="continue_without_login"><u>continue without login</u></string>
 
+    <!-- Home Page -->
+    <string name="is_signed_in">Sign In</string>
+
     <!--Select Company Pop Up -->
     <string name="select_company_textView">Please Select Your Company: </string>
     <string name="select_company_submit">Submit</string>

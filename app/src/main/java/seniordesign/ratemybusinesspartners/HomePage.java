@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,13 +16,34 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBQueryExpression;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+
+import org.w3c.dom.Text;
+
+import java.util.List;
+
+import seniordesign.ratemybusinesspartners.models.User;
 
 public class HomePage extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
-    NavigationView navigationView = null;
-    Toolbar toolbar = null;
-    Button searchCompanyButton, testCompanyProfileButton;
-    EditText companySearched;
+        implements NavigationView.OnNavigationItemSelectedListener,
+            GoogleSignIn, GoogleApiClient.OnConnectionFailedListener {
+    private NavigationView navigationView = null;
+    private Toolbar toolbar = null;
+    private GoogleApiClient mGoogleApiClient;
+    private MenuItem sign_in_or_out;
+    private Menu navMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,16 +66,23 @@ public class HomePage extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        //Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(getString(R.string.server_client_id))
+                .build();
+
+        // Build a GoogleApiClient with access to the Google Sign-In API and the
+        // options specified by gso.
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navMenu = navigationView.getMenu();
         navigationView.setNavigationItemSelectedListener(this);
-
-        searchCompanyButton = (Button) findViewById(R.id.home_page_searchcompany_button);
-        testCompanyProfileButton = (Button) findViewById(R.id.home_page_company_profile_button);
-        companySearched = (EditText) findViewById(R.id.home_page_searchcompany_edittext);
-
-//        searchCompanyButton.setOnClickListener(this);
-//        testCompanyProfileButton.setOnClickListener(this);
-
     }
 
     @Override
@@ -69,7 +98,13 @@ public class HomePage extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.home_page, menu);
+        getMenuInflater().inflate(R.menu.activity_home_page_drawer, menu);
+        sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
+        if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
+            sign_in_or_out.setTitle("Sign Out");
+        } else {
+            sign_in_or_out.setTitle("Sign In");
+        }
         return true;
     }
 
@@ -88,12 +123,10 @@ public class HomePage extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
@@ -104,8 +137,12 @@ public class HomePage extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.sign_in_or_out) {
+            if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
+                signOut();
+            } else { //Consider disconnect or onStart
+                signIn();
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -126,16 +163,37 @@ public class HomePage extends AppCompatActivity
         startActivity(intentSearch);
     }
 
+    @Override
+    public void signIn() {
+        //TODO: Implement
+    }
 
     @Override
-    public void onClick(View v) {
-//        switch(v.getId()) {
-//            case R.id.home_page_searchcompany_button:
-//                switchToSearchCompany();
-//                break;
-//            case R.id.home_page_company_profile_button:
-//                switchToCompanyProfile();
-//                break;
-//        }
+    public void signOut() {
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
+                        Intent intent = new Intent(HomePage.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                });
+    }
+
+    @Override
+    public void revokeAccess() {
+
+    }
+
+    @Override
+    public void handleSignInResult(GoogleSignInResult result) {
+        //TODO: Implement
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        // An unresolvable error has occurred and Google APIs (including Sign-In) will not
+        // be available.
     }
 }

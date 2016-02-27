@@ -27,9 +27,10 @@
                 android:icon="@drawable/ic_menu_share"
                 android:title="Settings" />
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/sign_in_or_out"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Sign Out" />
+                android:title="@string/is_signed_in"
+                android:actionViewClass="android.widget.Button" />
         </menu>
     </item>
 
