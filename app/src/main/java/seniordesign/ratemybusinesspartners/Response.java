@@ -2,13 +2,15 @@ package seniordesign.ratemybusinesspartners;
 
 import android.os.Parcelable;
 import android.util.JsonReader;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
 /**
  * Created by ceenajac on 2/16/2016.
  */
-public class Response {
+public class Response implements Serializable {
     private String primaryName;
     private String city;
     private String state;

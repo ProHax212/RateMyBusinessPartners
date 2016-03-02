@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import seniordesign.ratemybusinesspartners.adapters.ReviewListAdapter;
@@ -61,7 +62,8 @@ public class SearchResults extends AppCompatActivity {
 
         //Initialize Results
         ListView search = (ListView) findViewById(R.id.searchResultsListView);
-        ArrayList<Response> searchResults = (ArrayList<Response>)getIntent().getSerializableExtra("SearchResults");
+        List<Response> searchResults = new ArrayList<Response>();
+        searchResults = (ArrayList<Response>)getIntent().getSerializableExtra("searchResults");
         searchResultsAdapter = new SearchListAdapter(this,searchResults);
         search.setAdapter(searchResultsAdapter);
         int x;

@@ -10,6 +10,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import seniordesign.ratemybusinesspartners.R;
 import seniordesign.ratemybusinesspartners.Response;
@@ -25,11 +26,12 @@ public class SearchListAdapter extends ArrayAdapter<Response> {
     private static class ViewHolder {
         private TextView iView;
     }
-    public SearchListAdapter(Context context, ArrayList<Response> companyArrayList) {
+    public SearchListAdapter(Context context, List<Response> companyArrayList) {
 
         super(context, R.layout.search_list_item, companyArrayList);
         this.context = context;
-        this.companyArrayList = companyArrayList;
+        this.companyArrayList = (ArrayList<Response>)companyArrayList;
+
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
