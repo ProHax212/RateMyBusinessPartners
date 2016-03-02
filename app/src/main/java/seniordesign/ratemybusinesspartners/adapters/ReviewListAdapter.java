@@ -46,8 +46,8 @@ public class ReviewListAdapter extends ArrayAdapter<Review> {
         TextView reviewTextView = (TextView) rowView.findViewById(R.id.reviewTextView);
 
         // 4. Set the text for textView
-        reviewRatingBar.setRating(modelsArrayList.get(position).getNumStars());
         reviewTextView.setText(modelsArrayList.get(position).toString());
+        reviewRatingBar.setRating(modelsArrayList.get(position).getNumStars());
 
         // 5. return rowView
         return rowView;

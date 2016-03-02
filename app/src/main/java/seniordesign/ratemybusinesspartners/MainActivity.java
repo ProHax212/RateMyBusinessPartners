@@ -2,18 +2,11 @@ package seniordesign.ratemybusinesspartners;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.MainThread;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
-import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,9 +19,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 //AWS API
@@ -39,23 +29,14 @@ import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.*;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
-import com.amazonaws.services.dynamodbv2.model.*;
 
 //Dynamo
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexHashKey;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRangeKey;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
 import java.util.List;
-import java.util.Random;
 
-import seniordesign.ratemybusinesspartners.models.Book;
-import seniordesign.ratemybusinesspartners.models.Review;
 import seniordesign.ratemybusinesspartners.models.User;
 
-public class MainActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleSignIn {
 
     String targetCompany;
     public static User CURRENT_USER = new User("Dummy ID Token", "Walmart");
@@ -69,11 +50,14 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     private static final String TAG = "SignInActivity";
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
-
+    public enum Sign_In_Status {
+        SIGNED_IN, SIGNED_OUT, DISCONNECTED, ON_START;
+    };
+    public static Sign_In_Status sign_in_status = Sign_In_Status.ON_START;
     //Select Company
     private static final int RC_COMPANY_SELECTION = 9002;
     public static final String SELECTED_COMPANY = "";
-    private static boolean hasCompany = false;
+    public static boolean hasCompany = false;
     private String userIdToken;
     private String company;
 
@@ -88,12 +72,16 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+        if(sign_in_status == Sign_In_Status.SIGNED_OUT) {
+            Toast.makeText(MainActivity.this, "You have successfully signed out.", Toast.LENGTH_LONG).show();
+        }
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
         findViewById(R.id.disconnect_button).setOnClickListener(this);
+        findViewById(R.id.sign_out_button).setOnClickListener(this);
+        findViewById(R.id.continue_without_login).setOnClickListener(this);
+
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -107,8 +95,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
-        mStatusTextView = (TextView) findViewById(R.id.status);
 
 
         //Amazon Testing
@@ -178,6 +164,10 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
             case R.id.disconnect_button:
                 revokeAccess();
                 break;
+            case R.id.continue_without_login:
+                sign_in_status = Sign_In_Status.SIGNED_OUT;
+                switchToHomePage();
+                break;
         }
     }
 
@@ -227,51 +217,41 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         return super.onOptionsItemSelected(item);
     }
 
-    //Test Methods - will not be in final product
-    public void switchToCompanyProfile(View view){
-        Intent intent = new Intent(this, CompanyProfile.class);
-        intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
-
+    public void switchToHomePage() {
+        Intent intent = new Intent(this, HomePage.class);
         startActivity(intent);
     }
 
-    //Testing the Search
-    public void switchToSearchCompany(View view){
-        Intent intentSearch = new Intent(this, SearchEngine.class);
-        startActivity(intentSearch);
-    }
-    // [Start signIn]
-    private void signIn() {
+    public void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-    // [END SignIn]
 
-    private void signOut() {
+    public void signOut() {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        updateUI(false);
-                        // [END_EXCLUDE]
+                        Toast.makeText(MainActivity.this, "You have successfully signed out. ", Toast.LENGTH_LONG).show();
+                        sign_in_status = Sign_In_Status.SIGNED_OUT;
                     }
                 });
     }
 
-    private void revokeAccess() {
+    public void revokeAccess() {
         Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        updateUI(false);
-                        // [END_EXCLUDE]
+//                        updateUI(false);
                     }
                 });
+        sign_in_status = Sign_In_Status.DISCONNECTED;
+        Toast.makeText(MainActivity.this, "You have been disconnected. ", Toast.LENGTH_LONG).show();
+
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
+    public void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
@@ -304,36 +284,37 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 Intent intent = new Intent(MainActivity.this, SelectCompanyPopUp.class);
                 startActivityForResult(intent, RC_COMPANY_SELECTION);
             }
-            mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
-            findViewById(R.id.status).setVisibility(View.VISIBLE);
-            updateUI(true);
+            sign_in_status = Sign_In_Status.SIGNED_IN;
+            Intent intent = new Intent(this, HomePage.class);
+            startActivity(intent);
+
         } else {
-            // Signed out, show unauthenticated UI.
-            updateUI(false);
+            Toast.makeText(MainActivity.this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();
+            sign_in_status = Sign_In_Status.SIGNED_OUT;
         }
     }
 
-    private void updateUI(boolean signedIn) {
-        mStatusTextView.postDelayed(new Runnable(){
-            @Override
-            public void run()
-            {
-                mStatusTextView.setVisibility(View.GONE);
-            }
-        }, 10000);
-        if (signedIn) {
-            mStatusTextView.setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-            findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.disconnect_button).setVisibility(View.VISIBLE);
-        } else {
-            mStatusTextView.setVisibility(View.VISIBLE);
-            mStatusTextView.setText(R.string.main_textView_signedout);
-            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
-            findViewById(R.id.disconnect_button).setVisibility(View.GONE);
-        }
-    }
+//    public void updateUI(boolean signedIn) {
+//        mStatusTextView.postDelayed(new Runnable(){
+//            @Override
+//            public void run()
+//            {
+//                mStatusTextView.setVisibility(View.GONE);
+//            }
+//        }, 10000);
+//        if (signedIn) {
+//            mStatusTextView.setVisibility(View.VISIBLE);
+//            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
+//            findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
+//            findViewById(R.id.disconnect_button).setVisibility(View.VISIBLE);
+//        } else {
+//            mStatusTextView.setVisibility(View.VISIBLE);
+//            mStatusTextView.setText(R.string.main_textView_signedout);
+//            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+//            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
+//            findViewById(R.id.disconnect_button).setVisibility(View.GONE);
+//        }
+//    }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {

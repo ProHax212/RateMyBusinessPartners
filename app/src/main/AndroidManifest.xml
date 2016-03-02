@@ -3,6 +3,7 @@
     package="seniordesign.ratemybusinesspartners">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/rmbp_icon"
@@ -23,6 +24,7 @@
             android:name=".SearchEngine"
             android:label="Search Company"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
             android:name=".SearchResults"
             android:label="@string/title_search_results"
@@ -46,6 +48,10 @@
         <activity
             android:name=".SelectCompanyPopUp"
             android:theme="@style/Theme.PopUp" />
+        <activity
+            android:name=".HomePage"
+            android:label="@string/title_activity_home_page"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
     </application>
 
 </manifest>
