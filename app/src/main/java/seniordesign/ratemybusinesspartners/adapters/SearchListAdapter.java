@@ -22,7 +22,9 @@ public class SearchListAdapter extends ArrayAdapter<Response> {
 
     private final Context context;
     private final ArrayList<Response> companyArrayList;
-
+    private static class ViewHolder {
+        private TextView iView;
+    }
     public SearchListAdapter(Context context, ArrayList<Response> companyArrayList) {
 
         super(context, R.layout.search_list_item, companyArrayList);
@@ -31,14 +33,29 @@ public class SearchListAdapter extends ArrayAdapter<Response> {
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) context
+        ViewHolder viewHolder;
+        if(convertView == null){
+             convertView = LayoutInflater.from(this.getContext())
+                    .inflate(R.layout.search_list_item, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.iView= (TextView) convertView.findViewById(R.id.searchTextView);
+            convertView.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder)convertView.getTag();
+        }
+
+        Response item = companyArrayList.get(position);
+        if(item !=null){
+            viewHolder.iView.setText(String.format("%s \n%s,%s", item.getPrimaryName(),item.getCity(),item.getState()));
+        }
+        /*LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.search_list_item, parent, false);
         TextView textView = (TextView) rowView.findViewById(R.id.searchTextView);
         textView.setText(companyArrayList.get(position).getPrimaryName());
-        // change the icon for Windows and iPhone
+        // change the icon for Windows and iPhone*/
 
-        return rowView;
+        return convertView;
     }
 
 

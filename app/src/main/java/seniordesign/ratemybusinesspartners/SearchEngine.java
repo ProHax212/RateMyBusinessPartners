@@ -101,7 +101,7 @@ public class SearchEngine extends AppCompatActivity {
             JsonReader jsonReader = new JsonReader(new InputStreamReader(in, "UTF-8"));
             ArrayList<Response> searchResult = getResponse.parseResponse(jsonReader);
             Intent intent = new Intent(this, SearchResults.class);
-            intent.putExtra("searchResults", searchResult);
+            intent.putExtra("");
             startActivity(intent);
         }catch(Exception e){
             e.printStackTrace();
