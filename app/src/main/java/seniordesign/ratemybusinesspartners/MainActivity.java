@@ -82,9 +82,9 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         findViewById(R.id.disconnect_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
         findViewById(R.id.continue_without_login).setOnClickListener(this);
-        //TextView textView = (TextView)findViewById(R.id.main_company_review_textView);
-        //Typeface font = Typeface.createFromAsset(getAssets(),"fonts/BILLY ARGEL TRIAL___.otf_");
-        //textView.setTypeface(font);
+        TextView textView = (TextView)findViewById(R.id.main_company_review_textView);
+        Typeface font = Typeface.createFromAsset(getAssets(),"fonts/ModernAntiqua-Regular.ttf");
+        textView.setTypeface(font);
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
