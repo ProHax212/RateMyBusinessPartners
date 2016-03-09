@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         findViewById(R.id.continue_without_login).setOnClickListener(this);
 
         TextView textView = (TextView)findViewById(R.id.main_company_review_textView);
-        Typeface font = Typeface.createFromAsset(getAssets(),"fonts/BILLY ARGEL TRIAL___.otf");
+        Typeface font = Typeface.createFromAsset(getAssets(),"fonts/ModernAntiqua-Regular.ttf");
         textView.setTypeface(font);
 
         // Configure sign-in to request the user's ID, email address, and basic
