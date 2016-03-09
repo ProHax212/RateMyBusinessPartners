@@ -5,10 +5,14 @@ import android.media.Rating;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -36,9 +40,13 @@ public class WriteReview extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_write_review);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        // Initialize the Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.writeReviewToolbar);
         setSupportActionBar(toolbar);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true); // Allow the action bar to handle the 'back' action
 
         // Fill in company name from Intent
         Intent intent = getIntent();
@@ -64,6 +72,13 @@ public class WriteReview extends AppCompatActivity {
 
     }
 
+    // Initialize the action bar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.write_review, menu);
+        return true;
+    }
 
     /**
      * Submit the review to the database
@@ -109,5 +124,15 @@ public class WriteReview extends AppCompatActivity {
 
     }
 
+    // Action Bar Options
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId()){
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

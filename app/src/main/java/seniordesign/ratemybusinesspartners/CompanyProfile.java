@@ -50,7 +50,9 @@ public class CompanyProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_company_profile);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        // Initialize the toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.companyProfileToolbar);
         setSupportActionBar(toolbar);
 
         //Retrieve Intent inputs
