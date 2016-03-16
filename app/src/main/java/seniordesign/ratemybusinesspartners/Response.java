@@ -14,10 +14,12 @@ public class Response implements Serializable {
     private String primaryName;
     private String city;
     private String state;
+    private int length;
     public Response(){
         this.primaryName = null;
         this.city = null;
         this.state = null;
+        this.length = 0;
     }
 
     public String getPrimaryName() {
@@ -42,6 +44,14 @@ public class Response implements Serializable {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
     }
 
     public ArrayList<Response> parseResponse(JsonReader jsonReader) {
@@ -98,7 +108,7 @@ public class Response implements Serializable {
                         }
                     }
                 } else if(name.equals("CandidateReturnedQuantity")) {
-                    count = jsonReader.nextInt();
+                     component.setLength(jsonReader.nextInt());
                 }else {
                     jsonReader.skipValue();
                 }
