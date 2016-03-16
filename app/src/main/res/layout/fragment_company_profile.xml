@@ -1,0 +1,47 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="seniordesign.ratemybusinesspartners.fragments.CompanyProfileFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:id="@+id/companyNameTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/company_profile_company_name"
+        android:textStyle="bold"
+        android:textSize="@dimen/company_information_text_size" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:id="@+id/companyProfileReviewsTextView"
+        android:layout_below="@+id/companyNameTextView"
+        android:text="@string/company_profile_reviews"
+        android:textStyle="bold"
+        android:textSize="@dimen/company_information_text_size" />
+
+
+    <ListView
+        android:id="@+id/companyProfileReviewList"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/company_profile_review_list_height"
+        android:layout_below="@id/companyProfileReviewsTextView"
+        android:clickable="false"
+        android:contextClickable="false">
+
+
+
+    </ListView>
+
+    <View style="@style/divider"
+        android:layout_height="@dimen/divider_height"
+        android:layout_below="@id/companyProfileReviewList"
+        android:id="@+id/companyProfileDividerOne"/>
+
+</RelativeLayout>
