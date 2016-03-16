@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         SIGNED_IN, SIGNED_OUT, DISCONNECTED, ON_START;
     };
     public static Sign_In_Status sign_in_status = Sign_In_Status.ON_START;
+
     //Select Company
     private static final int RC_COMPANY_SELECTION = 9002;
     public static final String SELECTED_COMPANY = "";
@@ -73,18 +75,25 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+
+        // Initialize the Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+
+        //Deal with user accounts
         if(sign_in_status == Sign_In_Status.SIGNED_OUT) {
             Toast.makeText(MainActivity.this, "You have successfully signed out.", Toast.LENGTH_LONG).show();
         }
+        // Set the listeners for the user account buttons
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         findViewById(R.id.disconnect_button).setOnClickListener(this);
         findViewById(R.id.sign_out_button).setOnClickListener(this);
         findViewById(R.id.continue_without_login).setOnClickListener(this);
+
         TextView textView = (TextView)findViewById(R.id.main_company_review_textView);
         Typeface font = Typeface.createFromAsset(getAssets(),"fonts/ModernAntiqua-Regular.ttf");
         textView.setTypeface(font);
+
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

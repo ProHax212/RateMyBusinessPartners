@@ -36,15 +36,18 @@
         <activity
             android:name=".WriteReview"
             android:label="@string/title_activity_write_review"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".CompanyProfile"/>
         <activity
             android:name=".ReviewResults"
             android:label="@string/title_activity_review_results"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".CompanyProfile"/>
         <activity
             android:name=".ViewReview"
             android:label="@string/title_activity_view_review"
-            android:theme="@style/MainActivityTheme" />
+            android:theme="@style/MainActivityTheme"
+            android:parentActivityName=".ReviewResults"/>
         <activity
             android:name=".SelectCompanyPopUp"
             android:theme="@style/Theme.PopUp" />
