@@ -12,14 +12,32 @@
     tools:context="seniordesign.ratemybusinesspartners.CompanyProfile"
     tools:showIn="@layout/activity_company_profile">
 
+    <android.support.design.widget.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/companyProfileTabs"
+        app:tabMode="scrollable"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+    </android.support.design.widget.TabLayout>
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/companyProfileViewPager"
+        android:layout_below="@id/companyProfileTabs">
+
+    </android.support.v4.view.ViewPager>
+
+    <!--
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:id="@+id/companyNameTextView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_below="@id/companyProfileTabs"
         android:text="@string/company_profile_company_name"
         android:textStyle="bold"
         android:textSize="@dimen/company_information_text_size" />
@@ -69,5 +87,6 @@
         android:layout_toRightOf="@+id/allReviewsButton"
         android:layout_toEndOf="@+id/allReviewsButton"
         android:onClick="writeReview"/>
+        -->
 
 </RelativeLayout>
