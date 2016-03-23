@@ -44,14 +44,17 @@ public class SearchEngine extends AppCompatActivity {
     private ListView lv;
     private ArrayList<Response> result;
     ArrayList<String> previouslySearched = new ArrayList<String>();
+    String[] items = { "Walmart", "ExxonMobil", "Dell", "Kroger", "Gorman","Chevron", "Shell", "Google", "Microsoft"};
     ArrayAdapter<ArrayList<String>> adapter;
+    ArrayAdapter<String> sadapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_company);
         this.findAllViewsById();
         adapter = new ArrayAdapter<ArrayList<String>>(this, android.R.layout.simple_list_item_1);
-       lv.setAdapter(adapter) ;
+        sadapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        lv.setAdapter(sadapter);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         companyEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
@@ -65,7 +68,7 @@ public class SearchEngine extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String text){
                 if(!previouslySearched.isEmpty()){
-                    adapter.getFilter().filter(text);
+                    sadapter.getFilter().filter(text);
                 }
                 return false;
             }
