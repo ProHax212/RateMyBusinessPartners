@@ -9,8 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="seniordesign.ratemybusinesspartners.SearchEngine"
-    tools:showIn="@layout/activity_search_company"
-    android:background="@mipmap/stritervill_chicago_illinois_usa_city_night_skyscraper_tower_skyscrapers_buildings_houses_river_lights_light_reflection_76135_3840x2160">
+    tools:showIn="@layout/activity_search_company">
 
 
 
