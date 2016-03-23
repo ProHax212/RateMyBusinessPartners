@@ -19,7 +19,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBQueryExpression;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -40,9 +45,21 @@ public class HomePage extends AppCompatActivity
             GoogleSignIn, GoogleApiClient.OnConnectionFailedListener {
     private NavigationView navigationView = null;
     private Toolbar toolbar = null;
-    private GoogleApiClient mGoogleApiClient;
     private MenuItem sign_in_or_out;
     private Menu navMenu;
+
+    // GOOGLE Sign In
+    private GoogleApiClient mGoogleApiClient;
+    private static final int RC_SIGN_IN = 9001;
+
+    //Abraham Amazon DB
+    private DynamoDBMapper mapper;
+
+    //Select Company
+    private static final int RC_COMPANY_SELECTION = 9002;
+    public static final String SELECTED_COMPANY = "";
+    private String userIdToken;
+    private String company;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +83,17 @@ public class HomePage extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        //Google Sign In
+        initializeGoogleSignIn();
+        initializeAbrahamDatabase();
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navMenu = navigationView.getMenu();
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void initializeGoogleSignIn() {
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestIdToken(getString(R.string.server_client_id))
@@ -78,11 +105,34 @@ public class HomePage extends AppCompatActivity
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+    }
 
+    private void initializeAbrahamDatabase() {
+        //Amazon Testing
+        // Initialize the Amazon Cognito credentials provider
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                "us-east-1:f5ba73d3-acbf-45bb-83e2-e4fbe40f269c", // Identity Pool ID
+                Regions.US_EAST_1 // Region
+        );
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navMenu = navigationView.getMenu();
-        navigationView.setNavigationItemSelectedListener(this);
+        // Initialize the Cognito Sync client
+        CognitoSyncManager syncClient = new CognitoSyncManager(
+                getApplicationContext(),
+                Regions.US_EAST_1, // Region
+                credentialsProvider);
+
+        // Create a record in a dataset and synchronize with the server
+//        Dataset dataset = syncClient.openOrCreateDataset("myDataset");
+//        dataset.put("myKey", "myValue");
+//        dataset.synchronize(new DefaultSyncCallback() {
+//            @Override
+//            public void onSuccess(Dataset dataset, List newRecords) {
+//                //Your handler code here
+//            }
+//        });
+        AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+        mapper = new DynamoDBMapper(ddbClient);
     }
 
     @Override
@@ -123,6 +173,40 @@ public class HomePage extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        } else if (requestCode == RC_COMPANY_SELECTION) {
+            if(resultCode == 0) {
+                Toast.makeText(this, "You must associate your account with a company.", Toast.LENGTH_LONG).show();
+                signOut();
+            } else {
+                data.getData();
+                company = data.getStringExtra(MainActivity.SELECTED_COMPANY);
+                Runnable runSaveItem = new Runnable() {
+                    @Override
+                    public void run() {
+                        User user = new User();
+                        user.setUserIdToken(userIdToken);
+                        user.setCompany(company);
+
+                        mapper.save(user);
+                    }
+                };
+                Thread thread = new Thread(runSaveItem);
+                thread.start();
+                MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_IN;
+                sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
+                sign_in_or_out.setTitle("Sign Out");
+                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserIdToken(), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -165,7 +249,8 @@ public class HomePage extends AppCompatActivity
 
     @Override
     public void signIn() {
-        //TODO: Implement
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
@@ -183,12 +268,64 @@ public class HomePage extends AppCompatActivity
 
     @Override
     public void revokeAccess() {
-
+        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
+                new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+//                        updateUI(false);
+                    }
+                });
+        MainActivity.sign_in_status = MainActivity.Sign_In_Status.DISCONNECTED;
+        Toast.makeText(HomePage.this, "You have been disconnected. ", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void handleSignInResult(GoogleSignInResult result) {
-        //TODO: Implement
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+            MainActivity.CURRENT_USER = new User(acct.getDisplayName(), company);
+            userIdToken = acct.getId();
+            Runnable runLoadItem = new Runnable() {
+                @Override
+                public void run() {
+                    User partitionKeyKeyValues = new User();
+
+                    partitionKeyKeyValues.setUserIdToken(userIdToken);
+                    DynamoDBQueryExpression<User> queryExpression = new DynamoDBQueryExpression<User>()
+                            .withHashKeyValues(partitionKeyKeyValues);
+
+                    List<User> itemList = mapper.query(User.class, queryExpression);
+                    if(itemList.size() > 0) {
+                        MainActivity.hasCompany = true;
+                    }
+                    else { MainActivity.hasCompany = false; }
+                    Log.d("Has Company", ""+MainActivity.hasCompany);
+                }
+            };
+
+            Thread thread = new Thread(runLoadItem);
+            thread.start();
+            try {
+                thread.join();
+            } catch(Exception e) {
+                Log.d("ERROR: AT THREAD.JOIN: ", e.toString());
+            }
+            if(!MainActivity.hasCompany) {
+                Intent intent = new Intent(HomePage.this, SelectCompanyPopUp.class);
+                startActivityForResult(intent, RC_COMPANY_SELECTION);
+            } else {
+                MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_IN;
+                sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
+                sign_in_or_out.setTitle("Sign Out");
+                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserIdToken(), Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(HomePage.this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();
+            MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
+            sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
+            sign_in_or_out.setTitle("Sign In");
+        }
     }
 
     @Override

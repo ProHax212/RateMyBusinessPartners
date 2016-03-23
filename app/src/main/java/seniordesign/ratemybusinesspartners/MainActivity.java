@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     public static final String RYAN_DNB_LOGIN_PASSWORD = "ratemybusinesspartners";
 
     // google sign in
-    private TextView mStatusTextView;
     private static final String TAG = "SignInActivity";
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
@@ -64,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     private String userIdToken;
     private String company;
 
+    //Abraham Amazon DB
     private DynamoDBMapper mapper;
 
     //Ryan's Database for Testing
@@ -94,6 +94,20 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         Typeface font = Typeface.createFromAsset(getAssets(),"fonts/ModernAntiqua-Regular.ttf");
         textView.setTypeface(font);
 
+        //Google Sign in initialization
+        initializeGoogleSignIn();
+
+        //Abraham's db initialization
+        initializeAbrahamDatabase();
+
+        //Ryan's initialization for database
+        initializeRyanDatabase();
+
+        //Company Profile
+        this.targetCompany = "Walmart";
+    }
+
+    private void initializeGoogleSignIn() {
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -107,8 +121,8 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
-
+    }
+    private void initializeAbrahamDatabase() {
         //Amazon Testing
         // Initialize the Amazon Cognito credentials provider
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
@@ -124,26 +138,17 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 credentialsProvider);
 
         // Create a record in a dataset and synchronize with the server
-        Dataset dataset = syncClient.openOrCreateDataset("myDataset");
-        dataset.put("myKey", "myValue");
-        dataset.synchronize(new DefaultSyncCallback() {
-            @Override
-            public void onSuccess(Dataset dataset, List newRecords) {
-                //Your handler code here
-            }
-        });
-
+//        Dataset dataset = syncClient.openOrCreateDataset("myDataset");
+//        dataset.put("myKey", "myValue");
+//        dataset.synchronize(new DefaultSyncCallback() {
+//            @Override
+//            public void onSuccess(Dataset dataset, List newRecords) {
+//                //Your handler code here
+//            }
+//        });
         AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
         mapper = new DynamoDBMapper(ddbClient);
-
-
-        //Ryan's initialization for database
-        initializeRyanDatabase();
-
-        //Company Profile
-        this.targetCompany = "Walmart";
     }
-
     private void initializeRyanDatabase(){
 
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
@@ -194,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         } else if (requestCode == RC_COMPANY_SELECTION) {
             if(resultCode == 0) {
                 Toast.makeText(this, "You must associate your account with a company.", Toast.LENGTH_LONG).show();
-                signOut();
+                //signOut();
             } else {
                 data.getData();
                 company = data.getStringExtra(SELECTED_COMPANY);
@@ -210,6 +215,10 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 };
                 Thread thread = new Thread(runSaveItem);
                 thread.start();
+                sign_in_status = Sign_In_Status.SIGNED_IN;
+                Intent intent = new Intent(this, HomePage.class);
+                startActivity(intent);
+                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserIdToken(), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -260,7 +269,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 });
         sign_in_status = Sign_In_Status.DISCONNECTED;
         Toast.makeText(MainActivity.this, "You have been disconnected. ", Toast.LENGTH_LONG).show();
-
     }
 
     public void handleSignInResult(GoogleSignInResult result) {
@@ -295,11 +303,12 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
             if(!MainActivity.hasCompany) {
                 Intent intent = new Intent(MainActivity.this, SelectCompanyPopUp.class);
                 startActivityForResult(intent, RC_COMPANY_SELECTION);
+            } else {
+                sign_in_status = Sign_In_Status.SIGNED_IN;
+                Intent intent = new Intent(this, HomePage.class);
+                startActivity(intent);
+                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserIdToken(), Toast.LENGTH_LONG).show();
             }
-            sign_in_status = Sign_In_Status.SIGNED_IN;
-            Intent intent = new Intent(this, HomePage.class);
-            startActivity(intent);
-
         } else {
             Toast.makeText(MainActivity.this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();
             sign_in_status = Sign_In_Status.SIGNED_OUT;
