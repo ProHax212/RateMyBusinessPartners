@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="seniordesign.ratemybusinesspartners.SearchEngine">
+    tools:context="seniordesign.ratemybusinesspartners.SearchEngine"
+    tools:showIn="@layout/content_search_engine">
 
 
     <android.support.design.widget.AppBarLayout
