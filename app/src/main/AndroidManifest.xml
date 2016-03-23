@@ -32,7 +32,7 @@
         <activity
             android:name=".CompanyProfile"
             android:label="@string/title_activity_company_profile"
-            android:theme="@style/MainActivityTheme" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".WriteReview"
             android:label="@string/title_activity_write_review"
