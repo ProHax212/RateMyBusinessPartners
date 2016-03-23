@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         setContentView(R.layout.activity_main);
 
         // Initialize the Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        //setSupportActionBar(toolbar);
 
         //Deal with user accounts
         if(sign_in_status == Sign_In_Status.SIGNED_OUT) {
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 break;
             case R.id.continue_without_login:
                 sign_in_status = Sign_In_Status.SIGNED_OUT;
-                switchToHomePage();
+                switchToSearchCompany();
                 break;
         }
     }
@@ -233,7 +233,10 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         Intent intent = new Intent(this, HomePage.class);
         startActivity(intent);
     }
-
+    public void switchToSearchCompany(){
+        Intent intentSearch = new Intent(this, SearchEngine.class);
+        startActivity(intentSearch);
+    }
     public void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);

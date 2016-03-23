@@ -81,6 +81,7 @@
 
     <!--Search Engine-->
     <string name="Search">Test Search</string>
+    <string name="Search_Company">Search Companies</string>
     <string name="Company">Company</string>
     <string name="SearchEngine_search">Search</string>
     <string name="Search_Engine_tile">Company Search</string>

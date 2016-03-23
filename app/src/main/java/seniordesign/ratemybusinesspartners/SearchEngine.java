@@ -13,8 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.JsonReader;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
@@ -36,40 +39,63 @@ import javax.net.ssl.HttpsURLConnection;
 //I am not sure if I should check about the 8 hour token.
 //Would pulling that many times be fine?
 public class SearchEngine extends AppCompatActivity {
-    private EditText companyEditText;
+    private SearchView companyEditText;
     private Button searchButton;
+    private ListView lv;
     private ArrayList<Response> result;
-
+    ArrayList<String> previouslySearched = new ArrayList<String>();
+    ArrayAdapter<ArrayList<String>> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_company);
         this.findAllViewsById();
+        adapter = new ArrayAdapter<ArrayList<String>>(this, android.R.layout.simple_list_item_1);
+       lv.setAdapter(adapter) ;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        companyEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+
+            @Override
+            public boolean onQueryTextSubmit(String text){
+                String authToken = doPostRequest();
+                doGetRequest(authToken, text);
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String text){
+                if(!previouslySearched.isEmpty()){
+                    adapter.getFilter().filter(text);
+                }
+                return false;
+            }
+        });
+        /*&searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String authToken = doPostRequest();
                 doGetRequest(authToken);
             }
-        });
+        });*/
         //   String authToken = doPostRequest();
         // doGetRequest(authToken);
     }
     private void findAllViewsById(){
-        companyEditText = (EditText)findViewById(R.id.companyEditText);
-        searchButton = (Button)findViewById(R.id.searchButton);
+        companyEditText = (SearchView)findViewById(R.id.companyEditText);
+        lv = (ListView) findViewById(R.id.searchListView);
     }
     private void displayQuery(CharSequence message){
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
-    public String compileUrl(){
+    public String compileUrl(String comp){
         this.findAllViewsById();
         String urlString = null;
-        String company = companyEditText.getText().toString();
-        if(!company.isEmpty()){ /* Ceena - I changed if(company != null) to if(!company.isEmpty()) b/c the original always returns true. */
-            urlString = String.format("https://maxcvservices.dnb.com/V6.0/organizations?KeywordText=%s", Uri.encode(company));
+        String company = comp;
+        if(!company.isEmpty()) { /* Ceena - I changed if(company != null) to if(!company.isEmpty()) b/c the original always returns true. */
+            urlString = String.format("https://maxcvservices.dnb.com/V6.2/organizations?KeywordText=%s", Uri.encode(company));
+            if (!previouslySearched.contains(comp)) {
+                previouslySearched.add(comp);
+            }
         }
         urlString = urlString + "&SearchModeDescription=Basic&findcompany=true";
         return urlString;
@@ -79,11 +105,11 @@ public class SearchEngine extends AppCompatActivity {
         return result;
     }
 
-    public void doGetRequest(String token){
+    public void doGetRequest(String token, String company){
         HttpsURLConnection urlConnection = null;
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        String urlString = this.compileUrl();
+        String urlString = this.compileUrl(company);
         Response getResponse = new Response();
         try {
             URL url = new URL(urlString);
@@ -98,8 +124,7 @@ public class SearchEngine extends AppCompatActivity {
             System.out.println(HttpResult+ ":" + HttpString);
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            JsonReader jsonReader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-            ArrayList<Response> searchResult = getResponse.parseResponse(jsonReader);
+            JsonReader jsonReader = new JsonReader(new InputStreamReader(in, "UTF-8"));ArrayList<Response> searchResult = getResponse.parseResponse(jsonReader);
             Intent intent = new Intent(this, SearchResults.class);
             intent.putExtra("searchResults",searchResult);
             startActivity(intent);

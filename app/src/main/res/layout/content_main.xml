@@ -76,7 +76,7 @@
             android:textColor="@android:color/white"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:onClick="switchToHomePage" />
+            android:onClick="switchToSearchCompany" />
 
         <Button
             android:id="@+id/sign_out_button"

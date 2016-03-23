@@ -58,7 +58,7 @@ public class SearchResults extends AppCompatActivity {
 
 
         TextView companyName = (TextView) findViewById(R.id.resultNumber);
-        companyName.setText("1 Result Found");
+
 
         //Initialize Results
         ListView search = (ListView) findViewById(R.id.searchResultsListView);
@@ -66,7 +66,7 @@ public class SearchResults extends AppCompatActivity {
         searchResults = (ArrayList<Response>)getIntent().getSerializableExtra("searchResults");
         searchResultsAdapter = new SearchListAdapter(this,searchResults);
         search.setAdapter(searchResultsAdapter);
-        int x;
+       // companyName.setText( searchResults.size() + " Result Found");;
     }
 
 }
