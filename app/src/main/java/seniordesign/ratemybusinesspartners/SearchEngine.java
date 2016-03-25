@@ -288,6 +288,19 @@ public class SearchEngine extends AppCompatActivity implements
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+///        getMenuInflater().inflate(R.menu.nav_drawer, menu);
+        sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
+        if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
+            sign_in_or_out.setTitle("Sign Out");
+        } else {
+            sign_in_or_out.setTitle("Sign In");
+        }
+        return true;
+    }
+
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.search_engine_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {

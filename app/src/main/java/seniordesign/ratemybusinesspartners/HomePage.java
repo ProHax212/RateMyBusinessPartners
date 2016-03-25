@@ -88,7 +88,7 @@ public class HomePage extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.nav_drawer, menu);
+//        getMenuInflater().inflate(R.menu.nav_drawer, menu);
         sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
         if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
             sign_in_or_out.setTitle("Sign Out");
