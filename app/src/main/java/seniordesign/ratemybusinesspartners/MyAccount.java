@@ -71,12 +71,9 @@ public class MyAccount extends AppCompatActivity implements
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        initializeGoogleSignIn();
-        initializeUserDatabase();
-
-        EditText userId_edittext = (EditText) findViewById(R.id.myaccount_userId_edittext);
-        EditText email_edittext = (EditText) findViewById(R.id.myaccount_email_edittext);
-        EditText company_edittext = (EditText) findViewById(R.id.myaccount_company_edittext);
+        userId_edittext = (EditText) findViewById(R.id.myaccount_userId_edittext);
+        email_edittext = (EditText) findViewById(R.id.myaccount_email_edittext);
+        company_edittext = (EditText) findViewById(R.id.myaccount_company_edittext);
 
         userId_edittext.setText(MainActivity.CURRENT_USER.getUserId());
         email_edittext.setText(MainActivity.email);
@@ -86,6 +83,9 @@ public class MyAccount extends AppCompatActivity implements
         navMenu = navigationView.getMenu();
         navigationView.setNavigationItemSelectedListener(this);
         sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
+
+        initializeGoogleSignIn();
+        initializeUserDatabase();
     }
 
 
@@ -193,6 +193,7 @@ public class MyAccount extends AppCompatActivity implements
                 };
                 Thread thread = new Thread(runSaveItem);
                 thread.start();
+                MainActivity.CURRENT_USER.setCompany(company);
                 MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_IN;
                 sign_in_or_out.setTitle("Sign Out");
                 Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
@@ -212,13 +213,13 @@ public class MyAccount extends AppCompatActivity implements
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
-                        sign_in_or_out.setTitle("Sign In");
-                        Toast.makeText(MyAccount.this, "You have successfully signed out. ", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(MyAccount.this, HomePage.class);
-                        startActivity(intent);
                     }
                 });
+        MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
+        sign_in_or_out.setTitle("Sign In");
+        Toast.makeText(this, "You have successfully signed out. ", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, HomePage.class);
+        startActivity(intent);
     }
 
     @Override
@@ -231,7 +232,7 @@ public class MyAccount extends AppCompatActivity implements
                     }
                 });
         MainActivity.sign_in_status = MainActivity.Sign_In_Status.DISCONNECTED;
-        Toast.makeText(MyAccount.this, "You have been disconnected. ", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "You have been disconnected. ", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -257,7 +258,6 @@ public class MyAccount extends AppCompatActivity implements
                         MainActivity.CURRENT_USER.setCompany(itemList.get(0).getCompany());
                     }
                     else { MainActivity.hasCompany = false; }
-                    Log.d("Has Company", "" + MainActivity.hasCompany);
                 }
             };
 
@@ -269,7 +269,7 @@ public class MyAccount extends AppCompatActivity implements
                 Log.d("ERROR: AT THREAD.JOIN: ", e.toString());
             }
             if(!MainActivity.hasCompany) {
-                Intent intent = new Intent(MyAccount.this, SelectCompanyPopUp.class);
+                Intent intent = new Intent(this, SelectCompanyPopUp.class);
                 startActivityForResult(intent, RC_COMPANY_SELECTION);
             } else {
                 MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_IN;
@@ -281,7 +281,7 @@ public class MyAccount extends AppCompatActivity implements
             email_edittext.setText(MainActivity.email);
             company_edittext.setText(MainActivity.CURRENT_USER.getCompany());
         } else {
-            Toast.makeText(MyAccount.this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();
             MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
             sign_in_or_out.setTitle("Sign In");
         }

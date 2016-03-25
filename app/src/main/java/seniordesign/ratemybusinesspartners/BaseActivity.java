@@ -1,15 +1,14 @@
 package seniordesign.ratemybusinesspartners;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -33,10 +32,8 @@ import java.util.List;
 
 import seniordesign.ratemybusinesspartners.models.User;
 
-public class HomePage extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleSignIn, GoogleApiClient.OnConnectionFailedListener {
-
+public class BaseActivity extends AppCompatActivity implements GoogleSignIn,
+        NavigationView.OnNavigationItemSelectedListener,GoogleApiClient.OnConnectionFailedListener {
     //Nav View
     private NavigationView navigationView = null;
     private MenuItem sign_in_or_out;
@@ -51,38 +48,30 @@ public class HomePage extends AppCompatActivity
 
     //Select Company
     private static final int RC_COMPANY_SELECTION = 9002;
+    public static final String SELECTED_COMPANY = "";
     private String userIdToken;
     private String company;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_page);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.home_page_toolbar);
+        setContentView(R.layout.activity_base);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.base_toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_page_drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.base_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        initializeGoogleSignIn();
-        initializeUserDatabase();
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navMenu = navigationView.getMenu();
         navigationView.setNavigationItemSelectedListener(this);
     }
-
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_page_drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -115,47 +104,7 @@ public class HomePage extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        if (id == R.id.search_company) {
-            Intent intent = new Intent(this, SearchEngine.class);
-            startActivity(intent);
-        } else if (id == R.id.my_account) {
-            if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
-                Intent intent = new Intent(this, MyAccount.class);
-                startActivity(intent);
-            } else {
-                Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG).show();
-            }
-        } else if (id == R.id.my_reviews) {
-            // TODO:  Create MY_REVIEWS Activity
-        } else if (id == R.id.sign_in_or_out) {
-            if (MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
-                signOut();
-            } else { //Consider disconnect or onStart
-                signIn();
-            }
-        } else if (id == R.id.about) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_page_drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    //Test Methods - will not be in final product
-    public void switchToCompanyProfile(View view){
-        Intent intent = new Intent(this, CompanyProfile.class);
-        intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
-
-        startActivity(intent);
-    }
-
-    //Testing the Search
-    public void switchToSearchCompany(View view){
-        Intent intentSearch = new Intent(this, SearchEngine.class);
-        startActivity(intentSearch);
     }
 
     @Override
@@ -182,7 +131,6 @@ public class HomePage extends AppCompatActivity
                 };
                 Thread thread = new Thread(runSaveItem);
                 thread.start();
-                MainActivity.CURRENT_USER.setCompany(company);
                 MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_IN;
                 sign_in_or_out.setTitle("Sign Out");
                 Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
@@ -202,11 +150,12 @@ public class HomePage extends AppCompatActivity
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
-                        sign_in_or_out.setTitle("Sign In");
-                        Toast.makeText(HomePage.this, "You have successfully signed out. ", Toast.LENGTH_LONG).show();
+
                     }
                 });
+        MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
+        sign_in_or_out.setTitle("Sign In");
+        Toast.makeText(this, "You have successfully signed out. ", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -219,7 +168,7 @@ public class HomePage extends AppCompatActivity
                     }
                 });
         MainActivity.sign_in_status = MainActivity.Sign_In_Status.DISCONNECTED;
-        Toast.makeText(HomePage.this, "You have been disconnected. ", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "You have been disconnected. ", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -245,6 +194,7 @@ public class HomePage extends AppCompatActivity
                         MainActivity.CURRENT_USER.setCompany(itemList.get(0).getCompany());
                     }
                     else { MainActivity.hasCompany = false; }
+                    Log.d("Has Company", "" + MainActivity.hasCompany);
                 }
             };
 
@@ -256,7 +206,7 @@ public class HomePage extends AppCompatActivity
                 Log.d("ERROR: AT THREAD.JOIN: ", e.toString());
             }
             if(!MainActivity.hasCompany) {
-                Intent intent = new Intent(HomePage.this, SelectCompanyPopUp.class);
+                Intent intent = new Intent(this, SelectCompanyPopUp.class);
                 startActivityForResult(intent, RC_COMPANY_SELECTION);
             } else {
                 MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_IN;
@@ -264,7 +214,7 @@ public class HomePage extends AppCompatActivity
                 Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(HomePage.this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -274,7 +224,7 @@ public class HomePage extends AppCompatActivity
         // be available.
     }
 
-    private void initializeGoogleSignIn() {
+    protected void initializeGoogleSignIn() {
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -290,7 +240,7 @@ public class HomePage extends AppCompatActivity
                 .build();
     }
 
-    private void initializeUserDatabase() {
+    protected void initializeUserDatabase() {
         //Amazon Testing
         // Initialize the Amazon Cognito credentials provider
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(

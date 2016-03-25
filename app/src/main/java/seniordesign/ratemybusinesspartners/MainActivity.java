@@ -189,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 Thread thread = new Thread(runSaveItem);
                 thread.start();
                 sign_in_status = Sign_In_Status.SIGNED_IN;
+                CURRENT_USER.setCompany(company);
                 Intent intent = new Intent(this, HomePage.class);
                 startActivity(intent);
                 Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
