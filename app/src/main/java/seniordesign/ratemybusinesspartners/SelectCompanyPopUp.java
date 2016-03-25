@@ -71,7 +71,6 @@ public class SelectCompanyPopUp extends Activity {
                 company = selectCompanyAutoComplete.getText().toString();
                 if (companies.contains(company)) {
                     Intent intent = new Intent(SelectCompanyPopUp.this, MainActivity.class);
-                    Log.d("POPUP COMPANY: ", company);
                     intent.putExtra(MainActivity.SELECTED_COMPANY, company);
                     setResult(COMPANY_SELECTION, intent);
                     finish();

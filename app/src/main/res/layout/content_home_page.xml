@@ -11,7 +11,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="seniordesign.ratemybusinesspartners.HomePage"
     tools:showIn="@layout/app_bar_home_page"
-    android:background="@color/colorPrimary">
+    android:background="@color/primary_background">
 
     <LinearLayout
         android:id="@+id/main_view_sign_in_search_company"

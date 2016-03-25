@@ -10,14 +10,9 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRan
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMarshalling;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.marshallers.CalendarToStringMarshaller;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.unmarshallers.CalendarUnmarshaller;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Ryan Comer on 2/3/2016.
@@ -61,7 +56,7 @@ public class Review implements Parcelable{
         StringBuilder builder = new StringBuilder();
 
         if(!this.isUserAnonymous){
-            builder.append(reviewer.getUserIdToken());
+            builder.append(reviewer.getUserId());
         }else{
             builder.append("Anonymous");
         }
@@ -147,7 +142,7 @@ public class Review implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         // Push all of the fields onto the dest stack
         dest.writeString(this.reviewID);
-        dest.writeString(this.reviewer.getUserIdToken());
+        dest.writeString(this.reviewer.getUserId());
         dest.writeString(this.reviewer.getCompany());
         dest.writeString(this.reviewText);
         dest.writeString(this.targetCompanyName);
@@ -163,7 +158,7 @@ public class Review implements Parcelable{
             review.setReviewID(source.readString());
 
             User reviewer = new User();
-            reviewer.setUserIdToken(source.readString());
+            reviewer.setUserId(source.readString());
             reviewer.setCompany(source.readString());
             review.setReviewer(reviewer);
 

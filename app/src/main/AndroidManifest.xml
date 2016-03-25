@@ -23,8 +23,7 @@
         <activity
             android:name=".SearchEngine"
             android:label="Search Company"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SearchResults"
             android:label="@string/title_search_results"
@@ -36,25 +35,30 @@
         <activity
             android:name=".WriteReview"
             android:label="@string/title_activity_write_review"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".CompanyProfile"/>
+            android:parentActivityName=".CompanyProfile"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ReviewResults"
             android:label="@string/title_activity_review_results"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".CompanyProfile"/>
+            android:parentActivityName=".CompanyProfile"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ViewReview"
             android:label="@string/title_activity_view_review"
-            android:theme="@style/MainActivityTheme"
-            android:parentActivityName=".ReviewResults"/>
+            android:parentActivityName=".ReviewResults"
+            android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".SelectCompanyPopUp"
             android:theme="@style/Theme.PopUp" />
         <activity
             android:name=".HomePage"
             android:label="@string/title_activity_home_page"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".MyAccount"
+            android:label="@string/title_activity_my_account"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".BaseActivity"></activity>
     </application>
 
 </manifest>

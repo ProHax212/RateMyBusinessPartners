@@ -2,16 +2,16 @@ package seniordesign.ratemybusinesspartners;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -33,14 +33,18 @@ import java.util.List;
 
 import seniordesign.ratemybusinesspartners.models.User;
 
-public class HomePage extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
+public class MyAccount extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
         GoogleSignIn, GoogleApiClient.OnConnectionFailedListener {
-
-    //Nav View
+    //nav view
     private NavigationView navigationView = null;
     private MenuItem sign_in_or_out;
     private Menu navMenu;
+
+
+    private EditText userId_edittext;
+    private EditText email_edittext;
+    private EditText company_edittext;
 
     //Google Sign In
     private GoogleApiClient mGoogleApiClient;
@@ -57,34 +61,58 @@ public class HomePage extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_page);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.home_page_toolbar);
+        setContentView(R.layout.activity_my_account);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_account_toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_page_drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_account_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        initializeGoogleSignIn();
-        initializeUserDatabase();
+        userId_edittext = (EditText) findViewById(R.id.myaccount_userId_edittext);
+        email_edittext = (EditText) findViewById(R.id.myaccount_email_edittext);
+        company_edittext = (EditText) findViewById(R.id.myaccount_company_edittext);
+
+        userId_edittext.setText(MainActivity.CURRENT_USER.getUserId());
+        email_edittext.setText(MainActivity.email);
+        company_edittext.setText(MainActivity.CURRENT_USER.getCompany());
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navMenu = navigationView.getMenu();
         navigationView.setNavigationItemSelectedListener(this);
+        sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
+
+        initializeGoogleSignIn();
+        initializeUserDatabase();
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_page_drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//
+//        // Store our shared preference
+//        SharedPreferences sp = getSharedPreferences("OURINFO", MODE_PRIVATE);
+//        SharedPreferences.Editor ed = sp.edit();
+//        ed.putBoolean("active", true);
+//        ed.commit();
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//
+//        // Store our shared preference
+//        SharedPreferences sp = getSharedPreferences("OURINFO", MODE_PRIVATE);
+//        SharedPreferences.Editor ed = sp.edit();
+//        ed.putBoolean("active", false);
+//        ed.commit();
+//
+//    }
+
+    // Navigation Drawer functions
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -99,21 +127,6 @@ public class HomePage extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -121,12 +134,12 @@ public class HomePage extends AppCompatActivity
             Intent intent = new Intent(this, SearchEngine.class);
             startActivity(intent);
         } else if (id == R.id.my_account) {
-            if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
-                Intent intent = new Intent(this, MyAccount.class);
-                startActivity(intent);
-            } else {
-                Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG).show();
-            }
+//            if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
+//                Intent intent = new Intent(this, MyAccount.class);
+//                startActivity(intent);
+//            } else {
+//                Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG).show();
+//            }
         } else if (id == R.id.my_reviews) {
             // TODO:  Create MY_REVIEWS Activity
         } else if (id == R.id.sign_in_or_out) {
@@ -139,25 +152,23 @@ public class HomePage extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_page_drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_account_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+
     }
 
-    //Test Methods - will not be in final product
-    public void switchToCompanyProfile(View view){
-        Intent intent = new Intent(this, CompanyProfile.class);
-        intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
-
-        startActivity(intent);
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.my_account_drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
-    //Testing the Search
-    public void switchToSearchCompany(View view){
-        Intent intentSearch = new Intent(this, SearchEngine.class);
-        startActivity(intentSearch);
-    }
-
+    // Google sign in & Dynamo functions
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -202,11 +213,13 @@ public class HomePage extends AppCompatActivity
                 new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
-                        MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
-                        sign_in_or_out.setTitle("Sign In");
-                        Toast.makeText(HomePage.this, "You have successfully signed out. ", Toast.LENGTH_LONG).show();
                     }
                 });
+        MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
+        sign_in_or_out.setTitle("Sign In");
+        Toast.makeText(this, "You have successfully signed out. ", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, HomePage.class);
+        startActivity(intent);
     }
 
     @Override
@@ -219,7 +232,7 @@ public class HomePage extends AppCompatActivity
                     }
                 });
         MainActivity.sign_in_status = MainActivity.Sign_In_Status.DISCONNECTED;
-        Toast.makeText(HomePage.this, "You have been disconnected. ", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "You have been disconnected. ", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -256,15 +269,21 @@ public class HomePage extends AppCompatActivity
                 Log.d("ERROR: AT THREAD.JOIN: ", e.toString());
             }
             if(!MainActivity.hasCompany) {
-                Intent intent = new Intent(HomePage.this, SelectCompanyPopUp.class);
+                Intent intent = new Intent(this, SelectCompanyPopUp.class);
                 startActivityForResult(intent, RC_COMPANY_SELECTION);
             } else {
                 MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_IN;
                 sign_in_or_out.setTitle("Sign Out");
                 Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
             }
+
+            userId_edittext.setText(MainActivity.CURRENT_USER.getUserId());
+            email_edittext.setText(MainActivity.email);
+            company_edittext.setText(MainActivity.CURRENT_USER.getCompany());
         } else {
-            Toast.makeText(HomePage.this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();
+            MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
+            sign_in_or_out.setTitle("Sign In");
         }
     }
 
@@ -317,4 +336,5 @@ public class HomePage extends AppCompatActivity
         AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
         mapper = new DynamoDBMapper(ddbClient);
     }
+
 }

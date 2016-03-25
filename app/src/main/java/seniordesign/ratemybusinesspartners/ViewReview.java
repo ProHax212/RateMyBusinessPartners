@@ -2,18 +2,11 @@ package seniordesign.ratemybusinesspartners;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 
@@ -37,7 +30,7 @@ public class ViewReview extends AppCompatActivity {
         TextView reviewerAndDate = (TextView) findViewById(R.id.viewReviewReviewerDateTextView);
         StringBuilder builder = new StringBuilder();
         if(!reviewToShow.getIsUserAnonymous()){
-            builder.append(reviewToShow.getReviewer().getUserIdToken());
+            builder.append(reviewToShow.getReviewer().getUserId());
         }else{
             builder.append("Anonymous");
         }

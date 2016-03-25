@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="seniordesign.ratemybusinesspartners.HomePage">
+    tools:context="seniordesign.ratemybusinesspartners.SearchEngine">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:theme="@style/AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/home_page_toolbar"
+            android:id="@+id/search_engine_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/primary_action_bar"
@@ -21,5 +21,5 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_home_page" />
+    <include layout="@layout/content_search_engine" />
 </android.support.design.widget.CoordinatorLayout>

@@ -179,12 +179,14 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="title_activity_home_page">HomePage</string>
+    <string name="title_activity_my_account">MyAccount</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="signin_fragment">Sign In</string>
+    <string name="title_activity_base">BaseActivity</string>
     >>>>>>> 507e438263963022b7dd8d12ae337a4560598875
 
 </resources>

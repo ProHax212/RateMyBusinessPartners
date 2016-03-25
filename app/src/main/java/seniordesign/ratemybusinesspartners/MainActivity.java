@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,8 +25,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 //AWS API
 import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
-import com.amazonaws.mobileconnectors.cognito.Dataset;
-import com.amazonaws.mobileconnectors.cognito.DefaultSyncCallback;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.*;
@@ -65,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     public static boolean hasCompany = false;
     private String userIdToken;
     private String company;
+    public static String email;
 
     //Abraham Amazon DB
     private DynamoDBMapper mapper;
@@ -72,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     //Ryan's Database for Testing
     private DynamoDBMapper ryanMapper;
     private AmazonDynamoDBClient ryanClient;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         initializeGoogleSignIn();
 
         //Abraham's db initialization
-        initializeAbrahamDatabase();
+        initializeUserDatabase();
 
         //Ryan's initialization for database
         initializeRyanDatabase();
@@ -111,48 +108,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
 
     }
 
-    private void initializeGoogleSignIn() {
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken(getString(R.string.server_client_id))
-                .build();
-
-        // Build a GoogleApiClient with access to the Google Sign-In API and the
-        // options specified by gso.
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-    }
-    private void initializeAbrahamDatabase() {
-        //Amazon Testing
-        // Initialize the Amazon Cognito credentials provider
-        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                getApplicationContext(),
-                "us-east-1:f5ba73d3-acbf-45bb-83e2-e4fbe40f269c", // Identity Pool ID
-                Regions.US_EAST_1 // Region
-        );
-
-        // Initialize the Cognito Sync client
-        CognitoSyncManager syncClient = new CognitoSyncManager(
-                getApplicationContext(),
-                Regions.US_EAST_1, // Region
-                credentialsProvider);
-
-        // Create a record in a dataset and synchronize with the server
-//        Dataset dataset = syncClient.openOrCreateDataset("myDataset");
-//        dataset.put("myKey", "myValue");
-//        dataset.synchronize(new DefaultSyncCallback() {
-//            @Override
-//            public void onSuccess(Dataset dataset, List newRecords) {
-//                //Your handler code here
-//            }
-//        });
-        AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
-        mapper = new DynamoDBMapper(ddbClient);
-    }
     private void initializeRyanDatabase(){
 
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
@@ -201,6 +156,21 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -218,9 +188,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 Runnable runSaveItem = new Runnable() {
                     @Override
                     public void run() {
-                        User user = new User();
-                        user.setUserIdToken(userIdToken);
-                        user.setCompany(company);
+                        User user = new User(userIdToken, company);
 
                         mapper.save(user);
                     }
@@ -228,26 +196,12 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 Thread thread = new Thread(runSaveItem);
                 thread.start();
                 sign_in_status = Sign_In_Status.SIGNED_IN;
+                CURRENT_USER.setCompany(company);
                 Intent intent = new Intent(this, HomePage.class);
                 startActivity(intent);
-                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserIdToken(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
             }
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     //region Switch Activities
@@ -260,11 +214,6 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         Intent intentSearch = new Intent(this, SearchEngine.class);
         startActivity(intentSearch);
     }
-
-    /**
-     * Test method to switch to the company profile for WalMart
-     * @param v
-     */
     public void switchToCompanyProfile(View v){
         Intent intent = new Intent(this, CompanyProfile.class);
         intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
@@ -302,23 +251,26 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     }
 
     public void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             CURRENT_USER = new User(acct.getDisplayName(), company);
+            email = acct.getEmail();
             userIdToken = acct.getId();
             Runnable runLoadItem = new Runnable() {
                 @Override
                 public void run() {
                     User partitionKeyKeyValues = new User();
 
-                    partitionKeyKeyValues.setUserIdToken(userIdToken);
+                    partitionKeyKeyValues.setUserId(userIdToken);
                     DynamoDBQueryExpression<User> queryExpression = new DynamoDBQueryExpression<User>()
                             .withHashKeyValues(partitionKeyKeyValues);
 
                     List<User> itemList = mapper.query(User.class, queryExpression);
-                    if(itemList.size() > 0) { MainActivity.hasCompany = true; }
+                    if(itemList.size() > 0) {
+                        MainActivity.hasCompany = true;
+                        CURRENT_USER.setCompany(itemList.get(0).getCompany());
+                    }
                     else { MainActivity.hasCompany = false; }
                 }
             };
@@ -337,40 +289,62 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 sign_in_status = Sign_In_Status.SIGNED_IN;
                 Intent intent = new Intent(this, HomePage.class);
                 startActivity(intent);
-                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserIdToken(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(MainActivity.this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();
             sign_in_status = Sign_In_Status.SIGNED_OUT;
+            Toast.makeText(MainActivity.this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();
         }
     }
-
-//    public void updateUI(boolean signedIn) {
-//        mStatusTextView.postDelayed(new Runnable(){
-//            @Override
-//            public void run()
-//            {
-//                mStatusTextView.setVisibility(View.GONE);
-//            }
-//        }, 10000);
-//        if (signedIn) {
-//            mStatusTextView.setVisibility(View.VISIBLE);
-//            findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-//            findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
-//            findViewById(R.id.disconnect_button).setVisibility(View.VISIBLE);
-//        } else {
-//            mStatusTextView.setVisibility(View.VISIBLE);
-//            mStatusTextView.setText(R.string.main_textView_signedout);
-//            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-//            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
-//            findViewById(R.id.disconnect_button).setVisibility(View.GONE);
-//        }
-//    }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
+    }
+
+    private void initializeGoogleSignIn() {
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(getString(R.string.server_client_id))
+                .build();
+
+        // Build a GoogleApiClient with access to the Google Sign-In API and the
+        // options specified by gso.
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+    }
+
+    private void initializeUserDatabase() {
+        //Amazon Testing
+        // Initialize the Amazon Cognito credentials provider
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                "us-east-1:f5ba73d3-acbf-45bb-83e2-e4fbe40f269c", // Identity Pool ID
+                Regions.US_EAST_1 // Region
+        );
+
+        // Initialize the Cognito Sync client
+        CognitoSyncManager syncClient = new CognitoSyncManager(
+                getApplicationContext(),
+                Regions.US_EAST_1, // Region
+                credentialsProvider);
+
+        // Create a record in a dataset and synchronize with the server
+//        Dataset dataset = syncClient.openOrCreateDataset("myDataset");
+//        dataset.put("myKey", "myValue");
+//        dataset.synchronize(new DefaultSyncCallback() {
+//            @Override
+//            public void onSuccess(Dataset dataset, List newRecords) {
+//                //Your handler code here
+//            }
+//        });
+        AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+        mapper = new DynamoDBMapper(ddbClient);
     }
 }
