@@ -1,15 +1,8 @@
 package seniordesign.ratemybusinesspartners.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexHashKey;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMarshaller;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
-
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
 /**
@@ -18,20 +11,20 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
 @DynamoDBTable(tableName = "Users")
 public class User {
-    private String userIdToken;
+    private String userId;
     private String company;
 
     public User() {}
-    public User (String userIdToken, String company){
-        this.userIdToken = userIdToken;
+    public User (String userId, String company){
+        this.userId = userId;
         this.company = company;
     }
 
     //Getter and Setter methods
     @DynamoDBHashKey(attributeName = "UserIdToken")
-    public String getUserIdToken() { return userIdToken; }
-    public void setUserIdToken(String userIdToken){
-        this.userIdToken = userIdToken;
+    public String getUserId() { return userId; }
+    public void setUserId(String userId){
+        this.userId = userId;
     }
 
     @DynamoDBRangeKey(attributeName = "Company")
@@ -47,7 +40,7 @@ public class User {
         public String marshall(User user) {
             StringBuilder builder = new StringBuilder();
 
-            builder.append(user.getUserIdToken() + "\t" + user.getCompany());
+            builder.append(user.getUserId() + "\t" + user.getCompany());
             return builder.toString();
         }
 
@@ -57,7 +50,7 @@ public class User {
             String[] attributes = s.split("\t");
 
             User user = new User();
-            user.setUserIdToken(attributes[0]);
+            user.setUserId(attributes[0]);
             user.setCompany(attributes[1]);
 
             return user;

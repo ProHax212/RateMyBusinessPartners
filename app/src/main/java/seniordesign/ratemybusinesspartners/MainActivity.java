@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,8 +24,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 //AWS API
 import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
-import com.amazonaws.mobileconnectors.cognito.Dataset;
-import com.amazonaws.mobileconnectors.cognito.DefaultSyncCallback;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.*;
@@ -62,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     public static boolean hasCompany = false;
     private String userIdToken;
     private String company;
+    public static String email;
 
     //Abraham Amazon DB
     private DynamoDBMapper mapper;
@@ -69,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     //Ryan's Database for Testing
     private DynamoDBMapper ryanMapper;
     private AmazonDynamoDBClient ryanClient;
+
 
 
     @Override
@@ -206,9 +205,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 Runnable runSaveItem = new Runnable() {
                     @Override
                     public void run() {
-                        User user = new User();
-                        user.setUserIdToken(userIdToken);
-                        user.setCompany(company);
+                        User user = new User(userIdToken, company);
 
                         mapper.save(user);
                     }
@@ -218,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 sign_in_status = Sign_In_Status.SIGNED_IN;
                 Intent intent = new Intent(this, HomePage.class);
                 startActivity(intent);
-                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserIdToken(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -280,18 +277,22 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             CURRENT_USER = new User(acct.getDisplayName(), company);
+            email = acct.getEmail();
             userIdToken = acct.getId();
             Runnable runLoadItem = new Runnable() {
                 @Override
                 public void run() {
                     User partitionKeyKeyValues = new User();
 
-                    partitionKeyKeyValues.setUserIdToken(userIdToken);
+                    partitionKeyKeyValues.setUserId(userIdToken);
                     DynamoDBQueryExpression<User> queryExpression = new DynamoDBQueryExpression<User>()
                             .withHashKeyValues(partitionKeyKeyValues);
 
                     List<User> itemList = mapper.query(User.class, queryExpression);
-                    if(itemList.size() > 0) { MainActivity.hasCompany = true; }
+                    if(itemList.size() > 0) {
+                        MainActivity.hasCompany = true;
+                        CURRENT_USER.setCompany(itemList.get(0).getCompany());
+                    }
                     else { MainActivity.hasCompany = false; }
                 }
             };
@@ -310,7 +311,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                 sign_in_status = Sign_In_Status.SIGNED_IN;
                 Intent intent = new Intent(this, HomePage.class);
                 startActivity(intent);
-                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserIdToken(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
             }
         } else {
             Toast.makeText(MainActivity.this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();

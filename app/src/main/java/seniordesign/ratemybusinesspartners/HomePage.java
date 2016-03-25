@@ -14,9 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -33,8 +30,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -191,10 +186,7 @@ public class HomePage extends AppCompatActivity
                 Runnable runSaveItem = new Runnable() {
                     @Override
                     public void run() {
-                        User user = new User();
-                        user.setUserIdToken(userIdToken);
-                        user.setCompany(company);
-
+                        User user = new User(userIdToken, company);
                         mapper.save(user);
                     }
                 };
@@ -203,7 +195,7 @@ public class HomePage extends AppCompatActivity
                 MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_IN;
                 sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
                 sign_in_or_out.setTitle("Sign Out");
-                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserIdToken(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -211,22 +203,22 @@ public class HomePage extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
+        if (id == R.id.search_company) {
+            Intent intent = new Intent(this, SearchEngine.class);
+            startActivity(intent);
+        } else if (id == R.id.my_account) {
+            Intent intent = new Intent(this, MyAccount.class);
+            startActivity(intent);
+        } else if (id == R.id.my_reviews) {
+            // TODO:  Create MY_REVIEWS Activity
         } else if (id == R.id.sign_in_or_out) {
-            if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
+            if (MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
                 signOut();
             } else { //Consider disconnect or onStart
                 signIn();
             }
+        } else if (id == R.id.about) {
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -285,19 +277,21 @@ public class HomePage extends AppCompatActivity
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             MainActivity.CURRENT_USER = new User(acct.getDisplayName(), company);
+            MainActivity.email = acct.getEmail();
             userIdToken = acct.getId();
             Runnable runLoadItem = new Runnable() {
                 @Override
                 public void run() {
                     User partitionKeyKeyValues = new User();
 
-                    partitionKeyKeyValues.setUserIdToken(userIdToken);
+                    partitionKeyKeyValues.setUserId(userIdToken);
                     DynamoDBQueryExpression<User> queryExpression = new DynamoDBQueryExpression<User>()
                             .withHashKeyValues(partitionKeyKeyValues);
 
                     List<User> itemList = mapper.query(User.class, queryExpression);
                     if(itemList.size() > 0) {
                         MainActivity.hasCompany = true;
+                        MainActivity.CURRENT_USER.setCompany(itemList.get(0).getCompany());
                     }
                     else { MainActivity.hasCompany = false; }
                     Log.d("Has Company", ""+MainActivity.hasCompany);
@@ -318,7 +312,7 @@ public class HomePage extends AppCompatActivity
                 MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_IN;
                 sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
                 sign_in_or_out.setTitle("Sign Out");
-                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserIdToken(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
             }
         } else {
             Toast.makeText(HomePage.this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();
