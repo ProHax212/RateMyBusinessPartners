@@ -35,6 +35,14 @@
         android:layout_centerHorizontal="true"
         android:textColor="@android:color/white"
         android:textSize="27sp"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="Company Profile"
+        android:textStyle="italic"
+        android:onClick="switchToCompanyProfile"/>
     <!--<Button-->
         <!--android:layout_width="350dp"-->
         <!--android:layout_height="wrap_content"-->

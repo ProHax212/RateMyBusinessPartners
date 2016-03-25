@@ -12,6 +12,8 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
+import java.util.ArrayList;
+
 /**
  * Created by Ryan Comer on 2/4/2016.
  */
@@ -20,11 +22,13 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 public class User {
     private String userIdToken;
     private String company;
+    private ArrayList<String> reviewIds;
 
     public User() {}
     public User (String userIdToken, String company){
         this.userIdToken = userIdToken;
         this.company = company;
+        this.reviewIds = new ArrayList<>();
     }
 
     //Getter and Setter methods

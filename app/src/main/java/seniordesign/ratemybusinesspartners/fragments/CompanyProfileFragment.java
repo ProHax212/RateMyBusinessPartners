@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +21,8 @@ import seniordesign.ratemybusinesspartners.CompanyProfile;
 import seniordesign.ratemybusinesspartners.R;
 import seniordesign.ratemybusinesspartners.ViewReview;
 import seniordesign.ratemybusinesspartners.adapters.ReviewListAdapter;
+import seniordesign.ratemybusinesspartners.models.Company;
+import seniordesign.ratemybusinesspartners.models.DummyDatabase;
 import seniordesign.ratemybusinesspartners.models.Review;
 
 /**
@@ -71,8 +74,12 @@ public class CompanyProfileFragment extends Fragment {
         View returnView = inflater.inflate(R.layout.fragment_company_profile, container, false);
 
         // Initialize the company information
+        Company currentCompany = DummyDatabase.companies.get(this.mCompanyName);
         TextView companyNameTextView = (TextView) returnView.findViewById(R.id.companyNameTextView);
         companyNameTextView.setText(this.mCompanyName);
+
+        ImageView companyImage = (ImageView) returnView.findViewById(R.id.companyImage);
+        companyImage.setImageDrawable(getResources().getDrawable(currentCompany.getCompanyImageResource()));
 
         //Initialize List View
         ListView reviewList = (ListView) returnView.findViewById(R.id.companyProfileReviewList);

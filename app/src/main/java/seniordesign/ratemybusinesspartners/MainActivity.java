@@ -2,6 +2,7 @@ package seniordesign.ratemybusinesspartners;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +37,8 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
 
 import java.util.List;
 
+import seniordesign.ratemybusinesspartners.models.Company;
+import seniordesign.ratemybusinesspartners.models.DummyDatabase;
 import seniordesign.ratemybusinesspartners.models.User;
 
 public class MainActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleSignIn {
@@ -103,8 +106,9 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         //Ryan's initialization for database
         initializeRyanDatabase();
 
-        //Company Profile
-        this.targetCompany = "Walmart";
+        // Initialize Dummy Database
+        initializeDummyDatabase();
+
     }
 
     private void initializeGoogleSignIn() {
@@ -160,6 +164,14 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         this.ryanClient = new AmazonDynamoDBClient(credentialsProvider);
         this.ryanMapper = new DynamoDBMapper(ryanClient);
 
+    }
+
+    /**
+     * Temporary method to initialize the dummy database - or permanent if D&B doesn't respond...
+     */
+    private void initializeDummyDatabase(){
+        Company walmart = new Company("Walmart", R.drawable.walmart_logo);
+        DummyDatabase.companies.put(walmart.getCompanyName(), walmart);
     }
 
     @Override
@@ -238,6 +250,8 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         return super.onOptionsItemSelected(item);
     }
 
+    //region Switch Activities
+
     public void switchToHomePage() {
         Intent intent = new Intent(this, HomePage.class);
         startActivity(intent);
@@ -246,6 +260,19 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         Intent intentSearch = new Intent(this, SearchEngine.class);
         startActivity(intentSearch);
     }
+
+    /**
+     * Test method to switch to the company profile for WalMart
+     * @param v
+     */
+    public void switchToCompanyProfile(View v){
+        Intent intent = new Intent(this, CompanyProfile.class);
+        intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
+        startActivity(intent);
+    }
+
+    //endregion
+
     public void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);

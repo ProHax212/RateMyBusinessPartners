@@ -5,7 +5,7 @@
     tools:context="seniordesign.ratemybusinesspartners.fragments.CompanyProfileFragment">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:id="@+id/companyNameTextView"
@@ -16,14 +16,29 @@
         android:textStyle="bold"
         android:textSize="@dimen/company_information_text_size" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/companyNameTextView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/companyImage"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:maxHeight="@dimen/company_profile_image_max_height"
+        android:maxWidth="@dimen/company_profile_image_max_width"
+        android:src="@mipmap/rmbp_icon" />
+
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:id="@+id/companyProfileReviewsTextView"
-        android:layout_below="@+id/companyNameTextView"
+        android:layout_below="@+id/companyImage"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
         android:text="@string/company_profile_reviews"
-        android:textStyle="bold"
         android:textSize="@dimen/company_information_text_size" />
 
 
@@ -39,9 +54,13 @@
 
     </ListView>
 
-    <View style="@style/divider"
-        android:layout_height="@dimen/divider_height"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:layout_below="@id/companyProfileReviewList"
-        android:id="@+id/companyProfileDividerOne"/>
+        android:id="@+id/view" />
 
 </RelativeLayout>

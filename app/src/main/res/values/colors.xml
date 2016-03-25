@@ -11,5 +11,6 @@
     <color name="black">#000000</color>
     <color name="primary_background">#A8D0DF</color>
     <color name="primary_action_bar">#024E6E</color>
+    <color name="primary_tab_bar">#0383BA</color>
     <color name="primary_text">#024E6E</color>
 </resources>
