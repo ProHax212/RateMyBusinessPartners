@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:text="@string/write_review_submit_review"
         android:id="@+id/submitReviewButton"
-        android:layout_below="@+id/reviewRatingBar"
+        android:layout_below="@id/reviewRatingBar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:onClick="submitReview"/>
@@ -52,8 +52,8 @@
         android:layout_height="wrap_content"
         android:text="@string/write_review_anonymous_checkbox"
         android:id="@+id/anonymousCheckbox"
-        android:layout_alignBaseline="@+id/submitReviewButton"
-        android:layout_toRightOf="@+id/submitReviewButton"
-        android:layout_toEndOf="@+id/submitReviewButton" />
+        android:layout_alignBaseline="@id/submitReviewButton"
+        android:layout_toRightOf="@id/submitReviewButton"
+        android:layout_toEndOf="@id/submitReviewButton" />
 
 </RelativeLayout>

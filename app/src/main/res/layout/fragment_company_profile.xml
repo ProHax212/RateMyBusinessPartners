@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:id="@+id/companyProfileReviewsTextView"
-        android:layout_below="@+id/companyNameTextView"
+        android:layout_below="@id/companyNameTextView"
         android:text="@string/company_profile_reviews"
         android:textStyle="bold"
         android:textSize="@dimen/company_information_text_size" />

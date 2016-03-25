@@ -71,7 +71,7 @@ public class HomePage extends AppCompatActivity
         initializeGoogleSignIn();
         initializeUserDatabase();
 
-        navigationView = (NavigationView) findViewById(R.id.home_page_nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navMenu = navigationView.getMenu();
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -126,7 +126,7 @@ public class HomePage extends AppCompatActivity
                 Intent intent = new Intent(this, MyAccount.class);
                 startActivity(intent);
             } else {
-                Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG);
+                Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG).show();
             }
         } else if (id == R.id.my_reviews) {
             // TODO:  Create MY_REVIEWS Activity

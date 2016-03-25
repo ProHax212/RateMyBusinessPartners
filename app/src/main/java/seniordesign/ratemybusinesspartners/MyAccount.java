@@ -82,7 +82,7 @@ public class MyAccount extends AppCompatActivity implements
         email_edittext.setText(MainActivity.email);
         company_edittext.setText(MainActivity.CURRENT_USER.getCompany());
 
-        navigationView = (NavigationView) findViewById(R.id.my_account_nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navMenu = navigationView.getMenu();
         navigationView.setNavigationItemSelectedListener(this);
         sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
@@ -113,6 +113,18 @@ public class MyAccount extends AppCompatActivity implements
 //    }
 
     // Navigation Drawer functions
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.nav_drawer, menu);
+        sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
+        if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
+            sign_in_or_out.setTitle("Sign Out");
+        } else {
+            sign_in_or_out.setTitle("Sign In");
+        }
+        return true;
+    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -122,13 +134,12 @@ public class MyAccount extends AppCompatActivity implements
             Intent intent = new Intent(this, SearchEngine.class);
             startActivity(intent);
         } else if (id == R.id.my_account) {
-            if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
-                Intent intent = new Intent(this, MyAccount.class);
-                startActivity(intent);
-            } else {
-                Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG);
-            }
-
+//            if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
+//                Intent intent = new Intent(this, MyAccount.class);
+//                startActivity(intent);
+//            } else {
+//                Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG).show();
+//            }
         } else if (id == R.id.my_reviews) {
             // TODO:  Create MY_REVIEWS Activity
         } else if (id == R.id.sign_in_or_out) {
