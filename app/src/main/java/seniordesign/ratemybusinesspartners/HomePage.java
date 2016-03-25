@@ -2,8 +2,6 @@ package seniordesign.ratemybusinesspartners;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -37,13 +35,14 @@ import seniordesign.ratemybusinesspartners.models.User;
 
 public class HomePage extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-            GoogleSignIn, GoogleApiClient.OnConnectionFailedListener {
+        GoogleSignIn, GoogleApiClient.OnConnectionFailedListener {
+
+    //Nav View
     private NavigationView navigationView = null;
-    private Toolbar toolbar = null;
     private MenuItem sign_in_or_out;
     private Menu navMenu;
 
-    // GOOGLE Sign In
+    //Google Sign In
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 9001;
 
@@ -60,79 +59,26 @@ public class HomePage extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.home_page_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_page_drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         initializeGoogleSignIn();
-        initializeAbrahamDatabase();
+        initializeUserDatabase();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.home_page_nav_view);
         navMenu = navigationView.getMenu();
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void initializeGoogleSignIn() {
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestIdToken(getString(R.string.server_client_id))
-                .build();
-
-        // Build a GoogleApiClient with access to the Google Sign-In API and the
-        // options specified by gso.
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-    }
-
-    private void initializeAbrahamDatabase() {
-        //Amazon Testing
-        // Initialize the Amazon Cognito credentials provider
-        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                getApplicationContext(),
-                "us-east-1:f5ba73d3-acbf-45bb-83e2-e4fbe40f269c", // Identity Pool ID
-                Regions.US_EAST_1 // Region
-        );
-
-        // Initialize the Cognito Sync client
-        CognitoSyncManager syncClient = new CognitoSyncManager(
-                getApplicationContext(),
-                Regions.US_EAST_1, // Region
-                credentialsProvider);
-
-        // Create a record in a dataset and synchronize with the server
-//        Dataset dataset = syncClient.openOrCreateDataset("myDataset");
-//        dataset.put("myKey", "myValue");
-//        dataset.synchronize(new DefaultSyncCallback() {
-//            @Override
-//            public void onSuccess(Dataset dataset, List newRecords) {
-//                //Your handler code here
-//            }
-//        });
-        AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
-        mapper = new DynamoDBMapper(ddbClient);
-    }
-
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_page_drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -143,7 +89,7 @@ public class HomePage extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_home_page_drawer, menu);
+        getMenuInflater().inflate(R.menu.nav_drawer, menu);
         sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
         if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
             sign_in_or_out.setTitle("Sign Out");
@@ -166,6 +112,51 @@ public class HomePage extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        if (id == R.id.search_company) {
+            Intent intent = new Intent(this, SearchEngine.class);
+            startActivity(intent);
+        } else if (id == R.id.my_account) {
+            if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
+                Intent intent = new Intent(this, MyAccount.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG);
+            }
+        } else if (id == R.id.my_reviews) {
+            // TODO:  Create MY_REVIEWS Activity
+        } else if (id == R.id.sign_in_or_out) {
+            if (MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
+                signOut();
+            } else { //Consider disconnect or onStart
+                signIn();
+            }
+        } else if (id == R.id.about) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_page_drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    //Test Methods - will not be in final product
+    public void switchToCompanyProfile(View view){
+        Intent intent = new Intent(this, CompanyProfile.class);
+        intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
+
+        startActivity(intent);
+    }
+
+    //Testing the Search
+    public void switchToSearchCompany(View view){
+        Intent intentSearch = new Intent(this, SearchEngine.class);
+        startActivity(intentSearch);
     }
 
     @Override
@@ -193,50 +184,10 @@ public class HomePage extends AppCompatActivity
                 Thread thread = new Thread(runSaveItem);
                 thread.start();
                 MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_IN;
-                sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
                 sign_in_or_out.setTitle("Sign Out");
                 Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
             }
         }
-    }
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        if (id == R.id.search_company) {
-            Intent intent = new Intent(this, SearchEngine.class);
-            startActivity(intent);
-        } else if (id == R.id.my_account) {
-            Intent intent = new Intent(this, MyAccount.class);
-            startActivity(intent);
-        } else if (id == R.id.my_reviews) {
-            // TODO:  Create MY_REVIEWS Activity
-        } else if (id == R.id.sign_in_or_out) {
-            if (MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
-                signOut();
-            } else { //Consider disconnect or onStart
-                signIn();
-            }
-        } else if (id == R.id.about) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-    //Test Methods - will not be in final product
-    public void switchToCompanyProfile(View view){
-        Intent intent = new Intent(this, CompanyProfile.class);
-        intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
-
-        startActivity(intent);
-    }
-
-    //Testing the Search
-    public void switchToSearchCompany(View view){
-        Intent intentSearch = new Intent(this, SearchEngine.class);
-        startActivity(intentSearch);
     }
 
     @Override
@@ -252,8 +203,8 @@ public class HomePage extends AppCompatActivity
                     @Override
                     public void onResult(Status status) {
                         MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
-                        Intent intent = new Intent(HomePage.this, MainActivity.class);
-                        startActivity(intent);
+                        sign_in_or_out.setTitle("Sign In");
+                        Toast.makeText(HomePage.this, "You have successfully signed out. ", Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -310,15 +261,11 @@ public class HomePage extends AppCompatActivity
                 startActivityForResult(intent, RC_COMPANY_SELECTION);
             } else {
                 MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_IN;
-                sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
                 sign_in_or_out.setTitle("Sign Out");
                 Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
             }
         } else {
             Toast.makeText(HomePage.this, "Log in was unsuccessful. ", Toast.LENGTH_LONG).show();
-            MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
-            sign_in_or_out = navMenu.findItem(R.id.sign_in_or_out);
-            sign_in_or_out.setTitle("Sign In");
         }
     }
 
@@ -326,5 +273,49 @@ public class HomePage extends AppCompatActivity
     public void onConnectionFailed(ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
+    }
+
+    private void initializeGoogleSignIn() {
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(getString(R.string.server_client_id))
+                .build();
+
+        // Build a GoogleApiClient with access to the Google Sign-In API and the
+        // options specified by gso.
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+    }
+
+    private void initializeUserDatabase() {
+        //Amazon Testing
+        // Initialize the Amazon Cognito credentials provider
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                "us-east-1:f5ba73d3-acbf-45bb-83e2-e4fbe40f269c", // Identity Pool ID
+                Regions.US_EAST_1 // Region
+        );
+
+        // Initialize the Cognito Sync client
+        CognitoSyncManager syncClient = new CognitoSyncManager(
+                getApplicationContext(),
+                Regions.US_EAST_1, // Region
+                credentialsProvider);
+
+        // Create a record in a dataset and synchronize with the server
+//        Dataset dataset = syncClient.openOrCreateDataset("myDataset");
+//        dataset.put("myKey", "myValue");
+//        dataset.synchronize(new DefaultSyncCallback() {
+//            @Override
+//            public void onSuccess(Dataset dataset, List newRecords) {
+//                //Your handler code here
+//            }
+//        });
+        AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
+        mapper = new DynamoDBMapper(ddbClient);
     }
 }

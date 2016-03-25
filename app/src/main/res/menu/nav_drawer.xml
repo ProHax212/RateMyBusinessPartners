@@ -4,7 +4,7 @@
     <item
         android:id="@+id/search_company"
         android:icon="@drawable/ic_menu_camera"
-        android:title="About" />
+        android:title="Search Company" />
     <item
         android:id="@+id/my_account"
         android:icon="@drawable/ic_menu_gallery"
@@ -12,7 +12,7 @@
     <item
         android:id="@+id/my_reviews"
         android:icon="@drawable/ic_menu_slideshow"
-        android:title="View Profile" />
+        android:title="My Reviews" />
     <item
         android:id="@+id/sign_in_or_out"
         android:icon="@drawable/ic_menu_send"
@@ -21,7 +21,7 @@
     <item
         android:id="@+id/about"
         android:icon="@drawable/ic_menu_manage"
-        android:title="Abraham's Awesome" />
+        android:title="About Abraham . . ." />
 
 
 </menu>
