@@ -1,6 +1,7 @@
 package seniordesign.ratemybusinesspartners.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ public class SearchListAdapter extends ArrayAdapter<Response> {
 
         Response item = companyArrayList.get(position);
         if(item !=null){
+            viewHolder.iView.setTextColor(Color.BLACK);
             viewHolder.iView.setText(String.format("%s \n%s,%s", item.getPrimaryName(),item.getCity(),item.getState()));
         }
         /*LayoutInflater inflater = (LayoutInflater) context

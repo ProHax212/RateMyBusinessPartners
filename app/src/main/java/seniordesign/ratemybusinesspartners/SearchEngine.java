@@ -4,6 +4,7 @@ package seniordesign.ratemybusinesspartners;
  * Created by ceenajac on 2/26/2016.
  */
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,12 +70,11 @@ public class SearchEngine extends AppCompatActivity implements
         GoogleSignIn, GoogleApiClient.OnConnectionFailedListener,
         NavigationView.OnNavigationItemSelectedListener {
     private SearchView companyEditText;
-    private Button searchButton;
     private ListView lv;
     private ArrayList<Response> result;
-    ArrayList<String> previouslySearched = new ArrayList<String>();
-    String[] items = { "Walmart", "ExxonMobil", "Dell", "Kroger", "Gorman","Chevron", "Shell", "Google", "Microsoft"};
-    ArrayAdapter<ArrayList<String>> adapter;
+    //ArrayList<String> previouslySearched = new ArrayList<String>();
+    String[] items = {"Walmart","ExxonMobil", "Dell", "Kroger", "Gorman","Chevron", "Shell", "Google", "Microsoft"};
+    //ArrayAdapter<ArrayList<String>> adapter;
     ArrayAdapter<String> sadapter;
 
     //nav view
@@ -98,25 +100,34 @@ public class SearchEngine extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_company);
         this.findAllViewsById();
-        adapter = new ArrayAdapter<ArrayList<String>>(this, android.R.layout.simple_list_item_1);
-        sadapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+       // adapter = new ArrayAdapter<ArrayList<String>>(this, android.R.layout.simple_list_item_1);
+        sadapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,items);
         lv.setAdapter(sadapter);
         Toolbar toolbar = (Toolbar) findViewById(R.id.search_engine_toolbar);
         setSupportActionBar(toolbar);
-        companyEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+        companyEditText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
-            public boolean onQueryTextSubmit(String text){
+            public boolean onQueryTextSubmit(String text) {
                 String authToken = doPostRequest();
                 doGetRequest(authToken, text);
                 return false;
             }
+
             @Override
-            public boolean onQueryTextChange(String text){
-                if(!previouslySearched.isEmpty()){
-                    sadapter.getFilter().filter(text);
-                }
+            public boolean onQueryTextChange(String text) {
+                sadapter.getFilter().filter(text);
                 return false;
+            }
+        });
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                String itext = (String)parent.getItemAtPosition(position);
+                String authToken = doPostRequest();
+                doGetRequest(authToken, itext);
             }
         });
         /*&searchButton.setOnClickListener(new View.OnClickListener() {
@@ -159,9 +170,9 @@ public class SearchEngine extends AppCompatActivity implements
         String company = comp;
         if(!company.isEmpty()) { /* Ceena - I changed if(company != null) to if(!company.isEmpty()) b/c the original always returns true. */
             urlString = String.format("https://maxcvservices.dnb.com/V6.2/organizations?KeywordText=%s", Uri.encode(company));
-            if (!previouslySearched.contains(comp)) {
+            /*if (!previouslySearched.contains(comp)) {
                 previouslySearched.add(comp);
-            }
+            }*/
         }
         urlString = urlString + "&SearchModeDescription=Basic&findcompany=true";
         return urlString;

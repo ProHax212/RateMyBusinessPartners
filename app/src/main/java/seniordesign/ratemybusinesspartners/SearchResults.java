@@ -1,6 +1,7 @@
 package seniordesign.ratemybusinesspartners;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -59,14 +60,24 @@ public class SearchResults extends AppCompatActivity {
 
         TextView companyName = (TextView) findViewById(R.id.resultNumber);
 
-
+        companyName.setTextColor(Color.BLACK);
         //Initialize Results
         ListView search = (ListView) findViewById(R.id.searchResultsListView);
         List<Response> searchResults = new ArrayList<Response>();
         searchResults = (ArrayList<Response>)getIntent().getSerializableExtra("searchResults");
         searchResultsAdapter = new SearchListAdapter(this,searchResults);
         search.setAdapter(searchResultsAdapter);
-       // companyName.setText( searchResults.size() + " Result Found");;
+        companyName.setText(searchResults.size() + " Results Found");
+
+        search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent companyIntent = new Intent(SearchResults.this,CompanyProfile.class);
+                Response company = (Response)parent.getItemAtPosition(position);
+                companyIntent.putExtra("companyName", company.getPrimaryName());
+                startActivity(companyIntent);
+            }
+        });
     }
 
 }

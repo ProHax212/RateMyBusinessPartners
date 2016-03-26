@@ -75,7 +75,7 @@ public class CompanyProfile extends AppCompatActivity implements
         //Retrieve Intent inputs
         Intent intent = getIntent();
         currentCompany = intent.getStringExtra(COMPANY_PROFILE_TARGET_COMPANY);
-
+        /*Look RYAN here*/ String companyName = intent.getStringExtra("companyName");
         // Initialize Ryan's Database
         initializeRyanDatabase();
 

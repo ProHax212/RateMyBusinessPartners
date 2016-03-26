@@ -43,5 +43,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/searchListView"
         android:layout_below = "@id/companyEditText"
-        android:layout_marginTop="15dp"></ListView>
+        android:layout_marginTop="15dp"
+        android:choiceMode="singleChoice"></ListView>
 </RelativeLayout>
