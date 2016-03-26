@@ -4,17 +4,13 @@
     android:layout_height="match_parent"
     tools:context="seniordesign.ratemybusinesspartners.fragments.CompanyProfileFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+    <!--<TextView
+        style="@style/text_information"
         android:id="@+id/companyNameTextView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="@string/company_profile_company_name"
-        android:textStyle="bold"
-        android:textSize="@dimen/company_information_text_size" />
+        android:text="@string/company_profile_company_name"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -27,19 +23,17 @@
         android:adjustViewBounds="true"
         android:maxHeight="@dimen/company_profile_image_max_height"
         android:maxWidth="@dimen/company_profile_image_max_width"
-        android:src="@mipmap/rmbp_icon" />
+        android:src="@mipmap/rmbp_icon" />-->
 
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/text_information"
         android:id="@+id/companyProfileReviewsTextView"
-        android:layout_below="@+id/companyImage"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"
-        android:text="@string/company_profile_reviews"
-        android:textSize="@dimen/company_information_text_size" />
+        android:text="Recent Reviews"/>
 
 
     <ListView

@@ -73,13 +73,13 @@ public class CompanyProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View returnView = inflater.inflate(R.layout.fragment_company_profile, container, false);
 
-        // Initialize the company information
+        /* Initialize the company information
         Company currentCompany = DummyDatabase.companies.get(this.mCompanyName);
         TextView companyNameTextView = (TextView) returnView.findViewById(R.id.companyNameTextView);
         companyNameTextView.setText(this.mCompanyName);
 
         ImageView companyImage = (ImageView) returnView.findViewById(R.id.companyImage);
-        companyImage.setImageDrawable(getResources().getDrawable(currentCompany.getCompanyImageResource()));
+        companyImage.setImageDrawable(getResources().getDrawable(currentCompany.getCompanyImageResource()));*/
 
         //Initialize List View
         ListView reviewList = (ListView) returnView.findViewById(R.id.companyProfileReviewList);

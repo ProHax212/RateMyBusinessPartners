@@ -42,7 +42,36 @@
         android:layout_alignParentStart="true"
         android:text="Company Profile"
         android:textStyle="italic"
+        android:id="@+id/testCompanyProfile"
         android:onClick="switchToCompanyProfile"/>
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/testCompanyProfile"
+        android:id="@+id/radioGroupTest"
+        android:orientation="horizontal">
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Walmart"
+            android:id="@+id/walmartRadio"
+            android:checked="true" />
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Microsoft"
+            android:id="@+id/microsoftRadio"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Google"
+            android:id="@+id/googleRadio"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dell"
+            android:id="@+id/dellRadio"/>
+    </RadioGroup>
     <!--<Button-->
         <!--android:layout_width="350dp"-->
         <!--android:layout_height="wrap_content"-->

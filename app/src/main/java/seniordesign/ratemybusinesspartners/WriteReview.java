@@ -51,8 +51,8 @@ public class WriteReview extends AppCompatActivity {
         // Fill in company name from Intent
         Intent intent = getIntent();
         currentCompany = intent.getStringExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY);
-        TextView companyName = (TextView) findViewById(R.id.writeReviewCompanyTextView);
-        companyName.setText(currentCompany);
+        /*TextView companyName = (TextView) findViewById(R.id.writeReviewCompanyTextView);
+        companyName.setText(currentCompany);*/
 
         // Initialize Database
         initializeRyanDatabase();

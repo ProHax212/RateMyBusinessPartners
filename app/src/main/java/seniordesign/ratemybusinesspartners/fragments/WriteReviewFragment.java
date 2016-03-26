@@ -70,8 +70,8 @@ public class WriteReviewFragment extends Fragment implements View.OnClickListene
         // Inflate the layout for this fragment
         View returnView = inflater.inflate(R.layout.fragment_write_review, container, false);
 
-        TextView companyName = (TextView) returnView.findViewById(R.id.writeReviewCompanyTextView);
-        companyName.setText(this.currentCompany);
+        /*TextView companyName = (TextView) returnView.findViewById(R.id.writeReviewCompanyTextView);
+        companyName.setText(this.currentCompany);*/
 
         // Set the listener for the submit button
         Button submitButton = (Button) returnView.findViewById(R.id.submitReviewButton);
@@ -125,6 +125,8 @@ public class WriteReviewFragment extends Fragment implements View.OnClickListene
         remainAnonymousCheckbox.setChecked(false);
 
         mListener.submitReview(review);
+
+
 
     }
 

@@ -55,4 +55,9 @@ public class CompanyProfileTabAdapter extends FragmentPagerAdapter{
     public CharSequence getPageTitle(int position) {
         return tabTitles[position];
     }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;   // Need this to update the ViewPager after adding a review
+    }
 }

@@ -4,26 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="seniordesign.ratemybusinesspartners.fragments.ReviewResultsFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <!--<TextView
+        style="@style/text_information"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:text="@string/review_results_company_name_default"
-        android:textSize="@dimen/company_information_text_size"
-        android:id="@+id/reviewResultsCompanyName"/>
+        android:id="@+id/reviewResultsCompanyName"/>-->
+
+    <TextView
+        style="@style/text_information"
+        android:id="@+id/reviewResultsAllReviewsTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:text="All Reviews"/>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="@dimen/review_results_review_list_height"
-        android:layout_below="@id/reviewResultsCompanyName"
+        android:layout_below="@id/reviewResultsAllReviewsTextView"
         android:id="@+id/reviewResultsListView">
     </ListView>
 
