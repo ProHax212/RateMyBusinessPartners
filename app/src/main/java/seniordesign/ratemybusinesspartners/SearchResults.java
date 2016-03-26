@@ -74,7 +74,7 @@ public class SearchResults extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent companyIntent = new Intent(SearchResults.this,CompanyProfile.class);
                 Response company = (Response)parent.getItemAtPosition(position);
-                companyIntent.putExtra("companyName", company.getPrimaryName());
+                companyIntent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, company.getPrimaryName());
                 startActivity(companyIntent);
             }
         });

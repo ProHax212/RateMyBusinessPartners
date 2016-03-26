@@ -68,16 +68,18 @@ public class CompanyProfile extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_company_profile);
 
-        // Initialize the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.companyProfileToolbar);
-        setSupportActionBar(toolbar);
-
         //Retrieve Intent inputs
         Intent intent = getIntent();
         currentCompany = intent.getStringExtra(COMPANY_PROFILE_TARGET_COMPANY);
         /*Look RYAN here*/ String companyName = intent.getStringExtra("companyName");
         // Initialize Ryan's Database
         initializeRyanDatabase();
+
+        // Initialize the toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.companyProfileToolbar);
+        toolbar.setTitle("");
+        toolbar.setLogo(getResources().getDrawable(DummyDatabase.companies.get(currentCompany).getCompanyImageResource()));
+        setSupportActionBar(toolbar);
 
         // Initialize the tabs and fragments
         // The viewpager is used to manage which fragment is being shown based on the selected tab
@@ -127,7 +129,7 @@ public class CompanyProfile extends AppCompatActivity implements
 
         // Show the reviews
         AsyncListUpdate updater = new AsyncListUpdate();
-        updater.execute(ReviewResultsFragment.SORT_BY_DATE_NEWEST, ReviewResultsFragment.SHOW_ALL);
+        updater.execute(currentCompany, ReviewResultsFragment.SORT_BY_DATE_NEWEST, ReviewResultsFragment.SHOW_ALL);
         ArrayList<Review> returnList = new ArrayList<>();
         try {
             returnList = updater.get();
@@ -145,7 +147,7 @@ public class CompanyProfile extends AppCompatActivity implements
 
         AsyncListUpdate updater = new AsyncListUpdate();
         ArrayList<Review> returnList = new ArrayList<>();
-        updater.execute(SORT, SHOW);
+        updater.execute(currentCompany, SORT, SHOW);
 
         try {
             returnList = updater.get();
@@ -174,6 +176,7 @@ public class CompanyProfile extends AppCompatActivity implements
         });
         submitReviewThread.start();
         mViewPager.setCurrentItem(0, true);
+        mViewPager.getAdapter().notifyDataSetChanged(); // Update the fragments
         Toast.makeText(this, "Review Submitted", Toast.LENGTH_SHORT).show();
 
     }
@@ -202,7 +205,7 @@ public class CompanyProfile extends AppCompatActivity implements
             DynamoDBQueryExpression<Review> queryExpression;
 
             // Filter by date
-            switch (params[1]) {
+            switch (params[2]) {
 
                 case ReviewResultsFragment.SHOW_ALL:
                     queryExpression = new DynamoDBQueryExpression<Review>();
@@ -246,7 +249,7 @@ public class CompanyProfile extends AppCompatActivity implements
             }
 
             // Sort depending on the filters
-            switch (params[0]) {
+            switch (params[1]) {
                 case ReviewResultsFragment.SORT_BY_DATE_NEWEST:
                     queryExpression.setScanIndexForward(false);
                     break;
@@ -265,7 +268,7 @@ public class CompanyProfile extends AppCompatActivity implements
             }
 
             Review queryReview = new Review();
-            queryReview.setTargetCompanyName("Walmart");
+            queryReview.setTargetCompanyName(params[0]);
 
             queryExpression.setHashKeyValues(queryReview);
 

@@ -12,19 +12,18 @@
     tools:context="seniordesign.ratemybusinesspartners.fragments.WriteReviewFragment">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/text_information"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:id="@+id/writeReviewCompanyTextView"
-        android:textSize="@dimen/company_information_text_size"
-        android:text="@string/write_review_company_name_default"/>
+        android:layout_alignParentTop="true"
+        android:id="@+id/writeReviewWriteReviewTextView"
+        android:text="Write Review"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/writeReviewEditText"
-        android:layout_below="@id/writeReviewCompanyTextView"
+        android:layout_below="@id/writeReviewWriteReviewTextView"
         android:lines="8"
         android:inputType="textMultiLine"
         android:gravity="start"

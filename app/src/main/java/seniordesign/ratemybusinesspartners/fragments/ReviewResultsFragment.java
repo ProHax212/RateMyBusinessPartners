@@ -97,8 +97,8 @@ public class ReviewResultsFragment extends Fragment implements View.OnClickListe
         View returnView = inflater.inflate(R.layout.fragment_review_results, container, false);
 
         // Initialize Company Name
-        TextView companyName = (TextView) returnView.findViewById(R.id.reviewResultsCompanyName);
-        companyName.setText(this.currentCompany);
+        /*TextView companyName = (TextView) returnView.findViewById(R.id.reviewResultsCompanyName);
+        companyName.setText(this.currentCompany);*/
 
         // Initialize Filters
         sortBySpinner = (Spinner) returnView.findViewById(R.id.sortBySpinner);

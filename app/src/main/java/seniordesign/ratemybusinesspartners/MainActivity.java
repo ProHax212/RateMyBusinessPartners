@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.util.Log;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -127,6 +129,15 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
     private void initializeDummyDatabase(){
         Company walmart = new Company("Walmart", R.drawable.walmart_logo);
         DummyDatabase.companies.put(walmart.getCompanyName(), walmart);
+
+        Company microsoft = new Company("Microsoft", R.drawable.microsoft_logo);
+        DummyDatabase.companies.put(microsoft.getCompanyName(), microsoft);
+
+        Company dell = new Company("Dell", R.drawable.dell_logo);
+        DummyDatabase.companies.put(dell.getCompanyName(), dell);
+
+        Company google = new Company("Google", R.drawable.google_logo);
+        DummyDatabase.companies.put(google.getCompanyName(), google);
     }
 
     @Override
@@ -214,9 +225,19 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
         Intent intentSearch = new Intent(this, SearchEngine.class);
         startActivity(intentSearch);
     }
+
+    /**
+     * Test method - will not be here at final product
+     * @param v
+     */
     public void switchToCompanyProfile(View v){
         Intent intent = new Intent(this, CompanyProfile.class);
-        intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, "Walmart");
+
+        // Get radio group to find right company
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroupTest);
+        RadioButton selectedButton = (RadioButton) findViewById(radioGroup.getCheckedRadioButtonId());
+
+        intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, selectedButton.getText());
         startActivity(intent);
     }
 
