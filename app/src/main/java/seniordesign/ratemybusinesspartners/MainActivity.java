@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
      * Test method - will not be here at final product
      * @param v
      */
-    public void switchToCompanyProfile(View v){
+   /* public void switchToCompanyProfile(View v){
         Intent intent = new Intent(this, CompanyProfile.class);
 
         // Get radio group to find right company
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
 
         intent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, selectedButton.getText());
         startActivity(intent);
-    }
+    }*/
 
     //endregion
 

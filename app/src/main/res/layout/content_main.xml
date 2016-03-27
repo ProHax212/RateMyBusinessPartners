@@ -35,7 +35,7 @@
         android:layout_centerHorizontal="true"
         android:textColor="@android:color/white"
         android:textSize="27sp"/>
-    <Button
+  <!--  <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -43,8 +43,8 @@
         android:text="Company Profile"
         android:textStyle="italic"
         android:id="@+id/testCompanyProfile"
-        android:onClick="switchToCompanyProfile"/>
-    <RadioGroup
+        android:onClick="switchToCompanyProfile"/>-->
+<!--    <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/testCompanyProfile"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:text="Dell"
             android:id="@+id/dellRadio"/>
-    </RadioGroup>
+    </RadioGroup>-->
     <!--<Button-->
         <!--android:layout_width="350dp"-->
         <!--android:layout_height="wrap_content"-->

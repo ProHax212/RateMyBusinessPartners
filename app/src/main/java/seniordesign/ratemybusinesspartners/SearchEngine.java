@@ -73,7 +73,7 @@ public class SearchEngine extends AppCompatActivity implements
     private ListView lv;
     private ArrayList<Response> result;
     //ArrayList<String> previouslySearched = new ArrayList<String>();
-    String[] items = {"Walmart","ExxonMobil", "Dell", "Kroger", "Gorman","Chevron", "Shell", "Google", "Microsoft"};
+    String[] items = {"Walmart ( Active ) ","ExxonMobil", "Dell ( Active ) ", "Kroger", "Gorman","Chevron", "Shell", "Google ( Active ) ", "Microsoft ( Active ) ", "SoundCloud", "Facebook"};
     //ArrayAdapter<ArrayList<String>> adapter;
     ArrayAdapter<String> sadapter;
 
@@ -109,6 +109,14 @@ public class SearchEngine extends AppCompatActivity implements
 
             @Override
             public boolean onQueryTextSubmit(String text) {
+                Intent companyIntent = new Intent(SearchEngine.this,CompanyProfile.class);
+                //Response company = (Response)parent.getItemAtPosition(position);
+                companyIntent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, text);
+                startActivity(companyIntent);
+
+                /*Do not remove. Need to use for the actual thing*/
+                //String authToken = doPostRequest();
+                //doGetRequest(authToken, itext);
                 String authToken = doPostRequest();
                 doGetRequest(authToken, text);
                 return false;
@@ -126,8 +134,20 @@ public class SearchEngine extends AppCompatActivity implements
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 String itext = (String)parent.getItemAtPosition(position);
-                String authToken = doPostRequest();
-                doGetRequest(authToken, itext);
+                Intent companyIntent = new Intent(SearchEngine.this,CompanyProfile.class);
+                //Response company = (Response)parent.getItemAtPosition(position);
+                if(itext.contains("( Active )")){
+                    itext = itext.replace(" ( Active ) ", "");
+                    companyIntent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, itext);
+                    startActivity(companyIntent);
+                }else{
+                    displayQuery(" Sorry! Cannot find the company. Search and select an Active company");
+                }
+
+
+                /*Do not remove. Need to use for the actual thing*/
+                //String authToken = doPostRequest();
+                //doGetRequest(authToken, itext);
             }
         });
         /*&searchButton.setOnClickListener(new View.OnClickListener() {
