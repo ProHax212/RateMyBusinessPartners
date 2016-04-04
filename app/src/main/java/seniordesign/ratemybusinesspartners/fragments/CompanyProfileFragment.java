@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,26 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import seniordesign.ratemybusinesspartners.CompanyProfile;
 import seniordesign.ratemybusinesspartners.R;
 import seniordesign.ratemybusinesspartners.ViewReview;
+import seniordesign.ratemybusinesspartners.adapters.CompactReviewListAdapter;
 import seniordesign.ratemybusinesspartners.adapters.ReviewListAdapter;
 import seniordesign.ratemybusinesspartners.models.Company;
 import seniordesign.ratemybusinesspartners.models.DummyDatabase;
@@ -42,7 +58,10 @@ public class CompanyProfileFragment extends Fragment {
 
     private ReviewFragmentListener mListener;
 
-    ReviewListAdapter reviewArrayAdapter;
+    private BarChart mBarChart;
+
+    private CompactReviewListAdapter top5Adapter;
+    private CompactReviewListAdapter bottom5Adapter;
 
     public CompanyProfileFragment() {
         // Required empty public constructor
@@ -73,20 +92,74 @@ public class CompanyProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View returnView = inflater.inflate(R.layout.fragment_company_profile, container, false);
 
-        /* Initialize the company information
-        Company currentCompany = DummyDatabase.companies.get(this.mCompanyName);
-        TextView companyNameTextView = (TextView) returnView.findViewById(R.id.companyNameTextView);
-        companyNameTextView.setText(this.mCompanyName);
+        ArrayList<Review> reviews = mListener.updateReviews();
 
-        ImageView companyImage = (ImageView) returnView.findViewById(R.id.companyImage);
-        companyImage.setImageDrawable(getResources().getDrawable(currentCompany.getCompanyImageResource()));*/
+        // Initialize the Bar Graph for review ratings
+        BarData data = new BarData(getXAxisValues(), getDataSet(reviews, returnView.getContext()));
 
-        //Initialize List View
-        ListView reviewList = (ListView) returnView.findViewById(R.id.companyProfileReviewList);
+        mBarChart = (BarChart) returnView.findViewById(R.id.companyProfileBarGraph);
+        mBarChart.setData(data);
 
-        reviewArrayAdapter = new ReviewListAdapter(getContext(), new ArrayList<Review>());
-        reviewList.setAdapter(reviewArrayAdapter);
-        reviewList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        // Formatting for the Bar Chart
+        XAxis xAxis = mBarChart.getXAxis();
+        YAxis yAxisLeft = mBarChart.getAxisLeft();
+        YAxis yAxisRight = mBarChart.getAxisRight();
+
+        yAxisLeft.setDrawAxisLine(false);
+        yAxisLeft.setDrawGridLines(false);
+        yAxisLeft.setDrawLabels(false);
+
+        yAxisRight.setDrawAxisLine(false);
+        yAxisRight.setDrawGridLines(false);
+        yAxisRight.setDrawLabels(false);
+
+        xAxis.setDrawAxisLine(false);
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextSize(8f);
+
+        mBarChart.getLegend().setEnabled(false);
+        mBarChart.setDescription("");
+        mBarChart.getBarData().setValueTextSize(10f);
+        mBarChart.getBarData().setValueFormatter(new ValueFormatter() {
+            @Override
+            // Use this to take off the decimal values on the ratings (i.e. 3.00 -> 3)
+            public String getFormattedValue(float v, Entry entry, int i, ViewPortHandler viewPortHandler) {
+                return Integer.toString(Math.round(v));
+            }
+        });
+
+        // Initialize the Top 5 and Bottom 5 lists
+        top5Adapter = new CompactReviewListAdapter(returnView.getContext(), new ArrayList<Review>());
+        bottom5Adapter = new CompactReviewListAdapter(returnView.getContext(), new ArrayList<Review>());
+        ListView top5List = (ListView) returnView.findViewById(R.id.companyProfileTop5ListView);
+        ListView bottom5List = (ListView) returnView.findViewById(R.id.companyProfileBottom5ListView);
+
+        top5List.setAdapter(top5Adapter);
+        bottom5List.setAdapter(bottom5Adapter);
+
+        // Sort the list to easily take the top 5 and bottom 5
+        Collections.sort(reviews, new Comparator<Review>() {
+            @Override
+            public int compare(Review lhs, Review rhs) {
+                if(lhs.getNumStars() > rhs.getNumStars()) return 1;
+                else if(lhs.getNumStars() < rhs.getNumStars()) return -1;
+                else return 0;
+            }
+        });
+
+        // Update Top 5
+        for(int i = reviews.size() - 1; i > reviews.size() - 6 && i >= 0; i--){
+            top5Adapter.add(reviews.get(i));
+        }
+
+        // Update Bottom 5
+        for(int i = 0; i < 5 && i < reviews.size(); i++){
+            bottom5Adapter.add(reviews.get(i));
+        }
+
+        // Set adapters for the
+        AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArrayAdapter<Review> arrayAdapter = (ArrayAdapter<Review>) parent.getAdapter();
@@ -95,18 +168,83 @@ public class CompanyProfileFragment extends Fragment {
                 intent.putExtra(CompanyProfile.COMPANY_PROFILE_REVIEW_TO_VIEW, arrayAdapter.getItem(position));
                 startActivity(intent);
             }
-        });
+        };
 
-        // Initialize the reviews
-        ArrayList<Review> reviews = mListener.updateReviews();
-
-        reviewArrayAdapter.clear();
-
-        for(Review review : reviews){
-            reviewArrayAdapter.add(review);
-        }
+        top5List.setOnItemClickListener(onItemClickListener);
+        bottom5List.setOnItemClickListener(onItemClickListener);
 
         return returnView;
+    }
+
+    /**
+     * Return the reviews for this company as a BarDataSet
+     * @return
+     */
+    private BarDataSet getDataSet(ArrayList<Review> reviews, Context c){
+
+        int counter0 = 0;
+        int counter1 = 0;
+        int counter2 = 0;
+        int counter3 = 0;
+        int counter4 = 0;
+        int counter5 = 0;
+
+        // Increment the counters for the appropriate rating
+        for(Review review : reviews){
+            switch(Math.round(review.getNumStars())){
+                case 0:
+                    counter0 += 1;
+                    break;
+                case 1:
+                    counter1 += 1;
+                    break;
+                case 2:
+                    counter2 += 1;
+                    break;
+                case 3:
+                    counter3 += 1;
+                    break;
+                case 4:
+                    counter4 += 1;
+                    break;
+                case 5:
+                    counter5 += 1;
+                    break;
+            }
+        }
+
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        BarEntry entry = new BarEntry(1, 2);
+        entries.add(new BarEntry(counter0, 0));
+        entries.add(new BarEntry(counter1, 1));
+        entries.add(new BarEntry(counter2, 2));
+        entries.add(new BarEntry(counter3, 3));
+        entries.add(new BarEntry(counter4, 4));
+        entries.add(new BarEntry(counter5, 5));
+
+        BarDataSet dataSet = new BarDataSet(entries, "");
+        dataSet.setColors(new int[] {R.color.rating_0, R.color.rating_1,
+                R.color.rating_2, R.color.rating_3, R.color.rating_4, R.color.rating_5}, c);
+
+        return dataSet;
+
+    }
+
+    /**
+     * Return the X labels for the bar graph (0-5)
+     * @return
+     */
+    private ArrayList<String> getXAxisValues(){
+
+        ArrayList<String> xValues = new ArrayList<>();
+        xValues.add("0");
+        xValues.add("1");
+        xValues.add("2");
+        xValues.add("3");
+        xValues.add("4");
+        xValues.add("5");
+
+        return xValues;
     }
 
     @Override

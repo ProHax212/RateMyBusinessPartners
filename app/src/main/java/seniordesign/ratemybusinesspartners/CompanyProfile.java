@@ -124,10 +124,14 @@ public class CompanyProfile extends AppCompatActivity implements
      * The fragments will call this method to talk to the activity
      */
 
+    /**
+     * Callback method for the Company Profile Fragment
+     * Returns a list of reviews for the company
+     * @return List of reviews for the company
+     */
     @Override
     public ArrayList<Review> updateReviews() {
 
-        // Show the reviews
         AsyncListUpdate updater = new AsyncListUpdate();
         updater.execute(currentCompany, ReviewResultsFragment.SORT_BY_DATE_NEWEST, ReviewResultsFragment.SHOW_ALL);
         ArrayList<Review> returnList = new ArrayList<>();
