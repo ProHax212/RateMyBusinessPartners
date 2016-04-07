@@ -60,6 +60,9 @@ public class CompanyProfile extends AppCompatActivity implements
     private AmazonDynamoDBClient ryanClient;
     private DynamoDBMapper ryanMapper;
 
+    // Cache'd Review List
+    private ArrayList<Review> cachedReviews;
+
     private ViewPager mViewPager;
     private CompanyProfileTabAdapter mTabsAdapter;
 
@@ -90,6 +93,15 @@ public class CompanyProfile extends AppCompatActivity implements
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.companyProfileTabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        // Cache the reviews
+        AsyncListUpdate updater = new AsyncListUpdate();
+        updater.execute(currentCompany, ReviewResultsFragment.SORT_BY_DATE_NEWEST, ReviewResultsFragment.SHOW_ALL);
+        try{
+            cachedReviews = updater.get();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     private void initializeRyanDatabase() {

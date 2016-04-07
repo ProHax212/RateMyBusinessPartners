@@ -23,7 +23,10 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.lang.reflect.Array;
@@ -62,6 +65,7 @@ public class CompanyProfileFragment extends Fragment {
 
     private CompactReviewListAdapter top5Adapter;
     private CompactReviewListAdapter bottom5Adapter;
+    private CompactReviewListAdapter ratedReviewsAdapter;
 
     public CompanyProfileFragment() {
         // Required empty public constructor
@@ -128,6 +132,39 @@ public class CompanyProfileFragment extends Fragment {
                 return Integer.toString(Math.round(v));
             }
         });
+        mBarChart.setDragEnabled(false);
+        mBarChart.setScaleEnabled(false);
+        mBarChart.setPinchZoom(false);
+        mBarChart.setHighlightPerDragEnabled(false);
+        mBarChart.setDoubleTapToZoomEnabled(false);
+        mBarChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry entry, int i, Highlight highlight) {
+                View topBottom5Layout = getView().findViewById(R.id.companyProfileTopBottom5LinearLayout);
+                View ratedReviewsLayout = getView().findViewById(R.id.companyProfileRatedReviewsLayout);
+                TextView ratedReviewTextView = (TextView) getView().findViewById(R.id.companyProfileRatedReviewsTextView);
+                Log.d("Chart", Integer.toString(entry.getXIndex()));
+
+                ArrayList<Review> reviews = mListener.updateReviews();
+                ratedReviewsAdapter.clear();
+                for(Review review : reviews){
+                    if(Math.round(review.getNumStars()) == entry.getXIndex()) ratedReviewsAdapter.add(review);
+                }
+
+                ratedReviewTextView.setText(entry.getXIndex() + " Star Reviews");
+                topBottom5Layout.setVisibility(View.GONE);
+                ratedReviewsLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onNothingSelected() {
+                View topBottom5Layout = getView().findViewById(R.id.companyProfileTopBottom5LinearLayout);
+                View ratedReviewsLayout = getView().findViewById(R.id.companyProfileRatedReviewsLayout);
+
+                ratedReviewsLayout.setVisibility(View.GONE);
+                topBottom5Layout.setVisibility(View.VISIBLE);
+            }
+        });
 
         // Initialize the Top 5 and Bottom 5 lists
         top5Adapter = new CompactReviewListAdapter(returnView.getContext(), new ArrayList<Review>());
@@ -137,6 +174,11 @@ public class CompanyProfileFragment extends Fragment {
 
         top5List.setAdapter(top5Adapter);
         bottom5List.setAdapter(bottom5Adapter);
+
+        //Initialize the ListView to display reviews with a specific rating when the graph is pressed
+        ratedReviewsAdapter = new CompactReviewListAdapter(returnView.getContext(), new ArrayList<Review>());
+        ListView ratedReviewsList = (ListView) returnView.findViewById(R.id.companyProfileRatedReviewsListView);
+        ratedReviewsList.setAdapter(ratedReviewsAdapter);
 
         // Sort the list to easily take the top 5 and bottom 5
         Collections.sort(reviews, new Comparator<Review>() {
@@ -158,7 +200,7 @@ public class CompanyProfileFragment extends Fragment {
             bottom5Adapter.add(reviews.get(i));
         }
 
-        // Set adapters for the
+        // Set adapters for the lists
         AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -172,6 +214,7 @@ public class CompanyProfileFragment extends Fragment {
 
         top5List.setOnItemClickListener(onItemClickListener);
         bottom5List.setOnItemClickListener(onItemClickListener);
+        ratedReviewsList.setOnItemClickListener(onItemClickListener);
 
         return returnView;
     }

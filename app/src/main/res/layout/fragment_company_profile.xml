@@ -14,79 +14,102 @@
         <TextView
             style="@style/text_information"
             android:id="@+id/companyProfileReviewsTextView"
-            android:text="Statistics"/>
+            android:text="Overview"/>
 
-        <LinearLayout
+        <com.github.mikephil.charting.charts.BarChart
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/companyProfileReviewsTextView"
-            android:orientation="horizontal">
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/companyProfileBarGraph"/>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Top 5"
-                    android:textStyle="bold"
-                    android:id="@+id/companyProfileTop5TextView"/>
-
-                <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:id="@+id/companyProfileTop5ListView"/>
-
-                <View
-                    style="@style/divider"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Bottom 5"
-                    android:textStyle="bold"
-                    android:id="@+id/companyProfileBottom5TextView"/>
-
-                <ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:id="@+id/companyProfileBottom5ListView"/>
-
-            </LinearLayout>
-        </LinearLayout>
+            android:id="@+id/companyProfileBarGraph"/>
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"
+        android:layout_margin="5dp"
+        android:id="@+id/companyProfileDivider" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:id="@+id/companyProfileTopBottom5LinearLayout">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Top 5"
+                style="@style/text_information"
+                android:id="@+id/companyProfileTop5TextView"/>
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/companyProfileTop5TextView"
+                android:id="@+id/companyProfileTop5ListView"/>
+
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:background="@color/black"/>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bottom 5"
+                style="@style/text_information"
+                android:id="@+id/companyProfileBottom5TextView"/>
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/companyProfileBottom5TextView"
+                android:id="@+id/companyProfileBottom5ListView"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="5dp"
-        android:layout_weight="1">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/black"
-            android:layout_marginTop="5dp"
-            android:id="@+id/companyProfileDivider" />
+        android:layout_weight="1"
+        android:visibility="gone"
+        android:id="@+id/companyProfileRatedReviewsLayout">
 
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             style="@style/text_information"
-            android:paddingTop="10dp"
-            android:layout_below="@id/companyProfileDivider"
-            android:text="Financial"/>
+            android:text="[N] Star Reviews"
+            android:id="@+id/companyProfileRatedReviewsTextView"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/companyProfileRatedReviewsTextView"
+            android:id="@+id/companyProfileRatedReviewsListView"/>
 
     </RelativeLayout>
 
