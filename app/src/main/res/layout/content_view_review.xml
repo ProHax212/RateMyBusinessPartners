@@ -4,10 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:padding="16dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="seniordesign.ratemybusinesspartners.ViewReview"
     tools:showIn="@layout/activity_view_review">
@@ -29,13 +26,38 @@
         android:id="@+id/viewReviewRatingBar"
         android:layout_below="@id/viewReviewCompanyNameTextView"/>
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewReviewRatingBar"
+        android:id="@+id/viewReviewLikeButtonLayout">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/viewReviewLikeButton"
+            android:src="@drawable/like_button"
+            android:contentDescription="Like button - press to like the review"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/viewReviewLikeTextView"
+            android:textColor="@color/like_button_color"
+            android:text="Like"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/viewReviewLikeButton"
+            android:layout_toEndOf="@+id/viewReviewLikeButton" />
+
+    </RelativeLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/view_review_default_text"
         android:textSize="@dimen/view_review_review_text_size"
         android:id="@+id/viewReviewReviewerDateTextView"
-        android:layout_below="@id/viewReviewRatingBar"/>
+        android:layout_below="@id/viewReviewLikeButtonLayout"/>
 
     <View
         style="@style/divider"

@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import seniordesign.ratemybusinesspartners.CompanyProfile;
@@ -115,10 +116,13 @@ public class ReviewResultsFragment extends Fragment implements View.OnClickListe
         ListView reviewResults = (ListView) returnView.findViewById(R.id.reviewResultsListView);
         reviewResultsAdapter = new ReviewListAdapter(getContext(), new ArrayList<Review>());
         reviewResults.setAdapter(reviewResultsAdapter);
+        Log.d("Listener", "Setting the onItemSelected Listener");
         reviewResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ArrayAdapter<Review> arrayAdapter = (ArrayAdapter<Review>) parent.getAdapter();
+
+                Log.d("Listener", "Item clicked");
 
                 Intent intent = new Intent(view.getContext(), ViewReview.class);
                 intent.putExtra(CompanyProfile.COMPANY_PROFILE_REVIEW_TO_VIEW, arrayAdapter.getItem(position));
@@ -155,6 +159,17 @@ public class ReviewResultsFragment extends Fragment implements View.OnClickListe
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

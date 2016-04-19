@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -41,7 +44,9 @@ public class CompactReviewListAdapter extends ArrayAdapter{
 
         // 3. Get icon,title & counter views from the rowView
         RatingBar reviewRatingBar = (RatingBar) rowView.findViewById(R.id.reviewRatingBar);
+        //RelativeLayout likeButtonLayout = (RelativeLayout) rowView.findViewById(R.id.reviewLikeLayout);
         ((ViewGroup) rowView).removeView(reviewRatingBar);  // Rating Bar isn't in the compact version
+        //((ViewGroup) rowView).removeView(likeButtonLayout); // Like button isn't in the compact version
         TextView reviewTextView = (TextView) rowView.findViewById(R.id.reviewTextView);
 
         // 4. Set the text for textView

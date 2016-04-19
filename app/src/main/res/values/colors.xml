@@ -21,4 +21,7 @@
     <color name="rating_3">#FFD834</color>
     <color name="rating_4">#ADD633</color>
     <color name="rating_5">#9FC05A</color>
+
+    <!-- Like button color -->
+    <color name="like_button_color">#3AC32C</color>
 </resources>

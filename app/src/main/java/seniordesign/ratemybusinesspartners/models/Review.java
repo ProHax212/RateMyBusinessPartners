@@ -1,5 +1,6 @@
 package seniordesign.ratemybusinesspartners.models;
 
+import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,14 +12,16 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMarshall
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
+import java.io.Serializable;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
  * Created by Ryan Comer on 2/3/2016.
  */
 @DynamoDBTable(tableName = "Reviews")
-public class Review implements Parcelable{
+public class Review implements Serializable{
 
     //Fields for the Review model
     private String reviewID;
@@ -27,6 +30,8 @@ public class Review implements Parcelable{
     private String reviewText;
     private String targetCompanyName;
     private Float numStars;
+    private Integer numLikes;
+    private ArrayList<String> likedUsers;
     private Calendar dateCreated;
     private boolean isUserAnonymous;
 
@@ -40,11 +45,17 @@ public class Review implements Parcelable{
         this.numStars = numStars;
         this.dateCreated = Calendar.getInstance();
         this.isUserAnonymous = isUserAnonymous;
+        this.numLikes = 0;
+        this.likedUsers = new ArrayList<>();
 
     }
 
     public Review(){
+
         this.dateCreated = Calendar.getInstance();
+        this.numLikes = 0;
+        this.likedUsers = new ArrayList<>();
+
     }
 
 
@@ -103,6 +114,20 @@ public class Review implements Parcelable{
         this.reviewText = reviewText;
     }
 
+    @DynamoDBAttribute(attributeName = "Number of Likes")
+    public int getNumLikes(){return this.numLikes;}
+    public void setNumLikes(int numLikes){
+        this.numLikes = numLikes;
+    }
+
+    @DynamoDBAttribute(attributeName = "Liked Users")
+    public ArrayList<String> getLikedUsers() {
+        return this.likedUsers;
+    }
+    public void setLikedUsers(ArrayList<String> likedUsers){
+        this.likedUsers = likedUsers;
+    }
+
     @DynamoDBHashKey(attributeName = "Target Company")
     public String getTargetCompanyName() {
         return targetCompanyName;
@@ -145,17 +170,44 @@ public class Review implements Parcelable{
     }
 
 
+    /**
+     * Add a user to the liked reviews list
+     * Increment the numLikes field by 1
+     * @param userID
+     * @return Whether or not the addition was successful
+     */
+    public boolean likeReview(String userID){
+        if(!getLikedUsers().contains(userID)) {
+            this.getLikedUsers().add(userID);
+            this.numLikes += 1;
+            return true;
+        }
+        return false;
+    }
 
-
+    /**
+     * Remove a user from the liked reviews list
+     * Decrement the numLikes field by 1
+     * @param userID
+     * @return Whether or not the removal was successful
+     */
+    public boolean unlikeReview(String userID){
+        if(getLikedUsers().contains(userID)){
+            getLikedUsers().remove(userID);
+            this.numLikes -= 1;
+            return true;
+        }
+        else return false;
+    }
 
 
     // Parcelable Interface Methods
-    @Override
+    //@Override
     public int describeContents() {
         return 0;
     }
 
-    @Override
+    //@Override
     public void writeToParcel(Parcel dest, int flags) {
         // Push all of the fields onto the dest stack
         dest.writeString(this.reviewID);
@@ -166,6 +218,13 @@ public class Review implements Parcelable{
         dest.writeString(this.numStars.toString());
         dest.writeSerializable(this.dateCreated);
         dest.writeString(this.isUserAnonymous == true ? "1" : "0");
+        dest.writeString(this.numLikes.toString());
+
+        // Write the length of the array first
+        dest.writeString(Integer.toString(this.likedUsers.size()));
+        for(String userId : this.likedUsers){
+            dest.writeString(userId);
+        }
     }
 
     public static final Parcelable.Creator<Review> CREATOR = new Parcelable.Creator<Review>(){
@@ -186,6 +245,15 @@ public class Review implements Parcelable{
             review.setDateCreated((Calendar) source.readSerializable());
 
             review.setIsUserAnonymous(source.readString().equals("1") ? true : false);
+
+            review.setNumLikes(Integer.parseInt(source.readString()));
+
+            // Read the length of the liked array
+            int length = Integer.parseInt(source.readString());
+            ArrayList<String> likedUsers = new ArrayList<>();
+            for(int i = 0; i < length; i++){
+                likedUsers.add(source.readString());
+            }
 
             return review;
         }

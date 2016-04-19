@@ -90,12 +90,12 @@ public class CompanyProfileTabAdapter extends FragmentPagerAdapter{
         return registeredFragments.get(position);
     }
 
-    @Override
+    /*@Override
     public void notifyDataSetChanged() {
         // Update the graph
         BarChart barChart = (BarChart) getRegisteredFragment(0).getView().findViewById(R.id.companyProfileBarGraph);
         barChart.notifyDataSetChanged();
         barChart.invalidate();
         super.notifyDataSetChanged();
-    }
+    }*/
 }
