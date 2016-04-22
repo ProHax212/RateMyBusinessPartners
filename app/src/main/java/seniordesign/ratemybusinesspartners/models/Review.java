@@ -27,6 +27,7 @@ public class Review implements Serializable{
     private String reviewID;
 
     private User reviewer;
+    private String reviewerUserID;
     private String reviewText;
     private String targetCompanyName;
     private Float numStars;
@@ -40,6 +41,7 @@ public class Review implements Serializable{
     public Review(User reviewer, String reviewText, String targetCompanyName, Float numStars, boolean isUserAnonymous){
 
         this.reviewer = reviewer;
+        this.reviewerUserID = reviewerUserID;
         this.reviewText = reviewText;
         this.targetCompanyName = targetCompanyName;
         this.numStars = numStars;
@@ -112,6 +114,12 @@ public class Review implements Serializable{
     }
     public void setReviewText(String reviewText) {
         this.reviewText = reviewText;
+    }
+
+    @DynamoDBAttribute(attributeName = "UserID")
+    public String getReviewerUserID(){return this.reviewerUserID;}
+    public void setReviewerUserID(String userID){
+        this.reviewerUserID = userID;
     }
 
     @DynamoDBAttribute(attributeName = "Number of Likes")
@@ -237,7 +245,7 @@ public class Review implements Serializable{
             reviewer.setUserId(source.readString());
             reviewer.setCompany(source.readString());
             review.setReviewer(reviewer);
-
+            review.setReviewerUserID(reviewer.getUserId());
             review.setReviewText(source.readString());
             review.setTargetCompanyName(source.readString());
             review.setNumStars(Float.parseFloat(source.readString()));

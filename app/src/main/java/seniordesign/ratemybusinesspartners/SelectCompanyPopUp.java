@@ -55,7 +55,7 @@ public class SelectCompanyPopUp extends Activity {
         companies = new ArrayList<String>();
         companies.add("Bose");
         companies.add("Tesla");
-        companies.add("D&B");
+        companies.add("Microsoft");
         companies.add("Toyota");
         companies.add("Google");
         companies.add("Amazon");
