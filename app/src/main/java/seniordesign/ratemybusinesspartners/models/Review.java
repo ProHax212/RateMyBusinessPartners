@@ -68,15 +68,19 @@ public class Review implements Serializable{
     public String toString(){
         StringBuilder builder = new StringBuilder();
 
-        if(!this.isUserAnonymous){
-            builder.append(reviewer.getUserId());
-        }else{
-            builder.append("Anonymous");
-        }
         DateFormat dateFormat = DateFormat.getDateInstance();
         dateFormat.setCalendar(this.dateCreated);
-        builder.append("\n" + dateFormat.format(dateFormat.getCalendar().getTime()));
-        builder.append("\n\n" + this.reviewText);
+        builder.append(dateFormat.format(dateFormat.getCalendar().getTime()) + "\n");
+
+        if(getNumLikes() != 1) builder.append(getNumLikes() + " Likes\n\n");
+        else builder.append(getNumLikes() + " Like\n\n");
+
+        if(!this.isUserAnonymous){
+            builder.append(reviewer.getUserId() + "\n\n");
+        }else{
+            builder.append("Anonymous\n\n");
+        }
+        builder.append(this.reviewText);
 
         return builder.toString();
     }
@@ -86,11 +90,16 @@ public class Review implements Serializable{
         dateFormat.setCalendar(this.dateCreated);
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Rating: " + Math.round(getNumStars()) + "\n");
+        int numStarsInt = Math.round(getNumStars());
+        if(numStarsInt != 1) sb.append(numStarsInt + " Stars\n");
+        else sb.append(numStarsInt + " Star" + "\n");
+
+        if(getNumLikes() != 1) sb.append(getNumLikes() + " Likes\n");
+        else sb.append(getNumLikes() + " Like\n\natu");
 
         // Only show the first N words
         String[] reviewText = getReviewText().split(" ");
-        for(int i = 0; i < 6 && i < reviewText.length; i++){
+        for(int i = 0; i < 8 && i < reviewText.length; i++){
             sb.append(reviewText[i] + " ");
         }
         sb.append("...\n");
