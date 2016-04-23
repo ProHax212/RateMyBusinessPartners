@@ -5,6 +5,6 @@ package seniordesign.ratemybusinesspartners.interfaces;
  */
 public interface ReviewsChangedListener {
 
-    public void dataChanged();
+    void dataChanged();
 
 }

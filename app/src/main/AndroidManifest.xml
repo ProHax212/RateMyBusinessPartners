@@ -36,6 +36,14 @@
             android:label="@string/title_activity_company_profile"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
+            android:name=".UserReviews"
+            android:label="User Profile"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ViewUserReview"
+            android:label="User Profile"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
             android:name=".WriteReview"
             android:label="@string/title_activity_write_review"
             android:parentActivityName=".CompanyProfile"

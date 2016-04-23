@@ -131,14 +131,14 @@ public class HomePage extends AppCompatActivity
         myReviews.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Intent intentCompany = new Intent(HomePage.this,CompanyProfile.class);
-                intentCompany.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, MainActivity.CURRENT_USER.getCompany());
+                //Intent intentCompany = new Intent(HomePage.this,CompanyProfile.class);
+                //intentCompany.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, MainActivity.CURRENT_USER.getCompany());
 
-                startActivity(intentCompany);
-            //    Intent intentUser = new Intent(HomePage.this,UserReviews.class);
-                //intentUser.putExtra("userProfile", MainActivity.CURRENT_USER);
+                //startActivity(intentCompany);
+                Intent intentUser = new Intent(HomePage.this,UserReviews.class);
+                intentUser.putExtra("userProfile", MainActivity.CURRENT_USER);
 
-                //startActivity(intentUser);
+                startActivity(intentUser);
             }
         });
     }
