@@ -8,6 +8,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +70,12 @@ public class ViewReview extends AppCompatActivity {
             likeButtonText.setText("Like");
         }
 
+        // Put the number of likes
+        TextView numberOfLikesTextView = (TextView) findViewById(R.id.viewReviewNumberOfLikesTextView);
+        int numberOfLikes = reviewToShow.getNumLikes();
+        if(numberOfLikes != 1) numberOfLikesTextView.setText("\t|\t" + numberOfLikes + " Likes");
+        else numberOfLikesTextView.setText("\t|\t" + numberOfLikes + " Like");
+
         // Set the listener for the like button
         likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +94,11 @@ public class ViewReview extends AppCompatActivity {
                         Toast.makeText(ViewReview.this, "Review Liked", Toast.LENGTH_SHORT).show();
                     }
                 }
+
+                RelativeLayout parentLayout = (RelativeLayout) v.getParent();
+                TextView likesTextView = (TextView) parentLayout.findViewById(R.id.viewReviewNumberOfLikesTextView);
+                if(reviewToShow.getNumLikes() != 1) likesTextView.setText("\t|\t" + reviewToShow.getNumLikes() + " Likes");
+                else likesTextView.setText("\t|\t" + reviewToShow.getNumLikes() + " Like");
             }
         });
 

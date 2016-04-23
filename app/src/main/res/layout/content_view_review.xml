@@ -49,6 +49,15 @@
             android:layout_toRightOf="@+id/viewReviewLikeButton"
             android:layout_toEndOf="@+id/viewReviewLikeButton" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/viewReviewLikeTextView"
+            android:layout_toEndOf="@id/viewReviewLikeTextView"
+            android:layout_centerVertical="true"
+            android:id="@+id/viewReviewNumberOfLikesTextView"
+            android:text="\t|\t[DEFAULT_LIKES]"/>
+
     </RelativeLayout>
 
     <TextView
