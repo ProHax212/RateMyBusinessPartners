@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="seniordesign.ratemybusinesspartners.ViewReview"
-    tools:showIn="@layout/activity_view_review">
+    tools:context="seniordesign.ratemybusinesspartners.ViewUserReview"
+    tools:showIn="@layout/activity_view_user_review">
 
 
     <TextView
@@ -18,7 +18,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"/>
-    
+
     <RatingBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,39 +26,6 @@
         android:id="@+id/viewReviewRatingBar"
         android:layout_below="@id/viewReviewCompanyNameTextView"/>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/viewReviewRatingBar"
-        android:id="@+id/viewReviewLikeButtonLayout">
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/viewReviewLikeButton"
-            android:src="@drawable/like_button"
-            android:contentDescription="Like button - press to like the review"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/viewReviewLikeTextView"
-            android:textColor="@color/like_button_color"
-            android:text="Like"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/viewReviewLikeButton"
-            android:layout_toEndOf="@+id/viewReviewLikeButton" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/viewReviewLikeTextView"
-            android:layout_toEndOf="@id/viewReviewLikeTextView"
-            android:layout_centerVertical="true"
-            android:id="@+id/viewReviewNumberOfLikesTextView"
-            android:text="\t|\t[DEFAULT_LIKES]"/>
-
-    </RelativeLayout>
 
     <TextView
         android:layout_width="match_parent"
@@ -66,7 +33,9 @@
         android:text="@string/view_review_default_text"
         android:textSize="@dimen/view_review_review_text_size"
         android:id="@+id/viewReviewReviewerDateTextView"
-        android:layout_below="@id/viewReviewLikeButtonLayout"/>
+        android:layout_below="@+id/viewReviewRatingBar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <View
         style="@style/divider"
@@ -81,7 +50,9 @@
         android:scrollbars="vertical"
         android:maxLines="10"
         android:id="@+id/viewReviewTextReview"
-        android:layout_below="@id/viewReviewDividerOne"/>
+        android:layout_below="@+id/viewReviewDividerOne"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <View
         style="@style/divider"

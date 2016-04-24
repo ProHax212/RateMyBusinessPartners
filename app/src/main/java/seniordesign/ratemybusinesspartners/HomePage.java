@@ -1,7 +1,12 @@
 package seniordesign.ratemybusinesspartners;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -12,6 +17,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
@@ -29,6 +38,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 import seniordesign.ratemybusinesspartners.models.User;
@@ -53,12 +65,21 @@ public class HomePage extends AppCompatActivity
     private static final int RC_COMPANY_SELECTION = 9002;
     private String userIdToken;
     private String company;
-
+    private final int PHOTO = 1;
+    private ImageView imageView;
+    private EditText userId_edittext;
+    private EditText email_edittext;
+    private EditText company_edittext;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         Toolbar toolbar = (Toolbar) findViewById(R.id.home_page_toolbar);
+        imageView = (ImageView) findViewById(R.id.imageView);
+        toolbar.setTitle("My Profile");
+        Button selectText = (Button) findViewById(R.id.changeImageButton);
+        Button myReviews = (Button) findViewById(R.id.button);
+        Button companyReviews = (Button) findViewById(R.id.button2);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_page_drawer_layout);
@@ -70,9 +91,56 @@ public class HomePage extends AppCompatActivity
         initializeGoogleSignIn();
         initializeUserDatabase();
 
+        userId_edittext = (EditText) findViewById(R.id.myaccount_userId_edittext);
+        email_edittext = (EditText) findViewById(R.id.myaccount_email_edittext);
+        company_edittext = (EditText) findViewById(R.id.myaccount_company_edittext);
+
+        userId_edittext.setText(MainActivity.CURRENT_USER.getUserId());
+        email_edittext.setText(MainActivity.email);
+        company_edittext.setText(MainActivity.CURRENT_USER.getCompany());
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        SharedPreferences preferences = getSharedPreferences("prof", MODE_PRIVATE);
+        String img_str=preferences.getString("profilephoto", "");
+        if (!img_str.equals("")){
+            //decode string to image
+            String base=img_str;
+            byte[] imageAsBytes = Base64.decode(base.getBytes(), Base64.DEFAULT);
+            imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+
+        }
+
         navMenu = navigationView.getMenu();
         navigationView.setNavigationItemSelectedListener(this);
+        selectText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent pickPhotoIntent = new Intent(Intent.ACTION_PICK);
+                pickPhotoIntent.setType("image/*");
+                startActivityForResult(pickPhotoIntent, PHOTO);
+            }
+        });
+        companyReviews.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intentCompany = new Intent(HomePage.this,CompanyProfile.class);
+                intentCompany.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, MainActivity.CURRENT_USER.getCompany());
+
+                startActivity(intentCompany);
+            }
+        });
+        myReviews.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                //Intent intentCompany = new Intent(HomePage.this,CompanyProfile.class);
+                //intentCompany.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, MainActivity.CURRENT_USER.getCompany());
+
+                //startActivity(intentCompany);
+                Intent intentUser = new Intent(HomePage.this,UserReviews.class);
+                intentUser.putExtra("userProfile", MainActivity.CURRENT_USER);
+
+                startActivity(intentUser);
+            }
+        });
     }
 
     @Override
@@ -186,6 +254,29 @@ public class HomePage extends AppCompatActivity
                 MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_IN;
                 sign_in_or_out.setTitle("Sign Out");
                 Toast.makeText(this, "You are signed in as " + MainActivity.CURRENT_USER.getUserId(), Toast.LENGTH_LONG).show();
+            }
+        }else if(requestCode == PHOTO){
+            if(resultCode == RESULT_OK){
+                try{
+                    final Uri imageUri = data.getData();
+                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+
+                   /* imageView.buildDrawingCache();
+                    Bitmap bitmap = imageView.getDrawingCache();*/
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    selectedImage.compress(Bitmap.CompressFormat.PNG, 90, stream);
+                    byte[] image = stream.toByteArray();
+                    String img_str = Base64.encodeToString(image, 0);
+
+                    SharedPreferences preferences = getSharedPreferences("prof", MODE_PRIVATE);
+                    SharedPreferences.Editor edit = preferences.edit();
+                    edit.putString("profilephoto",img_str);
+                    edit.commit();
+                    imageView.setImageBitmap(selectedImage);
+                }catch(FileNotFoundException e){
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -317,4 +408,5 @@ public class HomePage extends AppCompatActivity
         AmazonDynamoDBClient ddbClient = new AmazonDynamoDBClient(credentialsProvider);
         mapper = new DynamoDBMapper(ddbClient);
     }
+
 }

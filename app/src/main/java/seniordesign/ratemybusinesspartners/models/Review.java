@@ -1,5 +1,6 @@
 package seniordesign.ratemybusinesspartners.models;
 
+import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,22 +12,27 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMarshall
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
+import java.io.Serializable;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
  * Created by Ryan Comer on 2/3/2016.
  */
 @DynamoDBTable(tableName = "Reviews")
-public class Review implements Parcelable{
+public class Review implements Serializable{
 
     //Fields for the Review model
     private String reviewID;
 
     private User reviewer;
+    private String reviewerUserID;
     private String reviewText;
     private String targetCompanyName;
     private Float numStars;
+    private Integer numLikes;
+    private ArrayList<String> likedUsers;
     private Calendar dateCreated;
     private boolean isUserAnonymous;
 
@@ -35,16 +41,23 @@ public class Review implements Parcelable{
     public Review(User reviewer, String reviewText, String targetCompanyName, Float numStars, boolean isUserAnonymous){
 
         this.reviewer = reviewer;
+        this.reviewerUserID = reviewerUserID;
         this.reviewText = reviewText;
         this.targetCompanyName = targetCompanyName;
         this.numStars = numStars;
         this.dateCreated = Calendar.getInstance();
         this.isUserAnonymous = isUserAnonymous;
+        this.numLikes = 0;
+        this.likedUsers = new ArrayList<>();
 
     }
 
     public Review(){
+
         this.dateCreated = Calendar.getInstance();
+        this.numLikes = 0;
+        this.likedUsers = new ArrayList<>();
+
     }
 
 
@@ -55,17 +68,43 @@ public class Review implements Parcelable{
     public String toString(){
         StringBuilder builder = new StringBuilder();
 
-        if(!this.isUserAnonymous){
-            builder.append(reviewer.getUserId());
-        }else{
-            builder.append("Anonymous");
-        }
         DateFormat dateFormat = DateFormat.getDateInstance();
         dateFormat.setCalendar(this.dateCreated);
-        builder.append("\n" + dateFormat.format(dateFormat.getCalendar().getTime()));
-        builder.append("\n\n" + this.reviewText);
+        builder.append(dateFormat.format(dateFormat.getCalendar().getTime()) + "\n");
+
+        if(getNumLikes() != 1) builder.append(getNumLikes() + " Likes\n\n");
+        else builder.append(getNumLikes() + " Like\n\n");
+
+        if(!this.isUserAnonymous){
+            builder.append(reviewer.getUserId() + "\n\n");
+        }else{
+            builder.append("Anonymous\n\n");
+        }
+        builder.append(this.reviewText);
 
         return builder.toString();
+    }
+
+    public String compactString(){
+        DateFormat dateFormat = DateFormat.getDateInstance();
+        dateFormat.setCalendar(this.dateCreated);
+        StringBuilder sb = new StringBuilder();
+
+        int numStarsInt = Math.round(getNumStars());
+        if(numStarsInt != 1) sb.append(numStarsInt + " Stars\n");
+        else sb.append(numStarsInt + " Star" + "\n");
+
+        if(getNumLikes() != 1) sb.append(getNumLikes() + " Likes\n");
+        else sb.append(getNumLikes() + " Like\n\natu");
+
+        // Only show the first N words
+        String[] reviewText = getReviewText().split(" ");
+        for(int i = 0; i < 8 && i < reviewText.length; i++){
+            sb.append(reviewText[i] + " ");
+        }
+        sb.append("...\n");
+
+        return sb.toString();
     }
 
     // Getters and Setters
@@ -84,6 +123,26 @@ public class Review implements Parcelable{
     }
     public void setReviewText(String reviewText) {
         this.reviewText = reviewText;
+    }
+
+    @DynamoDBAttribute(attributeName = "UserID")
+    public String getReviewerUserID(){return this.reviewerUserID;}
+    public void setReviewerUserID(String userID){
+        this.reviewerUserID = userID;
+    }
+
+    @DynamoDBAttribute(attributeName = "Number of Likes")
+    public int getNumLikes(){return this.numLikes;}
+    public void setNumLikes(int numLikes){
+        this.numLikes = numLikes;
+    }
+
+    @DynamoDBAttribute(attributeName = "Liked Users")
+    public ArrayList<String> getLikedUsers() {
+        return this.likedUsers;
+    }
+    public void setLikedUsers(ArrayList<String> likedUsers){
+        this.likedUsers = likedUsers;
     }
 
     @DynamoDBHashKey(attributeName = "Target Company")
@@ -128,17 +187,44 @@ public class Review implements Parcelable{
     }
 
 
+    /**
+     * Add a user to the liked reviews list
+     * Increment the numLikes field by 1
+     * @param userID
+     * @return Whether or not the addition was successful
+     */
+    public boolean likeReview(String userID){
+        if(!getLikedUsers().contains(userID)) {
+            this.getLikedUsers().add(userID);
+            this.numLikes += 1;
+            return true;
+        }
+        return false;
+    }
 
-
+    /**
+     * Remove a user from the liked reviews list
+     * Decrement the numLikes field by 1
+     * @param userID
+     * @return Whether or not the removal was successful
+     */
+    public boolean unlikeReview(String userID){
+        if(getLikedUsers().contains(userID)){
+            getLikedUsers().remove(userID);
+            this.numLikes -= 1;
+            return true;
+        }
+        else return false;
+    }
 
 
     // Parcelable Interface Methods
-    @Override
+    //@Override
     public int describeContents() {
         return 0;
     }
 
-    @Override
+    //@Override
     public void writeToParcel(Parcel dest, int flags) {
         // Push all of the fields onto the dest stack
         dest.writeString(this.reviewID);
@@ -149,6 +235,13 @@ public class Review implements Parcelable{
         dest.writeString(this.numStars.toString());
         dest.writeSerializable(this.dateCreated);
         dest.writeString(this.isUserAnonymous == true ? "1" : "0");
+        dest.writeString(this.numLikes.toString());
+
+        // Write the length of the array first
+        dest.writeString(Integer.toString(this.likedUsers.size()));
+        for(String userId : this.likedUsers){
+            dest.writeString(userId);
+        }
     }
 
     public static final Parcelable.Creator<Review> CREATOR = new Parcelable.Creator<Review>(){
@@ -161,14 +254,23 @@ public class Review implements Parcelable{
             reviewer.setUserId(source.readString());
             reviewer.setCompany(source.readString());
             review.setReviewer(reviewer);
-
+            review.setReviewerUserID(reviewer.getUserId());
             review.setReviewText(source.readString());
             review.setTargetCompanyName(source.readString());
             review.setNumStars(Float.parseFloat(source.readString()));
 
             review.setDateCreated((Calendar) source.readSerializable());
 
-            review.setIsUserAnonymous(source.readString() == "1" ? true : false);
+            review.setIsUserAnonymous(source.readString().equals("1") ? true : false);
+
+            review.setNumLikes(Integer.parseInt(source.readString()));
+
+            // Read the length of the liked array
+            int length = Integer.parseInt(source.readString());
+            ArrayList<String> likedUsers = new ArrayList<>();
+            for(int i = 0; i < length; i++){
+                likedUsers.add(source.readString());
+            }
 
             return review;
         }

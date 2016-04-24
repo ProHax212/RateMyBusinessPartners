@@ -19,36 +19,108 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <EditText
-            android:id="@+id/home_page_searchcompany_edittext"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:hint="Search Company: "
-            android:layout_gravity="center"/>
-        <Button
-            android:id="@+id/home_page_searchcompany_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="search"
-            android:textSize="12sp"
-            android:layout_gravity="center"
-            android:onClick="switchToSearchCompany"/>
-
-        <Button
-            android:id="@+id/home_page_company_profile_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Test Company Profile"
-            android:textSize="12sp"
-            android:layout_weight="2"
-            android:layout_gravity="center"
-            android:onClick="switchToCompanyProfile"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout">
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:id="@+id/imageView"
+        android:layout_gravity = "center_horizontal"
+        android:maxHeight="200dp"
+        android:src="@drawable/profile"
+        android:layout_below="@+id/main_view_sign_in_search_company"
+        android:layout_centerHorizontal="true"
+        android:maxWidth="200dp"
+        android:scaleType="fitXY" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change Profile Picture"
+        android:id="@+id/changeImageButton"
+        android:onClick="setProfile"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/myaccount_userId_textview"
+        android:text="Name"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:layout_below="@+id/changeImageButton"
+        android:layout_toLeftOf="@+id/imageView"
+        android:layout_toStartOf="@+id/imageView" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/myaccount_userId_edittext"
+        android:editable="false"
+        android:padding="10dp"
+        android:layout_alignTop="@+id/myaccount_userId_textview"
+        android:layout_toEndOf="@+id/myaccount_userId_textview"
+        android:layout_alignLeft="@+id/changeImageButton"
+        android:layout_alignStart="@+id/changeImageButton" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/myaccount_email_textview"
+        android:text="Email"
+        android:padding="10dp"
+        android:textSize="20sp"
+        android:layout_below="@+id/myaccount_userId_textview"
+        android:layout_alignRight="@+id/myaccount_userId_textview"
+        android:layout_alignEnd="@+id/myaccount_userId_textview" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/myaccount_email_edittext"
+        android:editable="false"
+        android:padding="10dp"
+        android:layout_above="@+id/myaccount_company_textView"
+        android:layout_alignLeft="@+id/myaccount_userId_edittext"
+        android:layout_alignStart="@+id/myaccount_userId_edittext" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/myaccount_company_textView"
+        android:text="Company"
+        android:padding="10dp"
+        android:textSize="15sp"
+        android:layout_below="@+id/myaccount_email_textview" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/myaccount_company_edittext"
+        android:editable="false"
+        android:padding="10dp"
+        android:layout_alignRight="@+id/myaccount_company_textView"
+        android:layout_alignEnd="@+id/myaccount_company_textView"
+        android:layout_below="@+id/myaccount_email_edittext"
+        android:layout_alignLeft="@+id/imageView"
+        android:layout_alignStart="@+id/imageView" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="View My Reviews"
+        android:id="@+id/button"
+        android:layout_below="@+id/myaccount_company_edittext"
+ />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="View Company Profile"
+        android:id="@+id/button2"
+        android:layout_toRightOf="@+id/button"
+        android:layout_below="@+id/myaccount_company_edittext" />
 </RelativeLayout>

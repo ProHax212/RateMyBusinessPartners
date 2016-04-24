@@ -5,13 +5,14 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMarshall
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 /**
  * Created by Ryan Comer on 2/4/2016.
  */
 
 @DynamoDBTable(tableName = "Users")
-public class User {
+public class User implements Serializable {
     private String userId;
     private String company;
     private ArrayList<String> reviewIds;

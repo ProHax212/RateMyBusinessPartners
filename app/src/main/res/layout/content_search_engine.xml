@@ -45,4 +45,6 @@
         android:layout_below = "@id/companyEditText"
         android:layout_marginTop="15dp"
         android:choiceMode="singleChoice"></ListView>
+
+
 </RelativeLayout>

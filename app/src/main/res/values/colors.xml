@@ -9,8 +9,20 @@
     <color name="blue_grey_800">#37474F</color>
     <color name="blue_grey_900">#263238</color>
     <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
     <color name="primary_background">#A8D0DF</color>
     <color name="primary_action_bar">#024E6E</color>
     <color name="primary_tab_bar">#0383BA</color>
     <color name="primary_text">#024E6E</color>
+
+    <!-- Rating Bar Graph Colors -->
+    <color name="rating_0">#FF340A</color>
+    <color name="rating_1">#FF8B5A</color>
+    <color name="rating_2">#FFB234</color>
+    <color name="rating_3">#FFD834</color>
+    <color name="rating_4">#ADD633</color>
+    <color name="rating_5">#9FC05A</color>
+
+    <!-- Like button color -->
+    <color name="like_button_color">#3AC32C</color>
 </resources>

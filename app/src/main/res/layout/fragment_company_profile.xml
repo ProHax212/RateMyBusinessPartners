@@ -1,60 +1,116 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="seniordesign.ratemybusinesspartners.fragments.CompanyProfileFragment">
 
-    <!--<TextView
-        style="@style/text_information"
-        android:id="@+id/companyNameTextView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="@string/company_profile_company_name"/>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/companyNameTextView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/companyImage"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        android:maxHeight="@dimen/company_profile_image_max_height"
-        android:maxWidth="@dimen/company_profile_image_max_width"
-        android:src="@mipmap/rmbp_icon" />-->
-
-
-    <TextView
-        style="@style/text_information"
-        android:id="@+id/companyProfileReviewsTextView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp"
-        android:text="Recent Reviews"/>
-
-
-    <ListView
-        android:id="@+id/companyProfileReviewList"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/company_profile_review_list_height"
-        android:layout_below="@id/companyProfileReviewsTextView"
-        android:clickable="false"
-        android:contextClickable="false">
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:layout_weight="1">
 
+        <TextView
+            style="@style/text_information"
+            android:id="@+id/companyProfileReviewsTextView"
+            android:text="Overview"/>
 
+        <com.github.mikephil.charting.charts.BarChart
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/companyProfileReviewsTextView"
+            android:id="@+id/companyProfileBarGraph"/>
 
-    </ListView>
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/black"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_below="@id/companyProfileReviewList"
-        android:id="@+id/view" />
+        android:layout_margin="5dp"
+        android:id="@+id/companyProfileDivider" />
 
-</RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:id="@+id/companyProfileTopBottom5LinearLayout">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Top 5"
+                style="@style/text_information"
+                android:id="@+id/companyProfileTop5TextView"/>
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/companyProfileTop5TextView"
+                android:id="@+id/companyProfileTop5ListView"/>
+
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:background="@color/black"/>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bottom 5"
+                style="@style/text_information"
+                android:id="@+id/companyProfileBottom5TextView"/>
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/companyProfileBottom5TextView"
+                android:id="@+id/companyProfileBottom5ListView"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone"
+        android:id="@+id/companyProfileRatedReviewsLayout">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            style="@style/text_information"
+            android:text="[N] Star Reviews"
+            android:id="@+id/companyProfileRatedReviewsTextView"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/companyProfileRatedReviewsTextView"
+            android:id="@+id/companyProfileRatedReviewsListView"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

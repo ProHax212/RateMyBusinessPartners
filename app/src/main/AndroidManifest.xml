@@ -3,7 +3,7 @@
     package="seniordesign.ratemybusinesspartners">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/rmbp_icon"
@@ -16,9 +16,12 @@
             android:theme="@style/MainActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+            <action android:name="android.intent.action.PICK"/>
+            <data android:mimeType="vnd.android.cursor.dir/vnd.google.note" />
+        </intent-filter>
         </activity>
         <activity
             android:name=".SearchEngine"
@@ -31,6 +34,14 @@
         <activity
             android:name=".CompanyProfile"
             android:label="@string/title_activity_company_profile"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".UserReviews"
+            android:label="User Profile"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ViewUserReview"
+            android:label="User Profile"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".WriteReview"
