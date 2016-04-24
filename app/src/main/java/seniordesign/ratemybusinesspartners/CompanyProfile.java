@@ -53,6 +53,7 @@ import seniordesign.ratemybusinesspartners.models.DummyDatabase;
 import seniordesign.ratemybusinesspartners.models.Review;
 import seniordesign.ratemybusinesspartners.models.User;
 
+
 public class CompanyProfile extends AppCompatActivity implements
         CompanyProfileFragment.ReviewFragmentListener, ReviewResultsFragment.UpdateReviews, WriteReviewFragment.SubmitReview, ReviewsChangedListener {
 

@@ -54,7 +54,7 @@ public class ViewUserReview extends AppCompatActivity {
         reviewText.setMovementMethod(new ScrollingMovementMethod());
 
         TextView companyName = (TextView) findViewById(R.id.viewReviewCompanyNameTextView);
-        companyName.setText(CompanyProfile.currentCompany);
+        companyName.setText(reviewToShow.getTargetCompanyName());
 
         RatingBar rating = (RatingBar) findViewById(R.id.viewReviewRatingBar);
         rating.setRating(reviewToShow.getNumStars());

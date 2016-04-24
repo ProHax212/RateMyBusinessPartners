@@ -35,8 +35,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/ratingBar"
         android:layout_below="@+id/resultNumber"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <View style="@style/divider"
         android:layout_below="@id/ratingBar"
@@ -47,14 +47,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Large Text"
         android:id="@+id/textView2"
-        android:layout_toRightOf="@+id/ratingBar"
         android:textAlignment="center"
-        android:layout_alignRight="@+id/ratingBar"
-        android:layout_alignBottom="@+id/ratingBar"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/resultNumber"
         android:layout_alignEnd="@+id/resultNumber"
-        android:layout_alignTop="@+id/ratingBar" />
+        android:text="Number of Reviews" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Average Rating"
+        android:id="@+id/textView3"
+        android:textAlignment="center"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/ratingBar"
+        android:layout_toLeftOf="@+id/ratingBar"
+        android:layout_toStartOf="@+id/ratingBar" />
 
 
 </RelativeLayout>

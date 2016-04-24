@@ -74,7 +74,7 @@ public class SearchEngine extends AppCompatActivity implements
     private ArrayList<Response> result;
     //ArrayList<String> previouslySearched = new ArrayList<String>();
     String[] items = {"Walmart ( Active ) ","ExxonMobil", "Dell ( Active ) ", "Kroger", "Gorman","Chevron", "Shell", "Google ( Active ) ", "Microsoft ( Active ) ", "SoundCloud", "Facebook"};
-    //ArrayAdapter<ArrayList<String>> adapter;
+    ArrayList<String> databaseCompany = new ArrayList<String>();//ArrayAdapter<ArrayList<String>> adapter
     ArrayAdapter<String> sadapter;
 
     //nav view
@@ -100,6 +100,7 @@ public class SearchEngine extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_company);
         this.findAllViewsById();
+        addCompanyToList(databaseCompany, items);
        // adapter = new ArrayAdapter<ArrayList<String>>(this, android.R.layout.simple_list_item_1);
         sadapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,items);
         lv.setAdapter(sadapter);
@@ -109,18 +110,29 @@ public class SearchEngine extends AppCompatActivity implements
 
             @Override
             public boolean onQueryTextSubmit(String text) {
-                Intent companyIntent = new Intent(SearchEngine.this,CompanyProfile.class);
-                //Response company = (Response)parent.getItemAtPosition(position);
-                companyIntent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, text);
-                startActivity(companyIntent);
+                Intent companyIntent = new Intent(SearchEngine.this, CompanyProfile.class);
+               // String submitWord = text + " ( Active )";
+                String submitWord = text.toLowerCase();
+                for(String comp: items) {
+                   String word =  comp.toLowerCase();
+                    if (word.contains(submitWord)) {
+                        if (comp.contains("( Active )")) {
+                            submitWord = comp.replace(" ( Active ) ", "");
+                            companyIntent.putExtra(CompanyProfile.COMPANY_PROFILE_TARGET_COMPANY, submitWord);
+                            startActivity(companyIntent);
+                            return false;
+                        } else {
+                            displayQuery(" Sorry! Cannot find the company. Search and select an Active company");
+                            return false;
+                        }
 
-                /*Do not remove. Need to use for the actual thing*/
-                //String authToken = doPostRequest();
-                //doGetRequest(authToken, itext);
-                String authToken = doPostRequest();
-                doGetRequest(authToken, text);
+                    }
+                }
+
+                displayQuery(" Sorry! Cannot find the company. Search and select an Active company");
                 return false;
             }
+
 
             @Override
             public boolean onQueryTextChange(String text) {
@@ -218,7 +230,7 @@ public class SearchEngine extends AppCompatActivity implements
 
             int HttpResult = urlConnection.getResponseCode();
             String HttpString = urlConnection.getResponseMessage();
-            System.out.println(HttpResult+ ":" + HttpString);
+            System.out.println(HttpResult + ":" + HttpString);
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             JsonReader jsonReader = new JsonReader(new InputStreamReader(in, "UTF-8"));ArrayList<Response> searchResult = getResponse.parseResponse(jsonReader);
@@ -262,7 +274,12 @@ public class SearchEngine extends AppCompatActivity implements
             return token;
         }
     }
+    private void addCompanyToList(ArrayList<String> dbCompany, String[] comp){
+        for(String company:comp){
+            dbCompany.add(company);
+        }
 
+    }
     private boolean afterEight(String date){
         boolean expired = false;
         Date expDate = toDate(date, "EEE, d MMM yyyy HH:mm:ss zzz");
@@ -289,7 +306,7 @@ public class SearchEngine extends AppCompatActivity implements
 //            startActivity(intent);
         } else if (id == R.id.my_account) {
             if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
-                Intent intent = new Intent(this, MyAccount.class);
+                Intent intent = new Intent(this, HomePage.class);
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG).show();

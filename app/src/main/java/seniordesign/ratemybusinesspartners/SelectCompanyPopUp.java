@@ -53,12 +53,10 @@ public class SelectCompanyPopUp extends Activity {
         submitButton = (Button) findViewById(R.id.select_company_button);
 
         companies = new ArrayList<String>();
-        companies.add("Bose");
-        companies.add("Tesla");
+        companies.add("Dell");
         companies.add("Microsoft");
-        companies.add("Toyota");
+        companies.add("Walmart");
         companies.add("Google");
-        companies.add("Amazon");
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, companies);
