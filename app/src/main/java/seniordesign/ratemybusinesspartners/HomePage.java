@@ -196,7 +196,14 @@ public class HomePage extends AppCompatActivity
                 Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG).show();
             }
         } else if (id == R.id.my_reviews) {
-            // TODO:  Create MY_REVIEWS Activity
+            if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
+                Intent intentUser = new Intent(HomePage.this,UserReviews.class);
+                intentUser.putExtra("userProfile", MainActivity.CURRENT_USER);
+
+                startActivity(intentUser);
+            } else {
+                Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG).show();
+            }
         } else if (id == R.id.sign_in_or_out) {
             if (MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
                 signOut();

@@ -312,10 +312,12 @@ public class SearchEngine extends AppCompatActivity implements
                 Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG).show();
             }
         } else if (id == R.id.my_reviews) {
-            // TODO:  Create MY_REVIEWS Activity
+
             if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
-//                Intent intent = new Intent(this, MyAccount.class);
-//                startActivity(intent);
+                Intent intentUser = new Intent(SearchEngine.this,UserReviews.class);
+                intentUser.putExtra("userProfile", MainActivity.CURRENT_USER);
+
+                startActivity(intentUser);
             } else {
                 Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG).show();
             }
@@ -408,8 +410,7 @@ public class SearchEngine extends AppCompatActivity implements
         MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
         sign_in_or_out.setTitle("Sign In");
         Toast.makeText(this, "You have successfully signed out. ", Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(this, HomePage.class);
-        startActivity(intent);
+        
     }
 
     @Override
