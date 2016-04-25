@@ -410,7 +410,7 @@ public class SearchEngine extends AppCompatActivity implements
         MainActivity.sign_in_status = MainActivity.Sign_In_Status.SIGNED_OUT;
         sign_in_or_out.setTitle("Sign In");
         Toast.makeText(this, "You have successfully signed out. ", Toast.LENGTH_LONG).show();
-        
+
     }
 
     @Override

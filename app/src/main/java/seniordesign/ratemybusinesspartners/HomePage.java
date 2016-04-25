@@ -137,7 +137,7 @@ public class HomePage extends AppCompatActivity
                 //startActivity(intentCompany);
                 Intent intentUser = new Intent(HomePage.this,UserReviews.class);
                 intentUser.putExtra("userProfile", MainActivity.CURRENT_USER);
-
+                intentUser.putExtra("isPublic",false);
                 startActivity(intentUser);
             }
         });

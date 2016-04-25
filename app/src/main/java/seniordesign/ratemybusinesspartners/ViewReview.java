@@ -42,6 +42,17 @@ public class ViewReview extends AppCompatActivity {
         StringBuilder builder = new StringBuilder();
         if(!reviewToShow.getIsUserAnonymous()){
             builder.append(reviewToShow.getReviewer().getUserId());
+
+            reviewerAndDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent viewUser = new Intent(ViewReview.this,UserReviews.class);
+                    viewUser.putExtra("userProfile", reviewToShow.getReviewer());
+                    viewUser.putExtra("isPublic",true);
+                    startActivity(viewUser);
+                }
+            });
+
         }else{
             builder.append("Anonymous");
         }
