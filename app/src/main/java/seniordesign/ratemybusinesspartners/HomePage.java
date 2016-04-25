@@ -137,7 +137,7 @@ public class HomePage extends AppCompatActivity
                 //startActivity(intentCompany);
                 Intent intentUser = new Intent(HomePage.this,UserReviews.class);
                 intentUser.putExtra("userProfile", MainActivity.CURRENT_USER);
-
+                intentUser.putExtra("isPublic",false);
                 startActivity(intentUser);
             }
         });
@@ -190,16 +190,25 @@ public class HomePage extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.my_account) {
             if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
-                Intent intent = new Intent(this, MyAccount.class);
+                Intent intent = new Intent(this, HomePage.class);
                 startActivity(intent);
             } else {
                 Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG).show();
             }
         } else if (id == R.id.my_reviews) {
-            // TODO:  Create MY_REVIEWS Activity
+            if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
+                Intent intentUser = new Intent(HomePage.this,UserReviews.class);
+                intentUser.putExtra("userProfile", MainActivity.CURRENT_USER);
+
+                startActivity(intentUser);
+            } else {
+                Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG).show();
+            }
         } else if (id == R.id.sign_in_or_out) {
             if (MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
                 signOut();
+                Intent intent2 = new Intent(this, MainActivity.class);
+                startActivity(intent2);
             } else { //Consider disconnect or onStart
                 signIn();
             }

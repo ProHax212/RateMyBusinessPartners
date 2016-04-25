@@ -66,6 +66,7 @@ public class UserReviews extends AppCompatActivity {
     private RatingBar averageReview;
     private TextView countReview;
     private String userID;
+    private Boolean isPublic;
     private ArrayAdapter<CharSequence> sortBySpinnerAdapter;
     private ArrayAdapter<CharSequence> dateSpinnerAdapter;
     private ReviewListAdapter reviewResultsAdapter;
@@ -80,13 +81,19 @@ public class UserReviews extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
         Toolbar toolbar = (Toolbar) findViewById(R.id.search_result_toolbar);
-        toolbar.setTitle("My Reviews");
+
 
         Intent intent = getIntent();
         currentUser = (User)intent.getSerializableExtra("userProfile");
         userID = currentUser.getUserId();
-        TextView companyName = (TextView) findViewById(R.id.resultNumber);
-        companyName.setText(userID);
+        isPublic = (Boolean)intent.getBooleanExtra("isPublic",false);
+        TextView userName = (TextView) findViewById(R.id.resultNumber);
+        userName.setText(userID);
+        if(isPublic){
+            toolbar.setTitle("My Reviews");
+        }else{
+            toolbar.setTitle(userID + "'s Reviews");
+        }
         countReview = (TextView)findViewById(R.id.textView2);
         averageReview = (RatingBar)findViewById(R.id.ratingBar);
         // Initialize Ryan Database
@@ -181,7 +188,11 @@ public class UserReviews extends AppCompatActivity {
 
                     for(Review review : queryResults){
 
-                        if(review.getReviewer().getUserId().equals(userID)){
+                        if((review.getReviewer().getUserId().equals(userID))&& !isPublic){
+                            resultsList.add(review);
+                            count+=1;
+                            avgReviews+=review.getNumStars();
+                        }  else if((review.getReviewer().getUserId().equals(userID))&& isPublic && !review.getIsUserAnonymous()){
                             resultsList.add(review);
                             count+=1;
                             avgReviews+=review.getNumStars();
