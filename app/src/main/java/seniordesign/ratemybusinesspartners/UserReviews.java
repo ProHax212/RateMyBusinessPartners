@@ -89,7 +89,7 @@ public class UserReviews extends AppCompatActivity {
         isPublic = (Boolean)intent.getBooleanExtra("isPublic",false);
         TextView userName = (TextView) findViewById(R.id.resultNumber);
         userName.setText(userID);
-        if(isPublic){
+        if(!isPublic){
             toolbar.setTitle("My Reviews");
         }else{
             toolbar.setTitle(userID + "'s Reviews");
