@@ -34,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ratingBar"
+        android:isIndicator="true"
         android:layout_below="@+id/resultNumber"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
