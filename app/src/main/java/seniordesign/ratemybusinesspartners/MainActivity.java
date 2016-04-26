@@ -290,11 +290,7 @@ public class MainActivity extends AppCompatActivity implements  GoogleApiClient.
                     List<User> itemList = mapper.query(User.class, queryExpression);
                     if(itemList.size() > 0) {
                         MainActivity.hasCompany = true;
-                        if(CURRENT_USER.getUserId().contains("Ceena")){
-                            CURRENT_USER.setCompany("Microsoft");
-                        }else {
-                            CURRENT_USER.setCompany(itemList.get(0).getCompany());
-                        }
+                        CURRENT_USER.setCompany(itemList.get(0).getCompany());
                     }
                     else { MainActivity.hasCompany = false; }
                 }

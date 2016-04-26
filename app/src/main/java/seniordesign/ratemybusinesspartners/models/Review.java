@@ -94,8 +94,8 @@ public class Review implements Serializable{
         if(numStarsInt != 1) sb.append(numStarsInt + " Stars\n");
         else sb.append(numStarsInt + " Star" + "\n");
 
-        if(getNumLikes() != 1) sb.append(getNumLikes() + " Likes\n");
-        else sb.append(getNumLikes() + " Like\n\natu");
+        if(getNumLikes() != 1) sb.append(getNumLikes() + " Likes\n\n");
+        else sb.append(getNumLikes() + " Like\n\n");
 
         // Only show the first N words
         String[] reviewText = getReviewText().split(" ");
