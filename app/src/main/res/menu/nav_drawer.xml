@@ -21,7 +21,7 @@
     <item
         android:id="@+id/about"
         android:icon="@drawable/ic_menu_manage"
-        android:title="About Abraham . . ." />
+        android:title="About" />
 
 
 </menu>
