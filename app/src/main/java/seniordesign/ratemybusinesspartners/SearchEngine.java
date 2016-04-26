@@ -214,66 +214,64 @@ public class SearchEngine extends AppCompatActivity implements
         return result;
     }
 
-    public void doGetRequest(String token, String company){
-        HttpsURLConnection urlConnection = null;
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        String urlString = this.compileUrl(company);
-        Response getResponse = new Response();
-        try {
-            URL url = new URL(urlString);
-            urlConnection = (HttpsURLConnection)url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.setRequestProperty("AUTHORIZATION", token);
-            urlConnection.setRequestProperty("Host", "maxcvservices.dnb.com");
-            urlConnection.connect();
+//    public void doGetRequest(String token, String company){
+//        HttpsURLConnection urlConnection = null;
+//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//        StrictMode.setThreadPolicy(policy);
+//        String urlString = this.compileUrl(company);
+//        Response getResponse = new Response();
+//        try {
+//            URL url = new URL(urlString);
+//            urlConnection = (HttpsURLConnection)url.openConnection();
+//            urlConnection.setRequestMethod("GET");
+//            urlConnection.setRequestProperty("AUTHORIZATION", token);
+//            urlConnection.setRequestProperty("Host", "maxcvservices.dnb.com");
+//            urlConnection.connect();
+//
+//            int HttpResult = urlConnection.getResponseCode();
+//            String HttpString = urlConnection.getResponseMessage();
+//            System.out.println(HttpResult + ":" + HttpString);
+//            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+//            JsonReader jsonReader = new JsonReader(new InputStreamReader(in, "UTF-8"));ArrayList<Response> searchResult = getResponse.parseResponse(jsonReader);
+//            Intent intent = new Intent(this, SearchResults.class);
+//            intent.putExtra("searchResults",searchResult);
+//            startActivity(intent);
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }finally{
+//            urlConnection.disconnect();
+//        }
+//    }
 
-            int HttpResult = urlConnection.getResponseCode();
-            String HttpString = urlConnection.getResponseMessage();
-            System.out.println(HttpResult + ":" + HttpString);
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            JsonReader jsonReader = new JsonReader(new InputStreamReader(in, "UTF-8"));ArrayList<Response> searchResult = getResponse.parseResponse(jsonReader);
-            Intent intent = new Intent(this, SearchResults.class);
-            intent.putExtra("searchResults",searchResult);
-            startActivity(intent);
-        }catch(Exception e){
-            e.printStackTrace();
-        }finally{
-            urlConnection.disconnect();
-        }
-    }
 
-
-    public String doPostRequest(){
-        HttpsURLConnection urlConnection = null;
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        String token=null;
-
-        try {
-            URL url = new URL("https://maxcvservices.dnb.com/Authentication/V2.0/");
-            urlConnection = (HttpsURLConnection)url.openConnection();
-            urlConnection.setDoOutput(true);
-            urlConnection.setRequestMethod("POST");
-            urlConnection.setConnectTimeout(10000);
-            urlConnection.setRequestProperty("Host", "maxcvservices.dnb.com");
-            urlConnection.setRequestProperty("x-dnb-user", "P200000B81FD90B010D4C83B9776AAF1");
-            urlConnection.setRequestProperty("x-dnb-pwd", "SeniorProject!");
-
-            urlConnection.connect();
-            String HttpResult = urlConnection.getResponseMessage();
-            System.out.println(HttpResult);
-            token = urlConnection.getHeaderField("Authorization");
-            String time = urlConnection.getHeaderField("Date");
-            this.afterEight(time);
-        }catch(Exception e){
-            e.printStackTrace();
-        }finally{
-            urlConnection.disconnect();
-            return token;
-        }
-    }
+//    public String doPostRequest(){
+//        HttpsURLConnection urlConnection = null;
+//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//        StrictMode.setThreadPolicy(policy);
+//        String token=null;
+//
+//        try {
+//            URL url = new URL("https://maxcvservices.dnb.com/Authentication/V2.0/");
+//            urlConnection = (HttpsURLConnection)url.openConnection();
+//            urlConnection.setDoOutput(true);
+//            urlConnection.setRequestMethod("POST");
+//            urlConnection.setConnectTimeout(10000);
+//
+//
+//            urlConnection.connect();
+//            String HttpResult = urlConnection.getResponseMessage();
+//            System.out.println(HttpResult);
+//            token = urlConnection.getHeaderField("Authorization");
+//            String time = urlConnection.getHeaderField("Date");
+//            this.afterEight(time);
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }finally{
+//            urlConnection.disconnect();
+//            return token;
+//        }
+//    }
     private void addCompanyToList(ArrayList<String> dbCompany, String[] comp){
         for(String company:comp){
             dbCompany.add(company);
