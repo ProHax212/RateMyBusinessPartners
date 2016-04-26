@@ -326,7 +326,8 @@ public class SearchEngine extends AppCompatActivity implements
                 signIn();
             }
         } else if (id == R.id.about) {
-
+            Intent intent = new Intent(this, AboutPage.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.search_engine_drawer_layout);

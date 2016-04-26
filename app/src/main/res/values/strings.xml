@@ -187,6 +187,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="signin_fragment">Sign In</string>
     <string name="title_activity_base">BaseActivity</string>
+    <string name="title_activity_about_page">AboutPage</string>
     >>>>>>> 507e438263963022b7dd8d12ae337a4560598875
 
 </resources>

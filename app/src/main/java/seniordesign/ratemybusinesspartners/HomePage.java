@@ -213,7 +213,8 @@ public class HomePage extends AppCompatActivity
                 signIn();
             }
         } else if (id == R.id.about) {
-
+            Intent intent = new Intent(this, AboutPage.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.home_page_drawer_layout);
