@@ -190,8 +190,7 @@ public class HomePage extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.my_account) {
             if(MainActivity.sign_in_status == MainActivity.Sign_In_Status.SIGNED_IN) {
-                Intent intent = new Intent(this, HomePage.class);
-                startActivity(intent);
+
             } else {
                 Toast.makeText(this, "You must be signed in.", Toast.LENGTH_LONG).show();
             }
