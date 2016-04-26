@@ -43,7 +43,8 @@ import seniordesign.ratemybusinesspartners.models.User;
 public class MainActivity extends AppCompatActivity implements  GoogleApiClient.OnConnectionFailedListener, View.OnClickListener, GoogleSignIn {
 
     String targetCompany;
-    public static User CURRENT_USER = new User("Dummy ID Token", "Walmart");
+    //public static User CURRENT_USER = new User("Dummy ID Token", "Walmart");
+    public static User CURRENT_USER = null;
 
     //D&B Login Credintials
     public static final String RYAN_DNB_LOGIN_USERNAME = "P200000FC7D9C7FA3D74F55BFF5D6D15";

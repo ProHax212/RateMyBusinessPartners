@@ -111,6 +111,12 @@ public class WriteReviewFragment extends Fragment implements View.OnClickListene
     @Override
     public void onClick(View v) {
 
+        // Check if the user is signed in - if not then they can't write a review
+        if(MainActivity.sign_in_status != MainActivity.Sign_In_Status.SIGNED_IN){
+            Toast.makeText(getContext(), "You must be logged in to write a review", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         EditText reviewEditText= (EditText) getView().findViewById(R.id.writeReviewEditText);
         String reviewText = reviewEditText.getText().toString().trim();
 
