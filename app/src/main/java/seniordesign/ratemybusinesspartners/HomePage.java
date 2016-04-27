@@ -285,6 +285,8 @@ public class HomePage extends AppCompatActivity
                     imageView.setImageBitmap(selectedImage);
                 }catch(FileNotFoundException e){
                     e.printStackTrace();
+                }catch(OutOfMemoryError e){
+                    Toast.makeText(this, "Image too large (> 16MB)", Toast.LENGTH_LONG).show();
                 }
             }
         }
