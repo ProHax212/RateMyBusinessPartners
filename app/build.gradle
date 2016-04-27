@@ -16,8 +16,8 @@ android {
         applicationId "seniordesign.ratemybusinesspartners"
         minSdkVersion 14//changed from 8 to 9 to be compatible with google play services
         targetSdkVersion 23
-        versionCode 3
-        versionName "3.0"
+        versionCode 4
+        versionName "4.0"
     }
     buildTypes {
         release {
